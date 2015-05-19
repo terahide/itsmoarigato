@@ -8,8 +8,26 @@
  */
 
 // Apply the java plugin to add support for Java
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
+    }
+}
+ 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+tasks.withType(AbstractCompile) each { it.options.encoding = 'UTF-8' }
+
+jar {
+	baseName = 'itsmoarigato'
+	version =  '0.1.0'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
