@@ -2,6 +2,7 @@ package com.itsmoarigato;
 
 import java.util.List;
 
+
 public class Arigato {
 	private int id; 
 	private User fromUser; 
