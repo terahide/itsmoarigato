@@ -19,27 +19,24 @@ public class Arigato {
 	JdbcTemplate jdbcTemplate;
 	
 	public void add(Message message){
-		int historyId = saveHistory(message);
 		int arigatoId = saveArigato(message);
-		populateArigatoIdToHistory(historyId,arigatoId);
+		saveHistory(arigatoId,message.getSubject(),message.getContents());
 		//TODO 画像の扱い
 	}
 
-	private int saveHistory(Message message) {
-		jdbcTemplate.update("insert into arigato_history_tbl (from_user ,to_user ,subject ,message, created) values (?,?,?,?,sysdate)", new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail(),message.getSubject(),message.getContents()});
-		Integer historyId = jdbcTemplate.queryForObject("select max(id) from arigato_history_tbl where to_user = ?", Integer.class,new Object[]{message.getToUser().getEmail()});
-		return historyId;
-	}
+	private int saveArigato(Message message) {
+		jdbcTemplate.update("insert into arigato_tbl (from_user ,to_user ,created) values (?,?,sysdate)",
+				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail()});
+		Integer arigatoId = jdbcTemplate.queryForObject("select max(id) from arigato_tbl where from_user = ? and to_user = ?", 
+				Integer.class,
+				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail()});
 
-	//NOTE IDの取得がマルチトランザクションになるとうまくいかなくなる可能性がある。本質的に DBの排他制御（明示的ロック）で解決すべき問題。（シングルサーバならこれで問題ない）
-	private synchronized int saveArigato(Message message) {
-		jdbcTemplate.update("insert into arigato_tbl (created) values (sysdate)");
-		Integer arigatoId = jdbcTemplate.queryForObject("select max(id) from arigato_tbl", Integer.class);
 		return arigatoId;
 	}
 
-	private void populateArigatoIdToHistory(int historyId, int arigatoId) {
-		jdbcTemplate.update("update arigato_history_tbl set arigato_id = ? where id = ?", new Object[]{arigatoId,historyId});
+	private void saveHistory(int arigatoId, String subject, String message) {
+		jdbcTemplate.update("insert into arigato_history_tbl (arigato_id,subject ,message, created) values (?,?,?,sysdate)", 
+				new Object[]{arigatoId,subject,message});
 	}
 
 	private static final String select_from_arigato = 
@@ -52,7 +49,7 @@ public class Arigato {
 			+ "from arigato_tbl a "
 			+ "inner join arigato_history_tbl h "
 			+ "on (a.id = h.arigato_id "
-			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id"
+			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id　group by arigato_id"
 			+ ") ";
 
 	
@@ -102,5 +99,14 @@ public class Arigato {
 	}
 	private static User toUser(String email) {
 		return new User(email, "");//TODO nameの取得
+	}
+
+	public Message getMessage(int messageId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void update(int arigatoId,String subject,String message) {
+		saveHistory(arigatoId, subject, message);
 	}
 }
