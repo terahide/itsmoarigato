@@ -52,25 +52,26 @@ public class Arigato {
 			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id　group by arigato_id"
 			+ ") ";
 
+	private static class ArigatoRowMapper implements RowMapper<Message>{
+		@Override
+		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
+			int id = rs.getInt("id"); 
+			User fromUser = toUser(rs.getString("from_user")); 
+			User toUser = toUser(rs.getString("to_user"));
+			String subject = rs.getString("subject"); 
+			String contents = rs.getString("message"); 
+			List<Image> images = null;
+			return new Message(id,fromUser, toUser, subject, contents, images);
+		}
+	}
 	
 	public List<Message> getMineMessages(String me) {
 		return jdbcTemplate.query(
 					select_from_arigato
 					+ "where to_user = ? "
 					+ "order by h.created　desc, h.id desc", 
-				new RowMapper<Message>(){
-			@Override
-			public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
-				int id = rs.getInt("id"); 
-				User fromUser = toUser(rs.getString("from_user")); 
-				User toUser = toUser(rs.getString("to_user"));
-				String subject = rs.getString("subject"); 
-				String contents = rs.getString("message"); 
-				List<Image> images = null;
-				return new Message(id,fromUser, toUser, subject, contents, images);
-			}
-		},
-		new Object[]{me});
+				new ArigatoRowMapper(),
+				new Object[]{me});
 	}
 
 	public List<Message> getArroundMessages(String me) {
@@ -83,30 +84,24 @@ public class Arigato {
 					+ "where me = ?"
 					+ ") "
 				+ "order by h.created　desc, h.id desc", 
-			new RowMapper<Message>(){
-		@Override
-		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
-			int id = rs.getInt("id"); 
-			User fromUser = toUser(rs.getString("from_user")); 
-			User toUser = toUser(rs.getString("to_user"));
-			String subject = rs.getString("subject"); 
-			String contents = rs.getString("message"); 
-			List<Image> images = null;
-			return new Message(id,fromUser, toUser, subject, contents, images);
-		}
-	},
-	new Object[]{me});
+				new ArigatoRowMapper(),
+				new Object[]{me});
 	}
 	private static User toUser(String email) {
 		return new User(email, "");//TODO nameの取得
 	}
 
 	public Message getMessage(int messageId) {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.queryForObject(
+				select_from_arigato + 
+				"where a.id = ?", 
+				new ArigatoRowMapper(),
+				new Object[]{messageId});
 	}
 
 	public void update(int arigatoId,String subject,String message) {
 		saveHistory(arigatoId, subject, message);
 	}
+	
+
 }

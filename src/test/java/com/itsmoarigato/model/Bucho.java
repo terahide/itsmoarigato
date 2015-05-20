@@ -6,8 +6,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +44,8 @@ public class Bucho {
 		Message message = getMostNewMessage(toUser);
 		
 		int messageId = message.getId();
+		message = arigato.getMessage(messageId);
+		assertThat(message.getId(), is(messageId));
 
 		message = createMessage(messageId);
 		
