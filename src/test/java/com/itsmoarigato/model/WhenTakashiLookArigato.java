@@ -1,7 +1,7 @@
 package com.itsmoarigato.model;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import com.itsmoarigato.Message;
 public class WhenTakashiLookArigato {
 	
 	private static final String me = "takashi@hoge.com";
+	private static final String friend = "tae@hoge.com";
 	
 	@Autowired
 	Bucho bucho;
@@ -39,5 +40,20 @@ public class WhenTakashiLookArigato {
 		
 		List<Message> messages = arigato.getMineMessages(me);
 		assertThat(messages.size(),is(1));
+
+		Message message = messages.get(0);
+		assertThat(message.getId(),not(0));
+		assertThat(message.getFromUser().getEmail(),is(Bucho.email));
+		assertThat(message.getToUser().getEmail(),is(me));
+		assertThat(message.getSubject(),is("いつもありがと"));
+		assertThat(message.getContents(),is("今日もがんばってるね:)"));
+	}
+
+	@Test
+	public void 他人あてのメッセージを登録してもらい自分あてのメッセージを見ると0件であるべき(){
+		bucho.sayArigato(friend);
+		
+		List<Message> messages = arigato.getMineMessages(me);
+		assertThat(messages.size(),is(0));
 	}
 }

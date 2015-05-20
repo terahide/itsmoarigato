@@ -43,20 +43,22 @@ public class Arigato {
 	}
 
 	public List<Message> getMineMessages(String toUser) {
-		return jdbcTemplate.query("select from_user ,to_user ,subject ,message from arigato_tbl a inner join arigato_history_tbl h on (a.id = h.arigato_id)", new RowMapper<Message>(){
+		return jdbcTemplate.query("select a.id,from_user ,to_user ,subject ,message from arigato_tbl a inner join arigato_history_tbl h on (a.id = h.arigato_id) where to_user = ?", new RowMapper<Message>(){
 			@Override
 			public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
+				int id = rs.getInt("id"); 
 				User fromUser = toUser(rs.getString("from_user")); 
 				User toUser = toUser(rs.getString("to_user"));
 				String subject = rs.getString("subject"); 
 				String contents = rs.getString("message"); 
 				List<Image> images = null;
-				return new Message(fromUser, toUser, subject, contents, images);
+				return new Message(id,fromUser, toUser, subject, contents, images);
 			}
 
 			private User toUser(String email) {
 				return new User(email, "");//TODO nameの取得
 			}
-		});
+		},
+		new Object[]{toUser});
 	}
 }
