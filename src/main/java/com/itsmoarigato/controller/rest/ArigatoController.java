@@ -2,6 +2,8 @@ package com.itsmoarigato.controller.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,13 +43,13 @@ public class ArigatoController {
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
     @ResponseBody
-    String create(ArigatoCommand arigato,Model model) {//TODO パラメータたち
+    String create(@Valid ArigatoCommand arigato,Model model) {
     	return "{\"sucsses\":true}";
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
-    String update(ArigatoCommand arigato, Model model) {//TODO パラメータたち 
+    String update(@Valid ArigatoCommand arigato, Model model) { 
     	return "{\"sucsses\":true}";
     }
     

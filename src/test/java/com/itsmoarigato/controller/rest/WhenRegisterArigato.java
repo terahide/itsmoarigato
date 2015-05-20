@@ -45,8 +45,8 @@ public class WhenRegisterArigato {
 	@Test
 	public void PUTするテスト() throws Exception {
 		Map<String,String> params = new LinkedHashMap<>();
-		params.put("fromUserId","bucho"); 
-		params.put("toUserId" ,"takashi");
+		params.put("fromUserId","bucho@hoge.co.jp"); 
+		params.put("toUserId" ,"takashi@hoge.co.jp");
 		params.put("subject" ,"いつもありがと");
 		params.put("message" ,"今日も頑張ってるね:)");
 
@@ -57,8 +57,8 @@ public class WhenRegisterArigato {
 	@Test
 	public void POSTするテスト() throws Exception {
 		Map<String,String> params = new LinkedHashMap<>();
-		params.put("fromUserId","bucho"); 
-		params.put("toUserId" ,"takashi");
+		params.put("fromUserId","bucho@hoge.co.jp"); 
+		params.put("toUserId" ,"takashi@hoge.co.jp");
 		params.put("subject" ,"いつもありがと");
 		params.put("message" ,"今日も頑張ってるね:)");
 

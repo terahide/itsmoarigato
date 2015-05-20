@@ -1,19 +1,33 @@
 package com.itsmoarigato.controller.rest;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.itsmoarigato.User;
 
 public class ArigatoCommand {
-	String id;
+
+	int id;
+
+	@NotBlank
+	@Email
 	String fromUserId; 
+
+	@NotBlank
+	@Email
 	String toUserId; 
+
+	@NotBlank
 	String subject; 
+
+	@NotBlank
 	String message; 
 //	List<Image> images;//TODO 後回し
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getFromUserId() {
