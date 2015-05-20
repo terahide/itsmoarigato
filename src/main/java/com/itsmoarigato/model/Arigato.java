@@ -42,8 +42,26 @@ public class Arigato {
 		jdbcTemplate.update("update arigato_history_tbl set arigato_id = ? where id = ?", new Object[]{arigatoId,historyId});
 	}
 
-	public List<Message> getMineMessages(String toUser) {
-		return jdbcTemplate.query("select a.id,from_user ,to_user ,subject ,message from arigato_tbl a inner join arigato_history_tbl h on (a.id = h.arigato_id) where to_user = ?", new RowMapper<Message>(){
+	private static final String select_from_arigato = 
+			"select "
+			+ "a.id,"
+			+ "from_user ,"
+			+ "to_user ,"
+			+ "subject ,"
+			+ "message "
+			+ "from arigato_tbl a "
+			+ "inner join arigato_history_tbl h "
+			+ "on (a.id = h.arigato_id "
+			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id"
+			+ ") ";
+
+	
+	public List<Message> getMineMessages(String me) {
+		return jdbcTemplate.query(
+					select_from_arigato
+					+ "where to_user = ? "
+					+ "order by h.created　desc, h.id desc", 
+				new RowMapper<Message>(){
 			@Override
 			public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
 				int id = rs.getInt("id"); 
@@ -54,11 +72,35 @@ public class Arigato {
 				List<Image> images = null;
 				return new Message(id,fromUser, toUser, subject, contents, images);
 			}
-
-			private User toUser(String email) {
-				return new User(email, "");//TODO nameの取得
-			}
 		},
-		new Object[]{toUser});
+		new Object[]{me});
+	}
+
+	public List<Message> getArroundMessages(String me) {
+		return jdbcTemplate.query(
+				select_from_arigato
+				+ "where to_user in ("
+					+ "select "
+					+ "friend "
+					+ "from friend_tbl "
+					+ "where me = ?"
+					+ ") "
+				+ "order by h.created　desc, h.id desc", 
+			new RowMapper<Message>(){
+		@Override
+		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
+			int id = rs.getInt("id"); 
+			User fromUser = toUser(rs.getString("from_user")); 
+			User toUser = toUser(rs.getString("to_user"));
+			String subject = rs.getString("subject"); 
+			String contents = rs.getString("message"); 
+			List<Image> images = null;
+			return new Message(id,fromUser, toUser, subject, contents, images);
+		}
+	},
+	new Object[]{me});
+	}
+	private static User toUser(String email) {
+		return new User(email, "");//TODO nameの取得
 	}
 }

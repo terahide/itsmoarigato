@@ -19,6 +19,7 @@ public class TableSetuper {
 	public void remakeTable() {
 		remakeArigatoTable();
 		remakeUserTable();
+		remakeFriendTable();
 	}
 	
 	private void remakeArigatoTable() {
@@ -37,5 +38,11 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table user_Tbl("
 						+ "email char,name varchar,password char,primary key(email))");
+	}
+	private void remakeFriendTable() {
+		jdbcTemplate.execute("drop table friend_Tbl if exists");
+		jdbcTemplate
+				.execute("create table friend_Tbl("
+						+ "me char, friend char, created datetime, primary key(me,friend))");
 	}
 }
