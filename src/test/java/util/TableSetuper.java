@@ -25,12 +25,12 @@ public class TableSetuper {
 		jdbcTemplate.execute("drop table arigato_Tbl if exists");
 		jdbcTemplate
 				.execute("create table arigato_Tbl("
-						+ "id serial,primary key(id))");
+						+ "id serial, created datetime, primary key(id))");
 
 		jdbcTemplate.execute("drop table arigato_history_Tbl if exists");
 		jdbcTemplate
 				.execute("create table arigato_history_Tbl("
-						+ "id serial, arigato_id integer,from_user char,to_user char,subject text,message text,primary key(id))");
+						+ "id serial, arigato_id integer,from_user char,to_user char,subject text,message text, created datetime, primary key(id))");
 	}
 	private void remakeUserTable() {
 		jdbcTemplate.execute("drop table user_Tbl if exists");

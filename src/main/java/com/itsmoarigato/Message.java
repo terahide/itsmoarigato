@@ -4,12 +4,24 @@ import java.util.List;
 
 
 public class Message {
-	private int id; 
-	private User fromUser; 
-	private User toUser; 
-	private String subject; 
-	private String contents; 
-	private List<Image> images;
+	private final int id; 
+	private final User fromUser; 
+	private final User toUser; 
+	private final String subject; 
+	private final String contents; 
+	private final List<Image> images;
+
+	public Message(User fromUser, User toUser,
+			String subject, String contents, List<Image> images) {
+		super();
+		this.id = 0;
+		this.fromUser = fromUser;
+		this.toUser = toUser;
+		this.subject = subject;
+		this.contents = contents;
+		this.images=images;
+	}
+
 	public Message(int id, User fromUser, User toUser,
 			String subject, String contents, List<Image> images) {
 		super();
@@ -18,7 +30,7 @@ public class Message {
 		this.toUser = toUser;
 		this.subject = subject;
 		this.contents = contents;
-		this.images = images;
+		this.images=images;
 	}
 	public int getId() {
 		return id;

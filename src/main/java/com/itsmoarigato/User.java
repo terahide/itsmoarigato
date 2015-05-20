@@ -1,15 +1,15 @@
 package com.itsmoarigato;
 
 public class User {
-	private int id;
-	private String name;
-	public User(int id, String name) {
+	private final String email;
+	private final String name;
+	public User(String email, String name) {
 		super();
-		this.id = id;
+		this.email = email;
 		this.name = name;
 	}
-	public int getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
 	public String getName() {
 		return name;
