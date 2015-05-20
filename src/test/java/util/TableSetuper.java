@@ -18,6 +18,7 @@ public class TableSetuper {
 	@Test
 	public void remakeTable() {
 		remakeArigatoTable();
+		remakeUserTable();
 	}
 	
 	private void remakeArigatoTable() {
@@ -30,5 +31,11 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table arigato_history_Tbl("
 						+ "id serial, arigato_id integer,from_user char,to_user char,subject text,message text,primary key(id))");
+	}
+	private void remakeUserTable() {
+		jdbcTemplate.execute("drop table user_Tbl if exists");
+		jdbcTemplate
+				.execute("create table user_Tbl("
+						+ "email char,name varchar,password char,primary key(email))");
 	}
 }

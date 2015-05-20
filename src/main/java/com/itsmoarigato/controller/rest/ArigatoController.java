@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itsmoarigato.Arigato;
+import com.itsmoarigato.Message;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.User;
 
@@ -26,19 +26,19 @@ public class ArigatoController {
 	User fromUser; 
 	User toUser;
 	String subject;
-	String message; 
+	String contents; 
 	List<Image> images;
 	
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
-    Arigato list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Arigato(id, fromUser, toUser, subject, message, images);
+    Message list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
+    	return new Message(id, fromUser, toUser, subject, contents, images);
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
-    Arigato detail(@PathVariable("id")String id,@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Arigato(toInt(id), fromUser, toUser, subject, message, images);
+    Message detail(@PathVariable("id")String id,@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
+    	return new Message(toInt(id), fromUser, toUser, subject, contents, images);
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
