@@ -21,7 +21,6 @@ public class ArigatoController {
 
 	//TODO けす
 	int id; 
-	int historyId; 
 	User fromUser; 
 	User toUser;
 	String subject;
@@ -31,24 +30,24 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
     Arigato list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Arigato(id, historyId, fromUser, toUser, subject, message, images);
+    	return new Arigato(id, fromUser, toUser, subject, message, images);
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
     Arigato detail(@PathVariable("id")String id,@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Arigato(toInt(id), historyId, fromUser, toUser, subject, message, images);
+    	return new Arigato(toInt(id), fromUser, toUser, subject, message, images);
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
     @ResponseBody
-    String create(Model model) {//TODO パラメータたち
+    String create(ArigatoCommand arigato,Model model) {//TODO パラメータたち
     	return "{\"sucsses\":true}";
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
-    String update(@PathVariable("id")String id, Model model) {//TODO パラメータたち 
+    String update(ArigatoCommand arigato, Model model) {//TODO パラメータたち 
     	return "{\"sucsses\":true}";
     }
     
