@@ -3,6 +3,7 @@ package com.itsmoarigato.model;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -100,5 +101,25 @@ public class WhenTakashiLookArigato {
 		assertThat(message.getToUser().getEmail(),is(me));
 		assertThat(message.getSubject(),is("今日もありがと"));
 		assertThat(message.getContents(),is("ムリしないでね:)"));
+	}
+
+	@Test
+	public void 自分あてのメッセージ3件を登録してもらいある時点以降の周囲のメッセージを見ると2件であるべき(){
+		bucho.sayArigato(me);
+		Date atPoint = new Date();
+		bucho.sayArigato(me);
+		bucho.sayArigato(me);
+		List<Message> messages = arigato.getArroundMessages(me,new Pagination(atPoint));
+		assertThat(messages.size(),is(2));
+	}
+
+	@Test
+	public void 自分あてのメッセージ3件を登録してもらいある時点以降の自分宛てのメッセージを見ると2件であるべき(){
+		bucho.sayArigato(me);
+		Date atPoint = new Date();
+		bucho.sayArigato(me);
+		bucho.sayArigato(me);
+		List<Message> messages = arigato.getMineMessages(me,new Pagination(atPoint));
+		assertThat(messages.size(),is(2));
 	}
 }

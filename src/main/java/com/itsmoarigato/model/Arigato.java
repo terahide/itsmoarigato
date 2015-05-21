@@ -69,28 +69,55 @@ public class Arigato {
 	}
 	
 	public List<Message> getMineMessages(String me,Pagination page) {
-		return jdbcTemplate.query(
-					select_from_arigato
-					+ "where to_user = ? "
-					+ "order by h.created　desc, h.id desc "
-					+"limit ? offset ? " , 
+		boolean afterAtPoint = page.hasAtPoint();
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append(select_from_arigato);
+		sql.append("where to_user = ? ");
+		if(afterAtPoint){
+			sql.append("and h.created < ? ");
+		}
+		sql.append("order by h.created　desc, h.id desc ");
+		sql.append("limit ? offset ? ");
+		Object[] params;
+		if(afterAtPoint){
+			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+		}else{
+			params = new Object[]{me,page.getLimit(),page.getOffset()};
+		}
+
+		return jdbcTemplate.query(sql.toString(), 
 				new ArigatoRowMapper(),
-				new Object[]{me,page.getLimit(),page.getOffset()});
+				params);
 	}
 
 	public List<Message> getArroundMessages(String me,Pagination page) {
-		return jdbcTemplate.query(
-				select_from_arigato
-				+ "where to_user in ("
-					+ "select "
-					+ "friend "
-					+ "from friend_tbl "
-					+ "where me = ?"
-					+ ") "
-				+ "order by h.created　desc, h.id desc "
-				+"limit ? offset ? " , 
+		boolean afterAtPoint = page.hasAtPoint();
+
+		StringBuilder sql = new StringBuilder();
+		sql.append(select_from_arigato);
+		sql.append("where to_user in (");
+		sql.append("select ");
+		sql.append("friend ");
+		sql.append("from friend_tbl ");
+		sql.append("where me = ?");
+		sql.append(") ");
+		if(afterAtPoint){
+			sql.append("and h.created < ? ");
+		}
+		sql.append("order by h.created　desc, h.id desc ");
+		sql.append("limit ? offset ? ");
+
+		Object[] params;
+		if(afterAtPoint){
+			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+		}else{
+			params = new Object[]{me,page.getLimit(),page.getOffset()};
+		}
+
+		return jdbcTemplate.query(sql.toString() , 
 				new ArigatoRowMapper(),
-				new Object[]{me,page.getLimit(),page.getOffset()});
+				params);
 	}
 
 	private static User toUser(String email) {

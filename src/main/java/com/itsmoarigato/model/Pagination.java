@@ -41,4 +41,8 @@ public class Pagination {
 	public Date getAtPoint() {
 		return atPoint;
 	}
+
+	public boolean hasAtPoint() {
+		return getAtPoint() != null;
+	}
 }
