@@ -10,6 +10,7 @@ import java.util.Map;
 
 
 
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,21 +30,39 @@ import util.HttpTestHelper;
 public class WhenRegisterArigato {
 
 	@Test
-	public void 一覧を取得するテスト() throws Exception {
+	public void test() throws Exception{
+		一覧を取得すると０件のテスト();
+		PUTするテスト();
+		一覧を取得すると1件のテスト();
+		詳細を取得するテスト();
+		POSTするテスト();
+		更新後の詳細を取得するテスト();
+	}
+	private void 一覧を取得すると０件のテスト() throws Exception {
 		HashMap<String, String> params = new HashMap<>();
 		String response = get("/rest/arigato/",params);
-		assertThat(response, is("[{\"id\":0,\"fromUser\":null,\"toUser\":null,\"subject\":null,\"contents\":null,\"created\":null,\"images\":null}]"));
+		assertThat(response, is("[]"));
 	}
 
-	@Test
-	public void 詳細を取得するテスト() throws Exception {
+	private void 一覧を取得すると1件のテスト() throws Exception {
 		HashMap<String, String> params = new HashMap<>();
-		String response = get("/rest/arigato/1",params);
-		assertThat(response, is("{\"id\":1,\"fromUser\":null,\"toUser\":null,\"subject\":null,\"contents\":null,\"created\":null,\"images\":null}"));
+		String response = get("/rest/arigato/",params);
+		assertThat(response, is("[{\"id\":193,\"fromUser\":{\"email\":\"bucho@hoge.co.jp\",\"name\":\"\"},\"toUser\":{\"email\":\"takashi@hoge.co.jp\",\"name\":\"\"},\"subject\":\"いつもありがと\",\"contents\":\"今日も頑張ってるね:)\",\"created\":\"2015-05-21\",\"images\":null}]"));
 	}
 
-	@Test
-	public void PUTするテスト() throws Exception {
+	private void 詳細を取得するテスト() throws Exception {
+		HashMap<String, String> params = new HashMap<>();
+		String response = get("/rest/arigato/193",params);
+		assertThat(response, is("{\"id\":193,\"fromUser\":{\"email\":\"bucho@hoge.co.jp\",\"name\":\"\"},\"toUser\":{\"email\":\"takashi@hoge.co.jp\",\"name\":\"\"},\"subject\":\"いつもありがと\",\"contents\":\"今日も頑張ってるね:)\",\"created\":\"2015-05-21\",\"images\":null}"));
+	}
+
+	private void 更新後の詳細を取得するテスト() throws Exception {
+		HashMap<String, String> params = new HashMap<>();
+		String response = get("/rest/arigato/193",params);
+		assertThat(response, is("{\"id\":193,\"fromUser\":{\"email\":\"bucho@hoge.co.jp\",\"name\":\"\"},\"toUser\":{\"email\":\"takashi@hoge.co.jp\",\"name\":\"\"},\"subject\":\"今日もありがと\",\"contents\":\"ムリしないでね:)\",\"created\":\"2015-05-21\",\"images\":null}"));
+	}
+
+	private void PUTするテスト() throws Exception {
 		Map<String,String> params = new LinkedHashMap<>();
 		params.put("fromUserId","bucho@hoge.co.jp"); 
 		params.put("toUserId" ,"takashi@hoge.co.jp");
@@ -54,15 +73,14 @@ public class WhenRegisterArigato {
 		assertThat(response, is("{\"sucsses\":true}"));
 	}
 
-	@Test
-	public void POSTするテスト() throws Exception {
+	private void POSTするテスト() throws Exception {
 		Map<String,String> params = new LinkedHashMap<>();
 		params.put("fromUserId","bucho@hoge.co.jp"); 
 		params.put("toUserId" ,"takashi@hoge.co.jp");
-		params.put("subject" ,"いつもありがと");
-		params.put("message" ,"今日も頑張ってるね:)");
+		params.put("subject" ,"今日もありがと");
+		params.put("message" ,"ムリしないでね:)");
 
-		String response = post("/rest/arigato/1",params);
+		String response = post("/rest/arigato/193",params);
 		assertThat(response, is("{\"sucsses\":true}"));
 	}
 

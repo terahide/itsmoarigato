@@ -16,7 +16,7 @@ import com.itsmoarigato.User;
 @Component
 public class Bucho {
 
-	public static final String email = "bucho@hoge.com";
+	public static final String email = "bucho@hoge.co.jp";
 	
 	@Autowired
 	Arigato arigato;

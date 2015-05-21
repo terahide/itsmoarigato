@@ -125,6 +125,7 @@ public class Arigato {
 	}
 
 	public Message getMessage(int messageId) {
+		//FIXME friend以外は見えないようにしないとね
 		return jdbcTemplate.queryForObject(
 				select_from_arigato + 
 				"where a.id = ?", 

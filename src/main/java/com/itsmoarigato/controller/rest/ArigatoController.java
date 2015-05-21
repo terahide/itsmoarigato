@@ -36,30 +36,49 @@ public class ArigatoController {
 	Date created;
 	List<Image> images;
 	
+	//TODO けす
+	private final static String me = "takashi@hoge.co.jp";
 	
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
-    List<Message> list(@RequestParam(value="type", required=false, defaultValue="arround") String type, Model model) {
-    	List<Message> messages = new ArrayList<>();
-    	messages.add(new Message(id, fromUser, toUser, subject, contents, created, images));
+    List<Message> list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {
+    	//TODO ページネーションどうしようね。
+    	List<Message> messages;
+    	if(type.equals(GetType.mine.name())){
+    		messages = arigato.getMineMessages(me, new Pagination());
+    	}else{
+    		messages = arigato.getAroundMessages(me, new Pagination());
+    	}
     	return messages;
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
-    Message detail(@PathVariable("id")String id,@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Message(toInt(id), fromUser, toUser, subject, contents, created, images);
+    Message detail(@PathVariable("id")String id, Model model) {
+    	return arigato.getMessage(toInt(id));
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
     @ResponseBody
     String create(@Valid ArigatoCommand arigato,Model model) {
+    	this.arigato.add(toMessage(arigato));
     	return "{\"sucsses\":true}";
     }
 
-    @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
+    private Message toMessage(ArigatoCommand arigato) {
+    	Message message = new Message(arigato.getId(),toUser(arigato.fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,null,new ArrayList<>());
+		return message;
+	}
+
+	private User toUser(String userId) {
+		User user = new User(userId,null);
+		return user;
+	}
+
+	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
     String update(@Valid ArigatoCommand arigato, Model model) { 
+    	this.arigato.update(arigato.getId(), arigato.getSubject(), arigato.getMessage());
     	return "{\"sucsses\":true}";
     }
     

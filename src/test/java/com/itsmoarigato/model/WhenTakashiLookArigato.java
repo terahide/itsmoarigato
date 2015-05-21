@@ -22,8 +22,8 @@ import com.itsmoarigato.Message;
 @Transactional
 public class WhenTakashiLookArigato {
 	
-	private static final String me = "takashi@hoge.com";
-	private static final String friend = "tae@hoge.com";
+	private static final String me = "takashi@hoge.co.jp";
+	private static final String friend = "tae@hoge.co.jp";
 	
 	@Autowired
 	Bucho bucho;
@@ -34,10 +34,18 @@ public class WhenTakashiLookArigato {
 	private Pagination p = new Pagination();
 	
 	@Before
-	public void link(){
+	public void before(){
+		link();
+		clearArigato();
+	}
+	private void link(){
+		jdbcTemplate.update("delete from friend_tbl");
 		link(me,me);
 		link(me,friend);
 		link(me,Bucho.email);
+	}
+	private void clearArigato(){
+		jdbcTemplate.update("delete from arigato_tbl");
 	}
 	
 	@Autowired
@@ -121,5 +129,13 @@ public class WhenTakashiLookArigato {
 		bucho.sayArigato(me);
 		List<Message> messages = arigato.getMineMessages(me,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
+	}
+	@Test
+	public void 存在しないメッセージを取得するとどうなるの(){
+		//FIXME 実装してね
+	}
+	@Test
+	public void 友達以外のメッセージを取得するとどうなるの(){
+		//FIXME 実装してね
 	}
 }
