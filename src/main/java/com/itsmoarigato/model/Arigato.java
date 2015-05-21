@@ -68,16 +68,17 @@ public class Arigato {
 		}
 	}
 	
-	public List<Message> getMineMessages(String me) {
+	public List<Message> getMineMessages(String me,Pagination page) {
 		return jdbcTemplate.query(
 					select_from_arigato
 					+ "where to_user = ? "
-					+ "order by h.created　desc, h.id desc", 
+					+ "order by h.created　desc, h.id desc "
+					+"limit ? offset ? " , 
 				new ArigatoRowMapper(),
-				new Object[]{me});
+				new Object[]{me,page.getLimit(),page.getOffset()});
 	}
 
-	public List<Message> getArroundMessages(String me) {
+	public List<Message> getArroundMessages(String me,Pagination page) {
 		return jdbcTemplate.query(
 				select_from_arigato
 				+ "where to_user in ("
@@ -86,10 +87,12 @@ public class Arigato {
 					+ "from friend_tbl "
 					+ "where me = ?"
 					+ ") "
-				+ "order by h.created　desc, h.id desc", 
+				+ "order by h.created　desc, h.id desc "
+				+"limit ? offset ? " , 
 				new ArigatoRowMapper(),
-				new Object[]{me});
+				new Object[]{me,page.getLimit(),page.getOffset()});
 	}
+
 	private static User toUser(String email) {
 		return new User(email, "");//TODO nameの取得
 	}
@@ -105,6 +108,4 @@ public class Arigato {
 	public void update(int arigatoId,String subject,String message) {
 		saveHistory(arigatoId, subject, message);
 	}
-	
-
 }

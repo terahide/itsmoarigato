@@ -54,7 +54,7 @@ public class Bucho {
 	}
 
 	private Message getMostNewMessage(String toUser) {
-		List<Message> messages = arigato.getMineMessages(toUser);
+		List<Message> messages = arigato.getMineMessages(toUser,new Pagination());
 		
 		//validate
 		//assertThat(messages.size(), is(1));

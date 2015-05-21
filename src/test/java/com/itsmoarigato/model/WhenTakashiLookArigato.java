@@ -30,6 +30,8 @@ public class WhenTakashiLookArigato {
 	@Autowired
 	Arigato arigato;
 	
+	private Pagination p = new Pagination();
+	
 	@Before
 	public void link(){
 		link(me,me);
@@ -47,7 +49,7 @@ public class WhenTakashiLookArigato {
 
 	@Test
 	public void メッセージがないとき自分あてのメッセージを見ると０件であるべき(){
-		List<Message> messages = arigato.getMineMessages(me);
+		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(0));
 	}
 
@@ -55,7 +57,7 @@ public class WhenTakashiLookArigato {
 	public void 自分あてのメッセージを登録してもらい自分あてのメッセージを見ると1件であるべき(){
 		bucho.sayArigato(me);
 		
-		List<Message> messages = arigato.getMineMessages(me);
+		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(1));
 
 		Message message = messages.get(0);
@@ -70,7 +72,7 @@ public class WhenTakashiLookArigato {
 	public void 他人あてのメッセージを登録してもらい自分あてのメッセージを見ると0件であるべき(){
 		bucho.sayArigato(friend);
 		
-		List<Message> messages = arigato.getMineMessages(me);
+		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(0));
 	}
 
@@ -79,7 +81,7 @@ public class WhenTakashiLookArigato {
 		bucho.sayArigato(me);
 		bucho.sayArigato(friend);
 		
-		List<Message> messages = arigato.getArroundMessages(me);
+		List<Message> messages = arigato.getArroundMessages(me,p);
 		assertThat(messages.size(),is(2));
 		assertThat(messages.get(0).getToUser().getEmail(),is(friend));//新しい順
 		assertThat(messages.get(1).getToUser().getEmail(),is(me));
@@ -89,7 +91,7 @@ public class WhenTakashiLookArigato {
 	public void 自分あてのメッセージを変更してもらい自分あてのメッセージを見ると1件であるべき(){
 		bucho.sayArigatoAndUpdate(me);
 		
-		List<Message> messages = arigato.getMineMessages(me);
+		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(1));
 
 		Message message = messages.get(0);
