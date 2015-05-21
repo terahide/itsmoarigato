@@ -20,6 +20,7 @@ public class Arigato {
 	JdbcTemplate jdbcTemplate;
 	
 	public void add(Message message){
+		//FIXME friend以外は見えないようにしないとね
 		int arigatoId = saveArigato(message);
 		saveHistory(arigatoId,message.getSubject(),message.getContents());
 		//TODO 画像の扱い
@@ -134,6 +135,8 @@ public class Arigato {
 	}
 
 	public void update(int arigatoId,String subject,String message) {
+		//FIXME 対象がなかった場合どうしようね
+		//FIXME friend以外は見えないようにしないとね
 		saveHistory(arigatoId, subject, message);
 	}
 }

@@ -138,4 +138,16 @@ public class WhenTakashiLookArigato {
 	public void 友達以外のメッセージを取得するとどうなるの(){
 		//FIXME 実装してね
 	}
+	@Test
+	public void 友達以外にメッセージを登録するとどうなるの(){
+		//FIXME 実装してね
+	}
+	@Test
+	public void 友達以外のメッセージを更新するとどうなるの(){
+		//FIXME 実装してね
+	}
+	@Test
+	public void 存在しないメッセージを更新するとどうなるの(){
+		//FIXME 実装してね
+	}
 }
