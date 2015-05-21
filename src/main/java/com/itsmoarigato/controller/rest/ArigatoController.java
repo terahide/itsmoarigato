@@ -1,10 +1,12 @@
 package com.itsmoarigato.controller.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.User;
+import com.itsmoarigato.model.Arigato;
+import com.itsmoarigato.model.Pagination;
 
 @RestController
 public class ArigatoController {
 	
-	//TODO モデリング
+	@Autowired
+	Arigato arigato;
 
 	//TODO けす
 	int id; 
@@ -31,10 +36,13 @@ public class ArigatoController {
 	Date created;
 	List<Image> images;
 	
+	
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
-    Message list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Message(id, fromUser, toUser, subject, contents, created, images);
+    List<Message> list(@RequestParam(value="type", required=false, defaultValue="arround") String type, Model model) {
+    	List<Message> messages = new ArrayList<>();
+    	messages.add(new Message(id, fromUser, toUser, subject, contents, created, images));
+    	return messages;
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)

@@ -32,7 +32,7 @@ public class WhenRegisterArigato {
 	public void 一覧を取得するテスト() throws Exception {
 		HashMap<String, String> params = new HashMap<>();
 		String response = get("/rest/arigato/",params);
-		assertThat(response, is("{\"id\":0,\"fromUser\":null,\"toUser\":null,\"subject\":null,\"contents\":null,\"created\":null,\"images\":null}"));
+		assertThat(response, is("[{\"id\":0,\"fromUser\":null,\"toUser\":null,\"subject\":null,\"contents\":null,\"created\":null,\"images\":null}]"));
 	}
 
 	@Test
