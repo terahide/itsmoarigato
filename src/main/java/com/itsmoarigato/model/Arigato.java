@@ -2,6 +2,7 @@ package com.itsmoarigato.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class Arigato {
 	}
 
 	private int saveArigato(Message message) {
-		jdbcTemplate.update("insert into arigato_tbl (from_user ,to_user ,created) values (?,?,sysdate)",
-				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail()});
+		jdbcTemplate.update("insert into arigato_tbl (from_user ,to_user ,created) values (?,?,?)",
+				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail(),new Timestamp(System.currentTimeMillis())});
 		Integer arigatoId = jdbcTemplate.queryForObject("select max(id) from arigato_tbl where from_user = ? and to_user = ?", 
 				Integer.class,
 				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail()});
@@ -37,8 +38,8 @@ public class Arigato {
 	}
 
 	private void saveHistory(int arigatoId, String subject, String message) {
-		jdbcTemplate.update("insert into arigato_history_tbl (arigato_id,subject ,message, created) values (?,?,?,sysdate)", 
-				new Object[]{arigatoId,subject,message});
+		jdbcTemplate.update("insert into arigato_history_tbl (arigato_id,subject ,message, created) values (?,?,?,?)", 
+				new Object[]{arigatoId,subject,message,new Timestamp(System.currentTimeMillis())});
 	}
 
 	private static final String select_from_arigato = 
@@ -63,7 +64,7 @@ public class Arigato {
 			User toUser = toUser(rs.getString("to_user"));
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
-			Date created = rs.getDate("created");
+			Timestamp created = rs.getTimestamp("created");
 			List<Image> images = null;
 			return new Message(id,fromUser, toUser, subject, contents, created, images);
 		}
@@ -76,7 +77,7 @@ public class Arigato {
 		sql.append(select_from_arigato);
 		sql.append("where to_user = ? ");
 		if(afterAtPoint){
-			sql.append("and h.created < ? ");
+			sql.append("and h.created > ? ");
 		}
 		sql.append("order by h.created　desc, h.id desc ");
 		sql.append("limit ? offset ? ");
@@ -104,7 +105,7 @@ public class Arigato {
 		sql.append("where me = ?");
 		sql.append(") ");
 		if(afterAtPoint){
-			sql.append("and h.created < ? ");
+			sql.append("and h.created > ? ");
 		}
 		sql.append("order by h.created　desc, h.id desc ");
 		sql.append("limit ? offset ? ");
@@ -112,6 +113,7 @@ public class Arigato {
 		Object[] params;
 		if(afterAtPoint){
 			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+			//params = new Object[]{me,page.getLimit(),page.getOffset()};
 		}else{
 			params = new Object[]{me,page.getLimit(),page.getOffset()};
 		}

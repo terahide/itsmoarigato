@@ -1,6 +1,6 @@
 package com.itsmoarigato;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -10,7 +10,7 @@ public class Message {
 	private final User toUser; 
 	private final String subject; 
 	private final String contents;
-	private final Date created;
+	private final Timestamp created;
 	private final List<Image> images;
 
 	public Message(User fromUser, User toUser,
@@ -26,7 +26,7 @@ public class Message {
 	}
 
 	public Message(int id, User fromUser, User toUser,
-			String subject, String contents, Date created, List<Image> images) {
+			String subject, String contents, Timestamp created, List<Image> images) {
 		super();
 		this.id = id;
 		this.fromUser = fromUser;
@@ -51,7 +51,7 @@ public class Message {
 	public String getContents() {
 		return contents;
 	}
-	public Date getCreated() {
+	public Timestamp getCreated() {
 		return created;
 	}
 	public List<Image> getImages() {

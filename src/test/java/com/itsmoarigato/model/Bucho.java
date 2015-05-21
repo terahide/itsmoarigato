@@ -31,7 +31,7 @@ public class Bucho {
 	}
 
 	private Message createMessage(int id) {
-		Message message = new Message(id,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", new Date(), new ArrayList<>());
+		Message message = new Message(id,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", null, new ArrayList<>());
 		return message;
 	}
 

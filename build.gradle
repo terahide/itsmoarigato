@@ -40,10 +40,15 @@ repositories {
 dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.5'
+	compile files('libs/spring-embedded-redis-1.0.1.RELEASE.jar')
+	compile 'org.springframework.session:spring-session:1.0.1.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-redis'
+	compile 'org.springframework.boot:spring-boot-starter-web'
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compile 'org.springframework.boot:spring-boot-starter-jdbc'
 	compile("com.h2database:h2")
 	
+	runtime "com.github.kstyrc:embedded-redis:0.6"
 	
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
@@ -51,5 +56,6 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile "junit:junit:4.11"
 	testCompile 'org.apache.httpcomponents:httpclient:4.4.1'
-	compile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }

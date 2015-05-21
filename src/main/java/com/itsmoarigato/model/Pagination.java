@@ -1,13 +1,15 @@
 package com.itsmoarigato.model;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Pagination {
 	private final int limit;
 	private final int offset;
-	private final Date atPoint;
+	private final Timestamp atPoint;
 	
-	public Pagination(int limit, int offset, Date atPoint) {
+	public Pagination(int limit, int offset, Timestamp atPoint) {
 		super();
 		this.limit = limit;
 		this.offset = offset;
@@ -22,12 +24,12 @@ public class Pagination {
 		this(10,offset,null);
 	}
 	
-	public Pagination(int offset,Date atPoint) {
+	public Pagination(int offset,Timestamp atPoint) {
 		this(10,offset,atPoint);
 	}
 
-	public Pagination(Date atPoint) {
-		this(10,1,atPoint);
+	public Pagination(Timestamp atPoint) {
+		this(10,0,atPoint);
 	}
 
 	public int getLimit() {
@@ -38,11 +40,13 @@ public class Pagination {
 		return offset;
 	}
 
-	public Date getAtPoint() {
+	public Timestamp getAtPoint() {
+//		SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+//		return f.format(atPoint);
 		return atPoint;
 	}
 
 	public boolean hasAtPoint() {
-		return getAtPoint() != null;
+		return atPoint != null;
 	}
 }

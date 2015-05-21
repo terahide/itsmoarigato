@@ -3,6 +3,7 @@ package com.itsmoarigato.model;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -114,20 +115,37 @@ public class WhenTakashiLookArigato {
 	@Test
 	public void 自分あてのメッセージ3件を登録してもらいある時点以降の周囲のメッセージを見ると2件であるべき(){
 		bucho.sayArigato(me);
-		Date atPoint = new Date();
+		Timestamp atPoint = new Timestamp(System.currentTimeMillis());
+		wait_();
 		bucho.sayArigato(me);
 		bucho.sayArigato(me);
 		List<Message> messages = arigato.getAroundMessages(me,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
 	}
 
+	private void wait_() {
+		try {
+			Thread.currentThread().sleep(1);
+		} catch (InterruptedException e) {
+			// N/A 
+		}
+	}
+	
 	@Test
 	public void 自分あてのメッセージ3件を登録してもらいある時点以降の自分宛てのメッセージを見ると2件であるべき(){
 		bucho.sayArigato(me);
-		Date atPoint = new Date();
+		Timestamp atPoint = new Timestamp(System.currentTimeMillis());
+		wait_();
 		bucho.sayArigato(me);
 		bucho.sayArigato(me);
 		List<Message> messages = arigato.getMineMessages(me,new Pagination(atPoint));
+		for (Message message : messages) {
+			System.out.print(message.getId());
+			System.out.print("\t");
+			System.out.print(message.getContents());
+			System.out.print("\t");
+			System.out.println(message.getCreated());
+		}
 		assertThat(messages.size(),is(2));
 	}
 	@Test
