@@ -91,7 +91,7 @@ public class Arigato {
 				params);
 	}
 
-	public List<Message> getArroundMessages(String me,Pagination page) {
+	public List<Message> getAroundMessages(String me,Pagination page) {
 		boolean afterAtPoint = page.hasAtPoint();
 
 		StringBuilder sql = new StringBuilder();

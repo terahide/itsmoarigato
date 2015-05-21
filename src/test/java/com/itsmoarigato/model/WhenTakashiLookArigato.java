@@ -82,7 +82,7 @@ public class WhenTakashiLookArigato {
 		bucho.sayArigato(me);
 		bucho.sayArigato(friend);
 		
-		List<Message> messages = arigato.getArroundMessages(me,p);
+		List<Message> messages = arigato.getAroundMessages(me,p);
 		assertThat(messages.size(),is(2));
 		assertThat(messages.get(0).getToUser().getEmail(),is(friend));//新しい順
 		assertThat(messages.get(1).getToUser().getEmail(),is(me));
@@ -109,7 +109,7 @@ public class WhenTakashiLookArigato {
 		Date atPoint = new Date();
 		bucho.sayArigato(me);
 		bucho.sayArigato(me);
-		List<Message> messages = arigato.getArroundMessages(me,new Pagination(atPoint));
+		List<Message> messages = arigato.getAroundMessages(me,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
 	}
 
