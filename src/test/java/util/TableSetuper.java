@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.itsmoarigato.model.Bucho;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
 public class TableSetuper {
@@ -21,6 +23,11 @@ public class TableSetuper {
 		remakeUserTable();
 		remakeFriendTable();
 	}
+	
+	private void link(String me,String friend){
+		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,sysdate)",new Object[]{me,friend});
+	}
+
 	
 	private void remakeArigatoTable() {
 		jdbcTemplate.execute("drop table arigato_Tbl if exists");
@@ -44,5 +51,16 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table friend_Tbl("
 						+ "me char, friend char, created datetime, primary key(me,friend))");
+	
+		link();
 	}
+
+	private static final String me = "takashi@hoge.co.jp";
+	
+	private void link(){
+		jdbcTemplate.update("delete from friend_tbl where me = ?",new Object[]{me});
+		link(me,me);
+		link(me,Bucho.email);
+	}
+	
 }
