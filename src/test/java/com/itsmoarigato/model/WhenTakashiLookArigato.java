@@ -46,7 +46,7 @@ public class WhenTakashiLookArigato {
 
 
 	@Test
-	public void メッセージがないときたかしあてのメッセージを見ると０件であるべき(){
+	public void メッセージがないとき自分あてのメッセージを見ると０件であるべき(){
 		List<Message> messages = arigato.getMineMessages(me);
 		assertThat(messages.size(),is(0));
 	}

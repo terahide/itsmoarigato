@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class Bucho {
 	}
 
 	private Message createMessage(int id) {
-		Message message = new Message(id,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", new ArrayList<>());
+		Message message = new Message(id,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", new Date(), new ArrayList<>());
 		return message;
 	}
 

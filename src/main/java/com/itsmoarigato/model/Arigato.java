@@ -2,6 +2,7 @@ package com.itsmoarigato.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,8 @@ public class Arigato {
 			+ "from_user ,"
 			+ "to_user ,"
 			+ "subject ,"
-			+ "message "
+			+ "message ,"
+			+ "h.created "
 			+ "from arigato_tbl a "
 			+ "inner join arigato_history_tbl h "
 			+ "on (a.id = h.arigato_id "
@@ -60,8 +62,9 @@ public class Arigato {
 			User toUser = toUser(rs.getString("to_user"));
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
+			Date created = rs.getDate("created");
 			List<Image> images = null;
-			return new Message(id,fromUser, toUser, subject, contents, images);
+			return new Message(id,fromUser, toUser, subject, contents, created, images);
 		}
 	}
 	

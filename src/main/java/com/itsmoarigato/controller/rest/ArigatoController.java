@@ -1,5 +1,6 @@
 package com.itsmoarigato.controller.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -27,18 +28,19 @@ public class ArigatoController {
 	User toUser;
 	String subject;
 	String contents; 
+	Date created;
 	List<Image> images;
 	
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
     Message list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Message(id, fromUser, toUser, subject, contents, images);
+    	return new Message(id, fromUser, toUser, subject, contents, created, images);
     }
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
     Message detail(@PathVariable("id")String id,@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {//TODO aroundをenumに 
-    	return new Message(toInt(id), fromUser, toUser, subject, contents, images);
+    	return new Message(toInt(id), fromUser, toUser, subject, contents, created, images);
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
