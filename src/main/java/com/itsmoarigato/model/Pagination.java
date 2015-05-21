@@ -1,8 +1,6 @@
 package com.itsmoarigato.model;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Pagination {
 	private final int limit;
@@ -41,8 +39,6 @@ public class Pagination {
 	}
 
 	public Timestamp getAtPoint() {
-//		SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
-//		return f.format(atPoint);
 		return atPoint;
 	}
 

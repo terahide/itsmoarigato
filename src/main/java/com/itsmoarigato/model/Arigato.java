@@ -113,7 +113,6 @@ public class Arigato {
 		Object[] params;
 		if(afterAtPoint){
 			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
-			//params = new Object[]{me,page.getLimit(),page.getOffset()};
 		}else{
 			params = new Object[]{me,page.getLimit(),page.getOffset()};
 		}
