@@ -28,15 +28,6 @@ public class ArigatoController {
 	Arigato arigato;
 
 	//TODO けす
-	int id; 
-	User fromUser; 
-	User toUser;
-	String subject;
-	String contents; 
-	Date created;
-	List<Image> images;
-	
-	//TODO けす
 	private final static String me = "takashi@hoge.co.jp";
 	
     @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
