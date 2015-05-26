@@ -32,14 +32,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 public class HttpTestHelper {
 	private static HttpClient httpClient;
-	private static HttpContext httpContext;
-	private static String sessionID;
+//	private static HttpContext httpContext;
+//	private static String sessionID;
 	static {
 		httpClient = new DefaultHttpClient();
-		CookieStore cookieStore = new BasicCookieStore();
-		HttpContext httpContext = new BasicHttpContext();
-		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-
+//		CookieStore cookieStore = new BasicCookieStore();
+//		HttpContext httpContext = new BasicHttpContext();
+//		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+//
 //		Credentials credentials = new UsernamePasswordCredentials("user","password");
 //		AuthScope scope = new AuthScope(host, port);
 //		((DefaultHttpClient)httpClient).getCredentialsProvider().setCredentials(scope, credentials);
@@ -61,11 +61,11 @@ public class HttpTestHelper {
 		URI uri = toUri(method,scheme,host,port,path,params);
 
 		HttpRequestBase request = toRequest(method,uri,params) ;
-		if(sessionID != null)request.addHeader("Cookie", sessionID);
+//		if(sessionID != null)request.addHeader("Cookie", sessionID);
 		
-		HttpResponse response_ = httpClient.execute(request,httpContext);
+		HttpResponse response_ = httpClient.execute(request/*,httpContext*/);
 		Header header = response_.getFirstHeader("Set-Cookie");
-		if(header != null)sessionID = header.getValue();
+//		if(header != null)sessionID = header.getValue();
 
 		HttpEntity entity = response_.getEntity();
 		String response = EntityUtils.toString(entity);

@@ -18,16 +18,18 @@ sourceCompatibility = targetCompatibility = 1.7
 group = 'itsmoarigato'
 
 dependencies {
-	compile 'org.springframework.session:spring-session:1.0.1.RELEASE',
+	compile( 
+			'org.springframework.session:spring-session:1.0.1.RELEASE',
 			project(':itsmoarigato:spring-embedded-redis'),
 			"org.springframework.boot:spring-boot-starter-redis",
 			"org.springframework.boot:spring-boot-starter-web",
 			"org.springframework.boot:spring-boot-starter-thymeleaf",
 			"nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect",
-			"org.springframework.security:spring-security-web:$springSecurityVersion",
-			"org.springframework.security:spring-security-config:$springSecurityVersion",
+//			"org.springframework.security:spring-security-web:$springSecurityVersion",
+//			"org.springframework.security:spring-security-config:$springSecurityVersion",
 			'org.springframework.boot:spring-boot-starter-jdbc',
 			"com.h2database:h2"
+			)
 
 	testCompile "org.springframework.boot:spring-boot-starter-test",
 				'org.apache.httpcomponents:httpclient:4.4.1'

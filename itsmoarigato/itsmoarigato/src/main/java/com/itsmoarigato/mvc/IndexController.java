@@ -30,4 +30,9 @@ public class IndexController {
 	public String index() {
 		return "index";
 	}
+	
+	@RequestMapping("/create")
+	public String create() {
+		return "create";
+	}
 }

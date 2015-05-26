@@ -22,12 +22,12 @@ import util.HttpTestHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Ignore //FIXME POSTとPUTのテストがかけたら消すこと
+//@Ignore //FIXME POSTとPUTのテストがかけたら消すこと
 public class WhenRegisterArigato {
 
 	@Test
 	public void test() throws Exception{
-		login();
+//		login();
 		PUTするテスト();
 		int id = 一覧を取得するとn件のテスト();
 		詳細を取得するテスト(id);
