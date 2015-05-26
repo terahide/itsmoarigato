@@ -4,7 +4,8 @@
 buildの方法
 > gradle itsmoarigato:itsmoarigato:build
 
-tableの作成
+tableの作成 
+
 テストクラス util.TableSetuperを何とかして実行してくださいｗ そのうちちゃんとできるように対応しますｗ
 
 サーバ起動方法
@@ -13,6 +14,7 @@ tableの作成
 ブラウザから http://localhost:8080 takashi@hoge.co.jp/passwordでlogin
 
 test方法
-> gradle itsmoarigato:itsmoarigato:integrationTest
-> gradle itsmoarigato:itsmoarigato:check //サーバを起動してから実行してください
+> gradle itsmoarigato:itsmoarigato:integrationTest 
+
+> gradle itsmoarigato:itsmoarigato:check //サーバを起動してから実行してください 
 
