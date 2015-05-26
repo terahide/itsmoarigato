@@ -1,6 +1,11 @@
-/bin
-/.gradle
-/build
-/db
-/.classpath
-/.project
+.gradle
+.idea
+build
+*.iml
+bin
+.classpath
+.settings
+.project
+target
+out
+.springBeans

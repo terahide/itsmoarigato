@@ -1,0 +1,57 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+	}
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'eclipse'
+
+apply from: JAVA_GRADLE
+
+tasks.findByPath("artifactoryPublish")?.enabled = false
+sourceCompatibility = targetCompatibility = 1.7
+
+group = 'itsmoarigato'
+
+dependencies {
+	compile 'org.springframework.session:spring-session:1.0.1.RELEASE',
+			project(':itsmoarigato:spring-embedded-redis'),
+			"org.springframework.boot:spring-boot-starter-redis",
+			"org.springframework.boot:spring-boot-starter-web",
+			"org.springframework.boot:spring-boot-starter-thymeleaf",
+			"nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect",
+			"org.springframework.security:spring-security-web:$springSecurityVersion",
+			"org.springframework.security:spring-security-config:$springSecurityVersion",
+			'org.springframework.boot:spring-boot-starter-jdbc',
+			"com.h2database:h2"
+
+	testCompile "org.springframework.boot:spring-boot-starter-test",
+				'org.apache.httpcomponents:httpclient:4.4.1'
+
+	integrationTestCompile gebDependencies,
+			"org.spockframework:spock-spring:$spockVersion"
+
+}
+
+integrationTest {
+	doFirst {
+		def port = reservePort()
+
+		def host = 'localhost:' + port
+		systemProperties['geb.build.baseUrl'] = 'http://'+host+'/'
+		systemProperties['geb.build.reportsDir'] = 'build/geb-reports'
+		systemProperties['server.port'] = port
+		systemProperties['management.port'] = 0
+	}
+}
+
+def reservePort() {
+	def socket = new ServerSocket(0)
+	def result = socket.localPort
+	socket.close()
+	result
+}
