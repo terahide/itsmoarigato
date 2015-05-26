@@ -28,7 +28,7 @@ class LoginPage extends Page {
 	static content = {
 		form { $('form') }
 		submit { $('input[type=submit]') }
-		login(required:false) { user='user', pass='password' ->
+		login(required:false) { user='takashi@hoge.co.jp', pass='password' ->
 			form.username = user
 			form.password = pass
 			submit.click(HomePage)

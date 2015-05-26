@@ -55,7 +55,7 @@ class BootTests extends GebReportingSpec {
 		then: 'sent to original page'
 		at HomePage
 		and: 'the username is displayed'
-		username == 'user'
+		username == 'takashi@hoge.co.jp'
 		and: 'Spring Session Management is being used'
 		driver.manage().cookies.find { it.name == 'SESSION' }
 		and: 'Standard Session is NOT being used'

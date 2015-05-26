@@ -22,7 +22,7 @@ import util.HttpTestHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Ignore
+@Ignore //FIXME POSTとPUTのテストがかけたら消すこと
 public class WhenRegisterArigato {
 
 	@Test
@@ -36,7 +36,7 @@ public class WhenRegisterArigato {
 	}
 	
 	private void login() throws Exception{
-		login("user","password");
+		login("takashi@hoge.co.jp","password");
 	}
 	
 	private void login(String user, String password) throws Exception {
