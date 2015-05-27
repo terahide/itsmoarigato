@@ -22,16 +22,20 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		when: "rest list access nodata"	
 			go "http://localhost:8080/rest/arigato"
 		then:
-			driver.pageSource != '[]'
+			driver.pageSource == "[]"
 
-//		when: "put"	
-//			go "http://localhost:8080/create"
-//			$('#fromUserId') <- "bucho@hoge.co.jp"
-//			$('#toUserId') <- "takashi@hoge.co.jp"
-//			$('#subject') <- "いつもありがと"
-//			$('#message') <- "今日も頑張ってるね:)"
-//			$('#submit').click()
-//		then:
-//			driver.pageSource == '[]'
+		when: "ありがとを登録すると"	
+			go "http://localhost:8080/create"
+			$('#fromUserId') << "bucho@hoge.co.jp"
+			$('#toUserId') << "takashi@hoge.co.jp"
+			$('#subject') << "いつもありがと"
+			$('#message') << "今日も頑張ってるね:)"
+			$('#submit').click()
+		then: "sucessと表示されるべき"
+			driver.pageSource == '{"sucsses":true}'
+		when:"rest list access one data"	
+			go "http://localhost:8080/rest/arigato"
+		then: 
+			driver.pageSource != "[]"
 	}
 }

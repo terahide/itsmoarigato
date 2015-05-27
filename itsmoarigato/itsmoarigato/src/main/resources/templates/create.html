@@ -4,7 +4,36 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<form id="arigatoCreateForm" method="put" th:action="@{/rest/arigato}">
+		<script>
+/*
+			$(document).ready(function(){
+				$("#submit").click(function(){
+					var url = $("#arigatoCreateForm").attr("action");
+					var data = $("#arigatoCreateForm").serialize();
+					$.ajax({
+						url: url,
+						method:"post",
+						dataType:"json",
+						data:data
+					})
+					.done(function(data, status, xhr){
+						alert(data);
+						$('#tweets').append(data);
+						$(data[0]).each(function(k,v){
+					           $('#tweets').append(v.text + '<br/>');
+					        });
+					})
+					.fail(function( data, status, xhr){
+						alert((fail) + data);
+					})
+					
+					retrun false;
+				});
+			});
+*/
+		</script>
+		<div id="tweets"></div>
+		<form id="arigatoCreateForm" method="post" th:action="@{/rest/arigato}">
 			<input type="text" id="fromUserId" name="fromUserId" />
 			<input type="text" id="toUserId" name="toUserId" />
 			<input type="text" id="subject" name="subject" />

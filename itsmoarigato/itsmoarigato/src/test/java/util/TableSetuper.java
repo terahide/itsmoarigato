@@ -18,7 +18,7 @@ public class TableSetuper {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void remakeTable() {
 		remakeArigatoTable();

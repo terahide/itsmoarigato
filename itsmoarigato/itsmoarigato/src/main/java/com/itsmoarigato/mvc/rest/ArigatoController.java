@@ -50,7 +50,7 @@ public class ArigatoController {
     	return arigato.getMessage(toInt(id));
     }
     
-    @RequestMapping(value="/rest/arigato",method=RequestMethod.PUT)
+    @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
     String create(@Valid ArigatoCommand arigato,Model model) {
     	this.arigato.add(toMessage(arigato));
