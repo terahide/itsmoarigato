@@ -33,7 +33,7 @@
 */
 		</script>
 		<div id="tweets"></div>
-		<form id="arigatoForm" method="post" th:action="@{/rest/arigato}">
+		<form id="arigatoForm" method="post" th:action="@{'/rest/arigato/'+${arigatoId}}">
 			<input type="text" id="fromUserId" name="fromUserId" />
 			<input type="text" id="toUserId" name="toUserId" />
 			<input type="text" id="subject" name="subject" />

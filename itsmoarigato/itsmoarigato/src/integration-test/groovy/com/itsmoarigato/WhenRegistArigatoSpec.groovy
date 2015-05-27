@@ -37,5 +37,15 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			go "http://localhost:8080/rest/arigato"
 		then: 
 			driver.pageSource != "[]"
+
+		when: "登録したありがとを更新すると"	
+			go "http://localhost:8080/update/1"
+			$('#fromUserId') << "bucho@hoge.co.jp"
+			$('#toUserId') << "takashi@hoge.co.jp"
+			$('#subject') << "今日もありがと"
+			$('#message') << "ムリしないでね:)"
+			$('#submit').click()
+		then: "sucessと表示されるべき"
+			driver.pageSource == '{"sucsses":true}'
 	}
 }
