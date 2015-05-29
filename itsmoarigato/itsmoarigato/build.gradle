@@ -9,7 +9,6 @@ buildscript {
 
 apply plugin: 'spring-boot'
 apply plugin: 'eclipse'
-
 apply from: JAVA_GRADLE
 
 tasks.findByPath("artifactoryPublish")?.enabled = false
@@ -34,6 +33,10 @@ dependencies {
 	testCompile "org.springframework.boot:spring-boot-starter-test",
 				'org.apache.httpcomponents:httpclient:4.4.1'
 
+	integrationTestCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
+					exclude group: "org.codehaus.groovy"
+				  }
+
 	integrationTestCompile gebDependencies,
 			"org.spockframework:spock-spring:$spockVersion"
 
@@ -41,7 +44,7 @@ dependencies {
 
 integrationTest {
 	doFirst {
-		def port = reservePort()
+  		def port = reservePort()
 
 		def host = 'localhost:' + port
 		systemProperties['geb.build.baseUrl'] = 'http://'+host+'/'

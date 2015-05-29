@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'javadocHotfix'
@@ -5,8 +7,9 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'propdeps'
 apply plugin: 'propdeps-idea'
 apply plugin: 'propdeps-eclipse'
-
+apply from: "../../gradle/osSpecificDownloads.gradle"
 group = 'org.springframework.session'
+
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -20,7 +23,8 @@ ext.spockDependencies = [
 ]
 
 ext.gebDependencies = spockDependencies + [
-		"org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion",
+		//"org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion",
+		"org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion",
 		"org.gebish:geb-spock:$gebVersion",
 		'commons-httpclient:commons-httpclient:3.1',
 		"org.codehaus.groovy:groovy:$groovyVersion"
@@ -64,6 +68,11 @@ sourceSets {
 }
 
 task integrationTest(type: Test, dependsOn: jar) {
+	dependsOn unzipChromeDriver
+
+	def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+	systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+
 	testClassesDir = sourceSets.integrationTest.output.classesDir
 	logging.captureStandardOutput(LogLevel.INFO)
 	classpath = sourceSets.integrationTest.runtimeClasspath

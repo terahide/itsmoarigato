@@ -5,40 +5,32 @@
 <body>
 	<div layout:fragment="content">
 		<script>
-/*
-			$(document).ready(function(){
-				$("#submit").click(function(){
-					var url = $("#arigatoForm").attr("action");
-					var data = $("#arigatoForm").serialize();
-					$.ajax({
-						url: url,
-						method:"post",
-						dataType:"json",
-						data:data
-					})
-					.done(function(data, status, xhr){
-						alert(data);
-						$('#tweets').append(data);
-						$(data[0]).each(function(k,v){
-					           $('#tweets').append(v.text + '<br/>');
-					        });
-					})
-					.fail(function( data, status, xhr){
-						alert((fail) + data);
-					})
-					
-					retrun false;
-				});
+		$(document).ready(function(){
+			$("#submit").click(function(){
+				var url = $("#arigatoForm").attr("action");
+				var method = $("#arigatoForm").attr("method");
+				var data = $("#arigatoForm").serialize();
+				$.ajax({
+					url: url,
+					type:method,
+					data:data
+				})
+				.done(function(data, status, xhr){
+					$('#result').append("updated!");
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
 			});
-*/
+		});
 		</script>
-		<div id="tweets"></div>
+		<div id="result"></div>
 		<form id="arigatoForm" method="post" th:action="@{'/rest/arigato/'+${arigatoId}}">
 			<input type="text" id="fromUserId" name="fromUserId" />
 			<input type="text" id="toUserId" name="toUserId" />
 			<input type="text" id="subject" name="subject" />
 			<input type="text" id="message" name="message" />
-			<input type="submit" id="submit" value="click" /> 
+			<input type="button" id="submit" value="click" /> 
 		</form>
 	</div>
 </body>

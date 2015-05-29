@@ -23,7 +23,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		when: "rest list access nodata"	
 			go "http://localhost:8080/rest/arigato"
 		then:
-			driver.pageSource.startsWith("[")
+			$("pre").text().startsWith("[")
 
 		when: "ありがとを登録すると"	
 			go "http://localhost:8080/create"
@@ -32,15 +32,16 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			$('#subject') << "いつもありがと"
 			$('#message') << "今日も頑張ってるね:)"
 			$('#submit').click()
+			waitFor{ $('#result').text() == "registed!" }
 		then: "sucessと表示されるべき"
-			driver.pageSource == '{"sucsses":true}'
+			$('#result').text() == "registed!"
 		when:"rest list access one data"	
 			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato"
-			waitFor { driver.pageSource.startsWith("[") }
+			waitFor { $("pre").text().startsWith("[") }
 		then: 
 			def slurper = new JsonSlurper()
-			def root = slurper.parseText(driver.pageSource)
+			def root = slurper.parseText($("pre").text())
 			root.size >= 1
 			def arigatoId = root[0]['id']
 			root[0]['fromUser']['email'] == "bucho@hoge.co.jp"
@@ -55,14 +56,14 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			$('#subject') << "今日もありがと"
 			$('#message') << "ムリしないでね:)"
 			$('#submit').click()
+			waitFor{ $('#result').text() == "updated!" }
 		then: "sucessと表示されるべき"
-			driver.pageSource == '{"sucsses":true}'
-
+			$('#result').text() == "updated!"
 		when: "登録したありがとを表示すると"	
 			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato/"+arigatoId
 		and:
-			root = slurper.parseText(driver.pageSource)
+			root = slurper.parseText($("pre").text())
 		then: 
 			root['fromUser']['email'] == "bucho@hoge.co.jp"
 			root['toUser']['email'] == "takashi@hoge.co.jp"
