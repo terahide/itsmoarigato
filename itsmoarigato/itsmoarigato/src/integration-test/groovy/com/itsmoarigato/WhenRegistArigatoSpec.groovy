@@ -10,15 +10,15 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 	def "ちょっとやってみた"(){
 		when: 'firstAccess'
 			go "http://localhost:8080"
-//		then:
-//			at LoginPage
-//		
-//		when: 'log in successfully'
-//			login()
+		then:
+			at LoginPage
+		
+		when: 'log in successfully'
+			login()
 		then: 'sent to original page'
 			at HomePage
-//		and: 'the username is displayed'
-//			username == 'takashi@hoge.co.jp'
+		and: 'the username is displayed'
+			username == 'takashi@hoge.co.jp'
 			
 		when: "rest list access nodata"	
 			go "http://localhost:8080/rest/arigato"
@@ -74,15 +74,15 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 	def "入力に誤りがある場合"(){
 		when: 'firstAccess'
 			go "http://localhost:8080"
-//		then:
-//			at LoginPage
-//		
-//		when: 'log in successfully'
-//			login()
+		then:
+			at LoginPage
+		
+		when: 'log in successfully'
+			login()
 		then: 'sent to original page'
 			at HomePage
-//		and: 'the username is displayed'
-//			username == 'takashi@hoge.co.jp'
+		and: 'the username is displayed'
+			username == 'takashi@hoge.co.jp'
 			
 		when:"rest list access one data"	
 			go "http://localhost:8080/"
@@ -117,6 +117,5 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			$('#errors').text().contains("message:may not be empty")
 			$('#errors').text().contains("subject:may not be empty")
 			$('#errors').text().contains("toUserId:may not be empty")
-
 	}
 }
