@@ -1,13 +1,13 @@
 package com.itsmoarigato.mvc.rest;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itsmoarigato.Message;
 import com.itsmoarigato.Image;
+import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
 import com.itsmoarigato.model.Arigato;
 import com.itsmoarigato.model.Pagination;
@@ -28,18 +28,20 @@ public class ArigatoController {
 	@Autowired
 	Arigato arigato;
 
-	//TODO けす
-	private final static String me = "takashi@hoge.co.jp";
+    private String me(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
+    }
 	
-    @RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
+	@RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
     List<Message> list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {
     	//TODO ページネーションどうしようね。
     	List<Message> messages;
     	if(type.equals(GetType.mine.name())){
-    		messages = arigato.getMineMessages(me, new Pagination());
+    		messages = arigato.getMineMessages(me(), new Pagination());
     	}else{
-    		messages = arigato.getAroundMessages(me, new Pagination());
+    		messages = arigato.getAroundMessages(me(), new Pagination());
     	}
     	return messages;
     }
