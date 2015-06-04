@@ -70,4 +70,53 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			root['subject'] == "今日もありがと"
 			root['contents'] == "ムリしないでね:)"
 	}
+
+	def "入力に誤りがある場合"(){
+		when: 'firstAccess'
+			go "http://localhost:8080"
+//		then:
+//			at LoginPage
+//		
+//		when: 'log in successfully'
+//			login()
+		then: 'sent to original page'
+			at HomePage
+//		and: 'the username is displayed'
+//			username == 'takashi@hoge.co.jp'
+			
+		when:"rest list access one data"	
+			go "http://localhost:8080/"
+			go "http://localhost:8080/rest/arigato"
+			waitFor { $("pre").text().startsWith("[") }
+		then: 
+			def slurper = new JsonSlurper()
+			def root = slurper.parseText($("pre").text())
+			root.size >= 1
+			def arigatoId = root[0]['id']
+
+		when: "ありがとを入力ミスで登録すると"	
+			go "http://localhost:8080/create"
+			$('#submit').click()
+			waitFor{ $('#result').text() == "Validation failed!" }
+		then: "Validation failed!と表示されるべき"
+			$('#result').text() == "Validation failed!"
+			$('#errors').text().contains("fromUserId:may not be empty")
+			$('#errors').text().contains("fromUserId:may not be empty")
+			$('#errors').text().contains("message:may not be empty")
+			$('#errors').text().contains("subject:may not be empty")
+			$('#errors').text().contains("toUserId:may not be empty")
+
+		when: "ありがとを入力ミスで更新すると"
+			go "http://localhost:8080/update/"+arigatoId
+			$('#submit').click()
+			waitFor{ $('#result').text() == "Validation failed!" }
+		then: "Validation failed!と表示されるべき"
+			$('#result').text() == "Validation failed!"
+			$('#errors').text().contains("fromUserId:may not be empty")
+			$('#errors').text().contains("fromUserId:may not be empty")
+			$('#errors').text().contains("message:may not be empty")
+			$('#errors').text().contains("subject:may not be empty")
+			$('#errors').text().contains("toUserId:may not be empty")
+
+	}
 }

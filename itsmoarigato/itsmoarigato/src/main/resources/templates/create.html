@@ -16,15 +16,25 @@
 						data:data
 					})
 					.done(function(data, status, xhr){
-						$('#result').append("registed!");
+						$('#result').text("registed!");
 					})
 					.fail(function( data, status, xhr){
-						alert("fail" + data.responseText);
+						var error = eval("(" + data.responseText + ")");
+						if(error.message.indexOf("Validation failed") == 0){
+							$('#result').text("Validation failed!");
+							$('#errors').text("");
+							$.each(error.errors,function(){
+								$('#errors').append(this.field+":"+this.defaultMessage+"<BR />");
+							});
+						}else{
+							alert("fail" + data.responseText);
+						}
 					})
 				});
 			});
 		</script>
 		<div id="result"></div>
+		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{/rest/arigato}">
 			<input type="text" id="fromUserId" name="fromUserId" />
 			<input type="text" id="toUserId" name="toUserId" />
