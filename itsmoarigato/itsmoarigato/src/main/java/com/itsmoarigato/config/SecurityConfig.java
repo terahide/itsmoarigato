@@ -1,5 +1,6 @@
 package com.itsmoarigato.config;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,17 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		public UserDetails loadUserByUsername(String username)
 				throws UsernameNotFoundException {
 			
-			return jdbcTemplate.queryForObject("select email,name,password from user_Tbl where email = ?", new RowMapper_(username),new Object[]{username});
+			return jdbcTemplate.queryForObject("select email,name,password from user_Tbl where email = ?", new RowMapper_(),new Object[]{username});
 		}
 	}
 	
-	private static class RowMapper_ implements RowMapper<UserDetails>{
+	private static class RowMapper_ implements RowMapper<UserDetails>,Serializable{
 		
-		private final String username;
-		
-		public RowMapper_(String username) {
+		public RowMapper_() {
 			super();
-			this.username = username;
 		}
 
 		@Override
@@ -62,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				throws SQLException {
 			
 			
+			final String username = rs.getString("email");
 			final String name = rs.getString("name");
 			final String password = rs.getString("password");
 
