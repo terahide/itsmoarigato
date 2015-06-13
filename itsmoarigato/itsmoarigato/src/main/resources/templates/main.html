@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+	<title>Secured Content</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<script>
+			$(document).ready(function(){
+				var url = $("#arigatoForm").attr("action");
+				$.ajax({
+					url: url,
+					type:"get"
+				})
+				.done(function(data, status, xhr){
+					ko.applyBindings(new AppViewModel(data));
+					
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
+			});
+
+			function AppViewModel(arigatos) {
+			    var self = this;
+			    
+			    // Editable data
+			    self.arigatos = ko.observableArray(arigatos);
+			}
+		</script>
+		
+		<div data-bind="foreach: arigatos">
+			<table>
+			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
+			<tr><td>感謝してる人</td><td><span data-bind="text: fromUser.email"></span></td></tr>
+			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
+			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
+			</table>
+			<hr />
+		</div> 
+
+		<form id="arigatoForm" method="get" th:action="@{/rest/arigato}" />
+	</div>
+</body>
+</html>
