@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +37,7 @@ public class ArigatoController {
 	
 	@RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
-    List<Message> list(@RequestParam(value="type", required=false, defaultValue="around") String type, Model model) {
+    List<Message> list(@RequestParam(value="type", required=false, defaultValue="around") String type) {
     	//TODO ページネーションどうしようね。
     	List<Message> messages;
     	if(type.equals(GetType.mine.name())){
@@ -51,13 +50,13 @@ public class ArigatoController {
 
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
-    Message detail(@PathVariable("id")String id, Model model) {
+    Message detail(@PathVariable("id")String id) {
     	return arigato.getMessage(toInt(id));
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
-    Json create(@Valid ArigatoCommand arigato,Model model,Principal principal) {
+    Json create(@Valid ArigatoCommand arigato,Principal principal) {
     	this.arigato.add(toMessage(arigato,principal.getName()));
     	return new Json("{\"sucsses\":true}");
     }
@@ -74,7 +73,7 @@ public class ArigatoController {
 
 	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
-    String update(@Valid ArigatoCommand arigato, Model model) { 
+    String update(@Valid ArigatoCommand arigato) { 
     	this.arigato.update(arigato.getId(), arigato.getSubject(), arigato.getMessage());
     	return "{\"success\":true}";
     }
