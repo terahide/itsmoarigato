@@ -32,14 +32,14 @@ public class Arigato {
 				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail(),new Timestamp(System.currentTimeMillis())});
 		Integer arigatoId = jdbcTemplate.queryForObject("select max(id) from arigato_tbl where from_user = ? and to_user = ?", 
 				Integer.class,
-				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail()});
+				message.getFromUser().getEmail(),message.getToUser().getEmail());
 
 		return arigatoId;
 	}
 
 	private void saveHistory(int arigatoId, String subject, String message) {
 		jdbcTemplate.update("insert into arigato_history_tbl (arigato_id,subject ,message, created) values (?,?,?,?)", 
-				new Object[]{arigatoId,subject,message,new Timestamp(System.currentTimeMillis())});
+				arigatoId,subject,message,new Timestamp(System.currentTimeMillis()));
 	}
 
 	private static final String select_from_arigato = 
@@ -132,7 +132,7 @@ public class Arigato {
 				select_from_arigato + 
 				"where a.id = ?", 
 				new ArigatoRowMapper(),
-				new Object[]{messageId});
+				messageId);
 	}
 
 	public void update(int arigatoId,String subject,String message) {
