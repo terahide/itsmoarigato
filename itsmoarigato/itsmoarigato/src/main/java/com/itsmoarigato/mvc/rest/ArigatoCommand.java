@@ -7,7 +7,7 @@ import com.itsmoarigato.User;
 
 public class ArigatoCommand {
 
-	int id;
+	String id;
 
 	@NotBlank
 	@Email
@@ -20,10 +20,10 @@ public class ArigatoCommand {
 	String message; 
 //	List<Image> images;//TODO 後回し
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getToUserId() {
