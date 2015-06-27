@@ -140,4 +140,9 @@ public class Arigato {
 		//FIXME friend以外は見えないようにしないとね
 		saveHistory(arigatoId, subject, message);
 	}
+	
+	public void delete(int arigatoId){
+		jdbcTemplate.update("delete from arigato_tbl where id = ?", 
+				arigatoId);
+	}
 }

@@ -81,6 +81,20 @@ public class WhenTakashiLookArigato {
 	}
 
 	@Test
+	public void 自分あてのメッセージを登録してもらいそれを消してと自分あてのメッセージを見ると0件であるべき(){
+		bucho.sayArigato(me);
+		
+		List<Message> messages = arigato.getMineMessages(me,p);
+		assertThat(messages.size(),is(1));
+
+		Message message = messages.get(0);
+		arigato.delete(message.getId());
+		
+		messages = arigato.getMineMessages(me,p);
+		assertThat(messages.size(),is(0));
+	}
+
+	@Test
 	public void 他人あてのメッセージを登録してもらい自分あてのメッセージを見ると0件であるべき(){
 		bucho.sayArigato(friend);
 		
