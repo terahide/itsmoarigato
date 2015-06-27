@@ -46,8 +46,12 @@ public class ArigatoController {
     	List<Message> messages;
     	if(type.equals(GetType.mine.name())){
     		messages = arigato.getMineMessages(me(), new Pagination());
-    	}else{
+    	}else if(type.equals(GetType.arround.name())){
     		messages = arigato.getAroundMessages(me(), new Pagination());
+    	}else if(type.equals(GetType.wrote.name())){
+    		messages = arigato.getWrittenMessages(me(), new Pagination());
+    	}else{
+    		throw new NotFoundException();//FIXME 本来は403？
     	}
     	return messages;
     }
