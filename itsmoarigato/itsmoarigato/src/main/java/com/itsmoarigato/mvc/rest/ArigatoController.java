@@ -1,5 +1,6 @@
 package com.itsmoarigato.mvc.rest;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
@@ -54,13 +57,13 @@ public class ArigatoController {
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
-    String create(@Valid ArigatoCommand arigato,Model model) {
-    	this.arigato.add(toMessage(arigato));
-    	return "{\"sucsses\":true}";
+    Json create(@Valid ArigatoCommand arigato,Model model,Principal principal) {
+    	this.arigato.add(toMessage(arigato,principal.getName()));
+    	return new Json("{\"sucsses\":true}");
     }
 
-    private Message toMessage(ArigatoCommand arigato) {
-    	Message message = new Message(arigato.getId(),toUser(arigato.fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,null,new ArrayList<Image>());
+    private Message toMessage(ArigatoCommand arigato,String fromUserId) {
+    	Message message = new Message(arigato.getId(),toUser(fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,null,new ArrayList<Image>());
 		return message;
 	}
 
@@ -73,7 +76,7 @@ public class ArigatoController {
     @ResponseBody
     String update(@Valid ArigatoCommand arigato, Model model) { 
     	this.arigato.update(arigato.getId(), arigato.getSubject(), arigato.getMessage());
-    	return "{\"sucsses\":true}";
+    	return "{\"success\":true}";
     }
     
     private static int toInt(String s){
@@ -97,5 +100,20 @@ public class ArigatoController {
 
 	private static boolean isEmpty(String s) {
 		return s == null || s.length() == 0;
+	}
+	
+	class Json {
+
+	    private final String value;
+
+	    public Json(String value) {
+	        this.value = value;
+	    }
+
+	    @JsonValue
+	    @JsonRawValue
+	    public String value() {
+	        return value;
+	    }
 	}
 }

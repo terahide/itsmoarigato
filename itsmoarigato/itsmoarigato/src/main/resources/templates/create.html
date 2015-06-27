@@ -42,10 +42,9 @@
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{/rest/arigato}">
-			<table>
-			<tr><td>件名</td><td><input type="text" id="fromUserId" name="fromUserId" /><span id="fromUserId_error" class="error" /></td></tr>
-			<tr><td>感謝してる人</td><td><input type="text" id="toUserId" name="toUserId" /><span id="toUserId_error" class="error" /></td></tr>
-			<tr><td>だれにありがとう？</td><td><input type="text" id="subject" name="subject" /><span id="subject_error" class="error" /></td></tr>
+			<table th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
+			<tr><td>だれにありがとう？</td><td><input type="text" id="toUserId" name="toUserId" /><span id="toUserId_error" class="error" /></td></tr>
+			<tr><td>件名</td><td><input type="text" id="subject" name="subject" /><span id="subject_error" class="error" /></td></tr>
 			<tr><td>感謝のことば</td><td><input type="text" id="message" name="message" /><span id="message_error" class="error" /></td></tr>
 			<tr><td></td><td><input type="button" id="submit" value="click" /></td></tr> 
 			</table>

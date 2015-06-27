@@ -11,10 +11,6 @@ public class ArigatoCommand {
 
 	@NotBlank
 	@Email
-	String fromUserId; 
-
-	@NotBlank
-	@Email
 	String toUserId; 
 
 	@NotBlank
@@ -29,12 +25,6 @@ public class ArigatoCommand {
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public String getFromUserId() {
-		return fromUserId;
-	}
-	public void setFromUserId(String fromUserId) {
-		this.fromUserId = fromUserId;
 	}
 	public String getToUserId() {
 		return toUserId;
