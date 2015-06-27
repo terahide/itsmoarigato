@@ -20,6 +20,16 @@
 
 				get(url,data,function(data){
 					viewModel.writtenByMe(data)
+
+					$(".delete").click(function(){
+						var url = $("#deleteForm").attr("action");
+						var $deleteButton = $(this) 
+						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+						data = $("#deleteForm").serialize();
+						delete_(url,data,function(){
+							$deleteButton.parents("table").remove()
+						})
+					})
 				})
 				
 				$("#writtenByMe").hide();
@@ -36,6 +46,24 @@
 				$.ajax({
 					url: url,
 					type:"get",
+					data:data
+				})
+				.done(function(data, status, xhr){
+					if (doneHandler == undefined){
+						return;
+					}
+					doneHandler(data)
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
+			}
+			
+			function delete_(url,data,doneHandler){
+				$.ajax({
+					url: url,
+					type:"DELETE",
+					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('#deleteForm input[name="_csrf"]').attr('value'))},
 					data:data
 				})
 				.done(function(data, status, xhr){
@@ -80,16 +108,17 @@
 			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
 			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
 			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
-			<tr><td>a</td><td><input type="button" value="削除" /></td></tr>
+			<tr><td>a</td><td><input type="button" class="delete" value="削除" /><input type="hidden" class="id" data-bind="attr:{value:id}" /></td></tr>
 			</table>
 			<hr />
 		</div> 
 		</div> 
 
-		<form id="arigatoForm" method="get" th:action="@{/rest/arigato}" />
-		<form id="writtenByMeForm" method="get" th:action="@{/rest/arigato}">
+		<form id="arigatoForm" th:action="@{/rest/arigato}" />
+		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
 			<input type="hidden" name="type" value="wrote" />
 		</form>
+		<form id="deleteForm" th:action="@{/rest/arigato}" />
 	</div>
 </body>
 </html>

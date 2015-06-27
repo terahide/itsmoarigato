@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +37,7 @@ public class ArigatoController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
-	
+    
 	@RequestMapping(value="/rest/arigato",method=RequestMethod.GET)
     @ResponseBody
     List<Message> list(@RequestParam(value="type", required=false, defaultValue="around") String type) {
@@ -54,7 +53,7 @@ public class ArigatoController {
     	return messages;
     }
 
-    @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
+    @RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.GET)
     @ResponseBody
     Message detail(@PathVariable("id")String id) {
     	Message message = arigato.getMessage(toInt(id));
@@ -81,9 +80,9 @@ public class ArigatoController {
 		return user;
 	}
 
-	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
+	@RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.POST)
     @ResponseBody
-    String update(@Valid ArigatoCommand arigato) {
+    Json update(@Valid ArigatoCommand arigato) {
 		{
 			Message message = this.arigato.getMessage(toInt(arigato.getId()));
 	    	if(message == null){
@@ -91,14 +90,15 @@ public class ArigatoController {
 	    	}
 		}
     	this.arigato.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
-    	return "{\"success\":true}";
+    	return new Json("{\"sucsses\":true}");
     }
     
-	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.DELETE)
-    @ResponseBody
-    String delete(@PathVariable("id")String id) { 
+	@RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseBody
+    Json delete(@PathVariable("id")String id) { 
     	this.arigato.delete(toInt(id));
-    	return "{\"success\":true}";
+    	return new Json("{\"sucsses\":true}");
     }
     
     private static int toInt(String s){
