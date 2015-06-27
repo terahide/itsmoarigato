@@ -5,40 +5,91 @@
 <body>
 	<div layout:fragment="content">
 		<script>
+			var viewModel = new AppViewModel()
 			$(document).ready(function(){
+				ko.applyBindings(viewModel);
+
 				var url = $("#arigatoForm").attr("action");
+
+				get(url,'',function(data){
+					viewModel.arigatos(data)
+				})
+
+				url = $("#arigatoForm").attr("action");
+				data = $("#writtenByMeForm").serialize();
+
+				get(url,data,function(data){
+					viewModel.writtenByMe(data)
+				})
+				
+				$("#writtenByMe").hide();
+				
+				$(".containerController").click(function(){
+					$("#writtenByMe").toggle();
+					$("#around").toggle();
+					
+					return false;
+				});
+			});
+			
+			function get(url,data,doneHandler){
 				$.ajax({
 					url: url,
-					type:"get"
+					type:"get",
+					data:data
 				})
 				.done(function(data, status, xhr){
-					ko.applyBindings(new AppViewModel(data));
-					
+					if (doneHandler == undefined){
+						return;
+					}
+					doneHandler(data)
 				})
 				.fail(function( data, status, xhr){
 					alert("fail" + data.responseText);
 				})
-			});
+			}
 
-			function AppViewModel(arigatos) {
+			function AppViewModel() {
 			    var self = this;
 			    
 			    // Editable data
-			    self.arigatos = ko.observableArray(arigatos);
+			    self.arigatos = ko.observableArray([]);
+			    self.writtenByMe = ko.observableArray([]);
 			}
 		</script>
+		
+		<div id="around">
+		<a class="containerController" href="#">自分がしたありがとうを見る</a><br /><br />
 		
 		<div data-bind="foreach: arigatos">
 			<table>
 			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
-			<tr><td>感謝してる人</td><td><span data-bind="text: fromUser.email"></span></td></tr>
 			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
 			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
+			<tr><td>by</td><td><span data-bind="text: fromUser.email"></span></td></tr>
 			</table>
 			<hr />
 		</div> 
+		</div> 
+
+		
+		<div id="writtenByMe">
+		<a class="containerController" href="#">みんながしたありがとうをみる</a><br /><br />
+		<div data-bind="foreach: writtenByMe">
+			<table>
+			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
+			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
+			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
+			<tr><td>a</td><td><input type="button" value="削除" /></td></tr>
+			</table>
+			<hr />
+		</div> 
+		</div> 
 
 		<form id="arigatoForm" method="get" th:action="@{/rest/arigato}" />
+		<form id="writtenByMeForm" method="get" th:action="@{/rest/arigato}">
+			<input type="hidden" name="type" value="wrote" />
+		</form>
 	</div>
 </body>
 </html>

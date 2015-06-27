@@ -46,12 +46,10 @@ public class ArigatoController {
     	List<Message> messages;
     	if(type.equals(GetType.mine.name())){
     		messages = arigato.getMineMessages(me(), new Pagination());
-    	}else if(type.equals(GetType.arround.name())){
-    		messages = arigato.getAroundMessages(me(), new Pagination());
     	}else if(type.equals(GetType.wrote.name())){
     		messages = arigato.getWrittenMessages(me(), new Pagination());
     	}else{
-    		throw new NotFoundException();//FIXME 本来は403？
+    		messages = arigato.getAroundMessages(me(), new Pagination());
     	}
     	return messages;
     }
@@ -103,9 +101,10 @@ public class ArigatoController {
     	return "{\"success\":true}";
     }
     
-    @ResponseStatus(HttpStatus.NOT_FOUND)  // 404
-    @ExceptionHandler(Exception.class)
     private static int toInt(String s){
+    	if(isEmpty(s)){
+    		return 0;
+    	}
 		try{
 			return Integer.parseInt(s);
 		}catch(NumberFormatException e){
