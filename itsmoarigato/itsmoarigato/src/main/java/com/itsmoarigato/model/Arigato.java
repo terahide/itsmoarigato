@@ -44,6 +44,7 @@ public class Arigato {
 				arigatoId,subject,message,new Timestamp(System.currentTimeMillis()));
 	}
 
+	//TODO VIEW にしよう。。。
 	private static final String select_from_arigato = 
 			"select "
 			+ "a.id,"
@@ -124,6 +125,30 @@ public class Arigato {
 				params);
 	}
 
+	public List<Message> getWrittenMessages(String me,Pagination page) {
+		boolean afterAtPoint = page.hasAtPoint();
+
+		StringBuilder sql = new StringBuilder();
+		sql.append(select_from_arigato);
+		sql.append("where from_user = ?");
+		if(afterAtPoint){
+			sql.append("and h.created > ? ");
+		}
+		sql.append("order by h.created　desc, h.id desc ");
+		sql.append("limit ? offset ? ");
+
+		Object[] params;
+		if(afterAtPoint){
+			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+		}else{
+			params = new Object[]{me,page.getLimit(),page.getOffset()};
+		}
+
+		return jdbcTemplate.query(sql.toString() , 
+				new ArigatoRowMapper(),
+				params);
+	}
+
 	private static User toUser(String email) {
 		return new User(email, "");//TODO nameの取得
 	}
@@ -142,12 +167,14 @@ public class Arigato {
 	}
 
 	public void update(int arigatoId,String subject,String message) {
+		//FIXME 他のユーザのメッセージは更新できないようにしないとね
 		//FIXME 対象がなかった場合どうしようね
 		//FIXME friend以外は見えないようにしないとね
 		saveHistory(arigatoId, subject, message);
 	}
 	
 	public void delete(int arigatoId){
+		//FIXME 他のユーザのメッセージは削除できないようにしないとね
 		jdbcTemplate.update("delete from arigato_tbl where id = ?", 
 				arigatoId);
 	}

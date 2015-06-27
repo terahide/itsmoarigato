@@ -1,8 +1,7 @@
 package com.itsmoarigato.model;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
 import java.util.List;
