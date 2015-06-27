@@ -1,10 +1,10 @@
 package com.itsmoarigato.model;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -88,7 +88,7 @@ public class WhenTakashiLookArigato {
 		assertThat(messages.size(),is(1));
 
 		Message message = messages.get(0);
-		arigato.delete(message.getId());
+		bucho.deleteArigato(message.getId());
 		
 		messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(0));
@@ -141,7 +141,7 @@ public class WhenTakashiLookArigato {
 
 	private void wait_() {
 		try {
-			Thread.currentThread().sleep(1);
+			Thread.sleep(1);
 		} catch (InterruptedException e) {
 			// N/A 
 		}

@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +60,9 @@ public class Bucho {
 		//assertThat(messages.size(), is(1));
 		
 		return messages.get(messages.size()-1);
+	}
+
+	public void deleteArigato(int arigatoId) {
+		arigato.delete(arigatoId);		
 	}
 }
