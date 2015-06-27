@@ -1,12 +1,13 @@
 package com.itsmoarigato.model;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
+import com.itsmoarigato.model.exception.NotFoundException;
 
 @Component
 public class Arigato {
@@ -127,12 +129,16 @@ public class Arigato {
 	}
 
 	public Message getMessage(int messageId) {
-		//FIXME friend以外は見えないようにしないとね
-		return jdbcTemplate.queryForObject(
-				select_from_arigato + 
-				"where a.id = ?", 
-				new ArigatoRowMapper(),
-				messageId);
+		try{
+			//FIXME friend以外は見えないようにしないとね
+			return jdbcTemplate.queryForObject(
+					select_from_arigato + 
+					"where a.id = ?", 
+					new ArigatoRowMapper(),
+					messageId);
+		}catch(EmptyResultDataAccessException e){
+			throw new NotFoundException(e);
+		}
 	}
 
 	public void update(int arigatoId,String subject,String message) {
