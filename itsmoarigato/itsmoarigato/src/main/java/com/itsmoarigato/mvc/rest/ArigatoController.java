@@ -78,7 +78,9 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato/{arigatoId}/image",method=RequestMethod.POST)
     @ResponseBody
     String add(@Valid FileUploadCommand uploaded,Principal principal) throws IOException {
-    	
+    	//TODO ファイルが画像かどうかのverify
+    	//TODO ファイルサイズのverify
+    	//TODO DBにいれるとかする
     	File f = File.createTempFile("~~~", "~~~");
     	try(OutputStream out =  new FileOutputStream(f)){
     		IOUtils.copy(uploaded.file.getInputStream(), out);

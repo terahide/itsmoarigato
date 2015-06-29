@@ -25,18 +25,10 @@
 							var csrf = $('#arigatoForm input[name="_csrf"]').serialize()
 						
 							$('input[type=file]').upload(url,csrf, function(res) {
-								$('#result').text("ご登録ありがとうございました!");
-								$('.error').each(function(){
-									$(this).text("");
-								});
-								$("#submit").prop("disabled",false);
+								handleDone(res);
 							}, 'json');
 						}else{
-							$('#result').text("ご登録ありがとうございました!");
-							$('.error').each(function(){
-								$(this).text("");
-							});
-							$("#submit").prop("disabled",false);
+							handleDone(data)
 						}
 						
 					})
@@ -55,6 +47,14 @@
 					})
 				});
 			});
+			
+			handleDone = function(res){
+				$('#result').text("ご登録ありがとうございました!");
+				$('.error').each(function(){
+					$(this).text("");
+				});
+				$("#submit").prop("disabled",false);
+			}
 		</script>
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
