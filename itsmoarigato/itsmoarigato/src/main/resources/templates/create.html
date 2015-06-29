@@ -18,10 +18,12 @@
 						data:data
 					})
 					.done(function(data, status, xhr){
+						alert(data.arigatoId)
 						$('#result').text("ご登録ありがとうございました!");
 						$('.error').each(function(){
 							$(this).text("");
 						});
+						$("#submit").prop("disabled",false);
 					})
 					.fail(function( data, status, xhr){
 						var error = eval("(" 	+ data.responseText + ")");
@@ -46,6 +48,7 @@
 			<tr><td>だれにありがとう？</td><td><input type="text" id="toUserId" name="toUserId" /><span id="toUserId_error" class="error" /></td></tr>
 			<tr><td>件名</td><td><input type="text" id="subject" name="subject" /><span id="subject_error" class="error" /></td></tr>
 			<tr><td>感謝のことば</td><td><input type="text" id="message" name="message" /><span id="message_error" class="error" /></td></tr>
+			<tr><td>写真・画像</td><td><input type="file" id="img" name="img" /><span id="img_error" class="error" /></td></tr>
 			<tr><td></td><td><input type="button" id="submit" value="click" /></td></tr> 
 			</table>
 		</form>

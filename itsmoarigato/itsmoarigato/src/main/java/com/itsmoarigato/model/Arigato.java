@@ -22,11 +22,13 @@ public class Arigato {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	
-	public void add(Message message){
+	public int add(Message message){
 		//FIXME friend以外は見えないようにしないとね
 		int arigatoId = saveArigato(message);
 		saveHistory(arigatoId,message.getSubject(),message.getContents());
 		//TODO 画像の扱い
+		
+		return arigatoId;
 	}
 
 	private int saveArigato(Message message) {

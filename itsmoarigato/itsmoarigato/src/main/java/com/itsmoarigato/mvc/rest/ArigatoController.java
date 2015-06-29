@@ -53,7 +53,7 @@ public class ArigatoController {
     	return messages;
     }
 
-    @RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.GET)
+    @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
     Message detail(@PathVariable("id")String id) {
     	Message message = arigato.getMessage(toInt(id));
@@ -65,9 +65,9 @@ public class ArigatoController {
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
-    Json create(@Valid ArigatoCommand arigato,Principal principal) {
-    	this.arigato.add(toMessage(arigato,principal.getName()));
-    	return new Json("{\"sucsses\":true}");
+    Json add(@Valid ArigatoCommand arigato,Principal principal) {
+    	int arigatoId = this.arigato.add(toMessage(arigato,principal.getName()));
+    	return new Json("{\"sucsses\":true,\"arigatoId\":" + arigatoId + "}");
     }
 
     private Message toMessage(ArigatoCommand arigato,String fromUserId) {
@@ -80,7 +80,7 @@ public class ArigatoController {
 		return user;
 	}
 
-	@RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.POST)
+	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
     Json update(@Valid ArigatoCommand arigato) {
 		{
@@ -93,7 +93,7 @@ public class ArigatoController {
     	return new Json("{\"sucsses\":true}");
     }
     
-	@RequestMapping(value="/rest/arigato/{id}/",method=RequestMethod.DELETE)
+	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
 	@ResponseBody
     Json delete(@PathVariable("id")String id) { 
