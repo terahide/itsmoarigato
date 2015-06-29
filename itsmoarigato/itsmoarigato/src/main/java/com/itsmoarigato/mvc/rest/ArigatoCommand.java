@@ -3,8 +3,6 @@ package com.itsmoarigato.mvc.rest;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.itsmoarigato.User;
-
 public class ArigatoCommand {
 
 	String id;
