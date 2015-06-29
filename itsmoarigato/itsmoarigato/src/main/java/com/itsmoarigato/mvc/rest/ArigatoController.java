@@ -1,11 +1,16 @@
 package com.itsmoarigato.mvc.rest;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -67,7 +72,18 @@ public class ArigatoController {
     @ResponseBody
     Json add(@Valid ArigatoCommand arigato,Principal principal) {
     	int arigatoId = this.arigato.add(toMessage(arigato,principal.getName()));
-    	return new Json("{\"sucsses\":true,\"arigatoId\":" + arigatoId + "}");
+    	return new Json("{\"success\":true,\"arigatoId\":" + arigatoId + "}");
+    }
+
+    @RequestMapping(value="/rest/arigato/{arigatoId}/image",method=RequestMethod.POST)
+    @ResponseBody
+    String add(@Valid FileUploadCommand uploaded,Principal principal) throws IOException {
+    	
+    	File f = File.createTempFile("~~~", "~~~");
+    	try(OutputStream out =  new FileOutputStream(f)){
+    		IOUtils.copy(uploaded.file.getInputStream(), out);
+    	}
+    	return "{\"success\":true}";
     }
 
     private Message toMessage(ArigatoCommand arigato,String fromUserId) {
@@ -90,7 +106,7 @@ public class ArigatoController {
 	    	}
 		}
     	this.arigato.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
-    	return new Json("{\"sucsses\":true}");
+    	return new Json("{\"success\":true}");
     }
     
 	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.DELETE)
@@ -98,7 +114,7 @@ public class ArigatoController {
 	@ResponseBody
     Json delete(@PathVariable("id")String id) { 
     	this.arigato.delete(toInt(id));
-    	return new Json("{\"sucsses\":true}");
+    	return new Json("{\"success\":true}");
     }
     
     private static int toInt(String s){
