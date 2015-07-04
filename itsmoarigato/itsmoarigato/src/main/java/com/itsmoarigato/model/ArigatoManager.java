@@ -26,7 +26,6 @@ public class ArigatoManager {
 		//FIXME friend以外は見えないようにしないとね
 		int arigatoId = saveArigato(message);
 		saveHistory(arigatoId,message.getSubject(),message.getContents());
-		//TODO 画像の扱い
 		
 		return arigatoId;
 	}
@@ -61,7 +60,7 @@ public class ArigatoManager {
 			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id　group by arigato_id"
 			+ ") ";
 
-	private static class ArigatoRowMapper implements RowMapper<Message>{
+	private class ArigatoRowMapper implements RowMapper<Message>{
 		@Override
 		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
 			int id = rs.getInt("id"); 
@@ -70,7 +69,22 @@ public class ArigatoManager {
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
 			Timestamp created = rs.getTimestamp("created");
-			List<Image> images = null;
+			List<Image> images = jdbcTemplate.query("select id,contents from image_tbl i inner join arigato_image_tbl l on (i.id = a.image_id) where l.arigato_id = ?",new RowMapper<Image>(){
+				@Override
+				public Image mapRow(ResultSet rs, int rowNum)
+						throws SQLException {
+					
+					
+					//TODO ファイルに出力して見えるようにする？
+					//TODO バイナリ列を返す？
+					
+					Image image = new Image(rs.getInt("id"), "");
+					
+					return image;
+				}
+			},
+			id);
+			
 			return new Message(id,fromUser, toUser, subject, contents, created, images);
 		}
 	}
@@ -179,5 +193,12 @@ public class ArigatoManager {
 		//FIXME 他のユーザのメッセージは削除できないようにしないとね
 		jdbcTemplate.update("delete from arigato_tbl where id = ?", 
 				arigatoId);
+	}
+
+	public void addImage(int arigatoId, int imageId) {
+		jdbcTemplate.update("insert into arigato_image_tbl (arigato_id ,image_id ,created) values (?,?,?)",
+				arigatoId,
+				imageId,
+				new Timestamp(System.currentTimeMillis()));
 	}
 }

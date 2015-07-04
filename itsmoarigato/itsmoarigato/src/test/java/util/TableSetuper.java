@@ -1,18 +1,12 @@
 package util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.codec.Hex;
-import org.springframework.security.crypto.keygen.BytesKeyGenerator;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.security.crypto.util.EncodingUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,6 +21,7 @@ public class TableSetuper {
 	//@Ignore
 	@Test
 	public void remakeTable() {
+		remakeImageTable();
 		remakeArigatoTable();
 		remakeUserTable();
 		remakeFriendTable();
@@ -47,6 +42,11 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table arigato_history_Tbl("
 						+ "id serial, arigato_id integer,subject text,message text, created timestamp, primary key(id))");
+
+		jdbcTemplate.execute("drop table arigato_image_Tbl if exists");
+		jdbcTemplate
+				.execute("create table arigato_image_Tbl("
+						+ "arigato_history_id integer, image_id integer, created timestamp, primary key(arigato_history_id, image_id))");
 	}
 	private void remakeUserTable() {
 		jdbcTemplate.execute("drop table user_Tbl if exists");
@@ -54,6 +54,10 @@ public class TableSetuper {
 				.execute("create table user_Tbl("
 						+ "email char,name varchar,password char,primary key(email))");
 		
+		jdbcTemplate.execute("drop table user_image_Tbl if exists");
+		jdbcTemplate
+				.execute("create table user_image_Tbl("
+						+ "user_id integer, image_id integer, created timestamp, primary key(user_id, image_id))");
 		registerUser();
 	}
 	private void remakeFriendTable() {
@@ -61,6 +65,15 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table friend_Tbl("
 						+ "me char, friend char, created timestamp, primary key(me,friend))");
+	
+		link();
+	}
+
+	private void remakeImageTable() {
+		jdbcTemplate.execute("drop table image_Tbl if exists");
+		jdbcTemplate
+				.execute("create table image_Tbl("
+						+ "id serial, from_user char, contents blob, created timestamp, primary key(id))");
 	
 		link();
 	}

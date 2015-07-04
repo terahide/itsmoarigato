@@ -1,16 +1,12 @@
 package com.itsmoarigato.mvc.rest;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -29,6 +25,7 @@ import com.itsmoarigato.Image;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
 import com.itsmoarigato.model.ArigatoManager;
+import com.itsmoarigato.model.ImageManager;
 import com.itsmoarigato.model.Pagination;
 import com.itsmoarigato.model.exception.NotFoundException;
 
@@ -36,7 +33,10 @@ import com.itsmoarigato.model.exception.NotFoundException;
 public class ArigatoController {
 	
 	@Autowired
-	ArigatoManager arigato;
+	ArigatoManager arigatoManager;
+	
+	@Autowired
+	ImageManager imageManager;
 	
     private String me(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,11 +49,11 @@ public class ArigatoController {
     	//TODO ページネーションどうしようね。
     	List<Message> messages;
     	if(type.equals(GetType.mine.name())){
-    		messages = arigato.getMineMessages(me(), new Pagination());
+    		messages = arigatoManager.getMineMessages(me(), new Pagination());
     	}else if(type.equals(GetType.wrote.name())){
-    		messages = arigato.getWrittenMessages(me(), new Pagination());
+    		messages = arigatoManager.getWrittenMessages(me(), new Pagination());
     	}else{
-    		messages = arigato.getAroundMessages(me(), new Pagination());
+    		messages = arigatoManager.getAroundMessages(me(), new Pagination());
     	}
     	return messages;
     }
@@ -61,7 +61,7 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
     Message detail(@PathVariable("id")String id) {
-    	Message message = arigato.getMessage(toInt(id));
+    	Message message = arigatoManager.getMessage(toInt(id));
     	if(message == null){
     		throw new NotFoundException();
     	}
@@ -71,7 +71,7 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
     Json add(@Valid ArigatoCommand arigato,Principal principal) {
-    	int arigatoId = this.arigato.add(toMessage(arigato,principal.getName()));
+    	int arigatoId = this.arigatoManager.add(toMessage(arigato,principal.getName()));
     	return new Json("{\"success\":true,\"arigatoId\":" + arigatoId + "}");
     }
 
@@ -80,11 +80,9 @@ public class ArigatoController {
     String add(@Valid FileUploadCommand uploaded,Principal principal) throws IOException {
     	//TODO ファイルが画像かどうかのverify
     	//TODO ファイルサイズのverify
-    	//TODO DBにいれるとかする
-    	File f = File.createTempFile("~~~", "~~~");
-    	try(OutputStream out =  new FileOutputStream(f)){
-    		IOUtils.copy(uploaded.file.getInputStream(), out);
-    	}
+    	
+    	int imageId = imageManager.add(uploaded.file.getInputStream(),principal.getName());
+    	arigatoManager.addImage(uploaded.arigatoId,imageId);
 
     	return "{\"success\":true}";
     }
@@ -103,12 +101,12 @@ public class ArigatoController {
     @ResponseBody
     Json update(@Valid ArigatoCommand arigato) {
 		{
-			Message message = this.arigato.getMessage(toInt(arigato.getId()));
+			Message message = this.arigatoManager.getMessage(toInt(arigato.getId()));
 	    	if(message == null){
 	    		throw new NotFoundException();
 	    	}
 		}
-    	this.arigato.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
+    	this.arigatoManager.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
     	return new Json("{\"success\":true}");
     }
     
@@ -116,7 +114,7 @@ public class ArigatoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
 	@ResponseBody
     Json delete(@PathVariable("id")String id) { 
-    	this.arigato.delete(toInt(id));
+    	this.arigatoManager.delete(toInt(id));
     	return new Json("{\"success\":true}");
     }
     
