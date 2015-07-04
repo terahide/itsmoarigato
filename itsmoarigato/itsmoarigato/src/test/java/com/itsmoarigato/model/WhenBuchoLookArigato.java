@@ -31,7 +31,7 @@ public class WhenBuchoLookArigato {
 	Bucho bucho;
 
 	@Autowired
-	Arigato arigato;
+	ArigatoManager arigato;
 	
 	private Pagination p = new Pagination();
 	

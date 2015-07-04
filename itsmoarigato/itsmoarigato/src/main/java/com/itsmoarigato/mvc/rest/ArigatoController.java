@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
-import com.itsmoarigato.model.Arigato;
+import com.itsmoarigato.model.ArigatoManager;
 import com.itsmoarigato.model.Pagination;
 import com.itsmoarigato.model.exception.NotFoundException;
 
@@ -36,8 +36,8 @@ import com.itsmoarigato.model.exception.NotFoundException;
 public class ArigatoController {
 	
 	@Autowired
-	Arigato arigato;
-
+	ArigatoManager arigato;
+	
     private String me(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
@@ -85,6 +85,7 @@ public class ArigatoController {
     	try(OutputStream out =  new FileOutputStream(f)){
     		IOUtils.copy(uploaded.file.getInputStream(), out);
     	}
+
     	return "{\"success\":true}";
     }
 

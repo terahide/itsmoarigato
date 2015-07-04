@@ -19,7 +19,7 @@ public class Bucho {
 	public static final String email = "bucho@hoge.co.jp";
 	
 	@Autowired
-	Arigato arigato;
+	ArigatoManager arigato;
 	
 	public void sayArigato(String toUser) {
 		arigato.add(createMessage(toUser));
