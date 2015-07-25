@@ -1,15 +1,10 @@
 package com.itsmoarigato.config;
 
-import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,14 +16,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
+import com.itsmoarigato.User;
+import com.itsmoarigato.model.UserManager;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	JdbcTemplate jdbcTemplate;
-
-
+	UserManager userManager;
+	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -56,27 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		public UserDetails loadUserByUsername(String username)
 				throws UsernameNotFoundException {
 			
-			return jdbcTemplate.queryForObject("select email,name,password from user_Tbl where email = ?", new RowMapper_(),new Object[]{username});
-		}
-	}
-	
-	private static class RowMapper_ implements RowMapper<UserDetails>,Serializable{
-		
-		public RowMapper_() {
-			super();
+			return toUserDetails(userManager.getUser(username));
 		}
 
-		@Override
-		public UserDetails mapRow(ResultSet rs, int rowNum)
-				throws SQLException {
-			
-			
-			final String username = rs.getString("email");
-			final String name = rs.getString("name");
-			final String password = rs.getString("password");
-
+		private UserDetails toUserDetails(final User user) {
 			return new UserDetails() {
-				
+				private static final long serialVersionUID = -977449495212347071L;
+
 				@Override
 				public boolean isEnabled() {
 					return true;
@@ -99,16 +82,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				
 				@Override
 				public String getUsername() {
-					return username;
+					return user.getEmail();
 				}
 				
-				public String getName() {
-					return name;
+				@SuppressWarnings("unused")
+				public String getName(){
+					return user.getName();
 				}
 				
 				@Override
 				public String getPassword() {
-					return password;
+					return user.getPassword();
 				}
 				
 				@Override
