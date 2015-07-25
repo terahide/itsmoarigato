@@ -11,7 +11,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itsmoarigato.Message;
+import com.itsmoarigato.model.exception.NotFoundException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
@@ -37,6 +40,9 @@ public class WhenTakashiLookArigato {
 	ArigatoManager arigato;
 	
 	private Pagination p = new Pagination();
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
 	public void before(){
@@ -178,8 +184,9 @@ public class WhenTakashiLookArigato {
 	
 	
 	@Test
-	public void 存在しないメッセージを取得するとどうなるの(){
-		//FIXME 実装してね
+	public void 存在しないメッセージを取得するとNotFoundExceptionが発生するべき(){
+		expectedException.expect(NotFoundException.class);
+		arigato.getMessage(-1);//not exist
 	}
 	@Test
 	public void 友達以外のメッセージを取得するとどうなるの(){
