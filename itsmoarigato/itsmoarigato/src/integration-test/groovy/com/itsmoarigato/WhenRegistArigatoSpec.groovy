@@ -50,13 +50,13 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			
 		when: "登録したありがとを更新すると"	
 			go "http://localhost:8080/update/"+arigatoId
-			$('#toUserId') << "takashi@hoge.co.jp"
-			$('#subject') << "今日もありがと"
-			$('#message') << "ムリしないでね:)"
+			$('#toUserId').value("takashi@hoge.co.jp")
+			$('#subject').value("今日もありがと")
+			$('#message').value("ムリしないでね:)")
 			$('#submit').click()
-			waitFor{ $('#result').text() == "updated!" }
+			waitFor{ $('#result').text() == "更新されました!" }
 		then: "sucessと表示されるべき"
-			$('#result').text() == "updated!"
+			$('#result').text() == "更新されました!"
 		when: "登録したありがとを表示すると"	
 			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato/"+arigatoId
@@ -104,9 +104,9 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 
 		when: "ありがとを入力ミスで更新すると"
 			go "http://localhost:8080/update/"+arigatoId
-			$('#toUserId') << ""
-			$('#subject') << ""
-			$('#message') << ""
+			$('#toUserId').value("") 
+			$('#subject').value("")
+			$('#message').value("")
 			$('#submit').click()
 			waitFor{ $('#errors').text() != "" }
 		then: "Validation failed!と表示されるべき"
