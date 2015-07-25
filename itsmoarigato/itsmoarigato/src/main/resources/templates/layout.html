@@ -95,6 +95,7 @@
 			<form class="navbar-form pull-right" th:action="@{/logout}" method="post">
 					<input type="submit" value="Log out" />
 			</form>
+			<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
 			<a th:href="@{/my}">
 			<img th:src="${currentUser.user.image.url}" style="max-height:2em" class="pull-right" th:alt="${currentUser.user.name}"></img>
 			<p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">

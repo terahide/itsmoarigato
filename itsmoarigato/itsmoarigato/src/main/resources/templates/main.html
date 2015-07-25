@@ -13,14 +13,26 @@
 
 				get(url,'',function(data){
 					viewModel.arigatos(data)
+
+					$(".delete").click(function(){
+						var url = $("#deleteForm").attr("action");
+						var $deleteButton = $(this) 
+						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+						data = $("#deleteForm").serialize();
+						delete_(url,data,function(){
+							$deleteButton.parents("table").remove()
+						})
+					})
+					$(".edit").click(function(){
+						var url = $("#updateForm").attr("action");
+						var $editButton = $(this) 
+						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+						location.href=url
+					})
 				})
 
 				url = $("#arigatoForm").attr("action");
 				data = $("#writtenByMeForm").serialize();
-
-				get(url,data,function(data){
-					viewModel.writtenByMe(data)
-				})
 			});
 			
 			function get(url,data,doneHandler){
@@ -62,8 +74,8 @@
 			    var self = this;
 			    
 			    // Editable data
+			    self.me = $("#currentUser").val()
 			    self.arigatos = ko.observableArray([]);
-			    self.writtenByMe = ko.observableArray([]);
 			}
 		</script>
 		
@@ -72,17 +84,34 @@
 		<div data-bind="foreach: arigatos">
 			<table>
 			<tr>
-				<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
-				<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-				<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+				<td>
+					<span data-bind="if: fromUser.email == $parent.me">
+						<img th:src="@{/resources/img/trash.png}" style="max-height:3em" alt="削除" class="delete"></img>
+						<img th:src="@{/resources/img/edit.png}" style="max-height:3em" alt="編集" class="edit"></img>
+						<input type="hidden" class="id" data-bind="attr:{value:id}" />
+					</span>
+				</td>
+				<td>
+					<table>
+					<tr>
+						<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+					</tr>
+					</table>
+					<p>【<span data-bind="text: subject"></span>】</p>
+					<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+					<div data-bind="foreach: images">
+						<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<hr />
+				</td>
 			</tr>
 			</table>
-			<p>【<span data-bind="text: subject"></span>】</p>
-			<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
-			<div data-bind="foreach: images">
-				<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
-			</div>
-			<hr />
 		</div> 
 		</div> 
 
