@@ -94,7 +94,7 @@
 			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
 			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
 			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
-			<tr><td>by</td><td><span data-bind="text: fromUser.email"></span></td></tr>
+			<tr><td>by</td><td><img data-bind="attr:{src: fromUser.imageUrl}" style="max-height:2em" ></img> <span data-bind="text: fromUser.name"></span></td></tr>
 			</table>
 			<hr />
 		</div> 
@@ -106,9 +106,9 @@
 		<div data-bind="foreach: writtenByMe">
 			<table>
 			<tr><td>件名</td><td><span data-bind="text: subject"></span></td></tr>
-			<tr><td>だれにありがとう？</td><td><span data-bind="text: toUser.email"></span></td></tr>
+			<tr><td>だれにありがとう？</td><td><img data-bind="attr:{src: toUser.imageUrl}" style="max-height:2em" ></img> <span data-bind="text: toUser.name"></span></td></tr>
 			<tr><td>感謝のことば</td><td><span data-bind="text: contents"></span></td></tr>
-			<tr><td>a</td><td><input type="button" class="delete" value="削除" /><input type="hidden" class="id" data-bind="attr:{value:id}" /></td></tr>
+			<tr><td></td><td><input type="button" class="delete" value="削除" /><input type="hidden" class="id" data-bind="attr:{value:id}" /></td></tr>
 			</table>
 			<hr />
 		</div> 

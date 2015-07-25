@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 	private final String email;
 	private final String name;
-	@JsonIgnore
 	private final String password;
 	private final Image image;
 	public User(String email, String name, String password,Image image) {
@@ -25,8 +24,13 @@ public class User {
 	public String getName() {
 		return name;
 	}
+	@JsonIgnore
 	public String getPassword() {
 		return password;
+	}
+	@JsonIgnore
+	public Image getImage() {
+		return image;
 	}
 	public URI getImageUrl() {
 		try {

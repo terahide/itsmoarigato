@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.itsmoarigato.Image;
 import com.itsmoarigato.User;
+import com.itsmoarigato.model.exception.NotFoundException;
 
 @Component
 public class UserManager {
@@ -26,22 +27,26 @@ public class UserManager {
 	ImageManager imageManager;
 	
 	public User getUser(final String email){
-		return jdbcTemplate.queryForObject("select name,password from user_Tbl where email = ?", new RowMapper<User>(){
-			@Override
-			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				String name = rs.getString("name");
-				String password = rs.getString("password"); 
-				Integer imageId = getUserImageId(email);
-				Image i; 
-				if(imageId == null){
-					i = null;
-				}else{
-					i = imageManager.findImageById(imageId);
+		try{
+			return jdbcTemplate.queryForObject("select name,password from user_Tbl where email = ?", new RowMapper<User>(){
+				@Override
+				public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+					String name = rs.getString("name");
+					String password = rs.getString("password"); 
+					Integer imageId = getUserImageId(email);
+					Image i; 
+					if(imageId == null){
+						i = null;
+					}else{
+						i = imageManager.findImageById(imageId);
+					}
+					return new User(email, name, password, i);
 				}
-				return new User(email, name, password, i);
-			}
 			
-		},email);
+			},email);
+		}catch(EmptyResultDataAccessException e){
+			throw new NotFoundException(e);
+		}
 	}
 
 	private Integer getUserImageId(String email) {

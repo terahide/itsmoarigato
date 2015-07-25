@@ -86,8 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				}
 				
 				@SuppressWarnings("unused")
-				public String getName(){
-					return user.getName();
+				public User getUser(){
+					return user;
 				}
 				
 				@Override
