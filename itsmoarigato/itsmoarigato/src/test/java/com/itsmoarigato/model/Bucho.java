@@ -26,8 +26,9 @@ public class Bucho {
 	@Autowired
 	ImageManager imageManager;
 	
-	public void sayArigato(String toUser) {
+	public Message sayArigato(String toUser) {
 		arigato.add(createMessage(toUser));
+		return getMostNewMessage(toUser);
 	}
 
 	private Message createMessage(String toUser) {
@@ -50,7 +51,7 @@ public class Bucho {
 		Message message = getMostNewMessage(toUser);
 		
 		int messageId = message.getId();
-		message = arigato.getMessage(messageId);
+		message = arigato.getMessage(email,messageId);
 		assertThat(message.getId(), is(messageId));
 
 		message = createMessage(messageId);
@@ -59,7 +60,7 @@ public class Bucho {
 	}
 
 	private Message getMostNewMessage(String toUser) {
-		List<Message> messages = arigato.getMineMessages(toUser,new Pagination());
+		List<Message> messages = arigato.getYoursMessages(email,toUser,new Pagination());
 		
 		//validate
 		//assertThat(messages.size(), is(1));

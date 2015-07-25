@@ -57,12 +57,12 @@ public class WhenBuchoLookArigato {
 	@Test
 	public void たかしあてのメッセージを登録して自分が書いたメッセージを見ると1件であるべき(){
 		List<Message> messages;
-		messages = arigato.getWrittenMessages(takashi,p);
+		messages = arigato.getWrittenMessages(me,takashi,p);
 		assertThat(messages.size(),is(0));
 
 		bucho.sayArigato(takashi);
 		
-		messages = arigato.getWrittenMessages(me,p);
+		messages = arigato.getWrittenMessages(me,me,p);
 		assertThat(messages.size(),is(1));
 
 		Message message = messages.get(0);

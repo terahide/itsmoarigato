@@ -32,12 +32,16 @@ public class WhenTakashiLookArigato {
 	
 	private static final String me = "takashi@hoge.co.jp";
 	private static final String friend = "tae@hoge.co.jp";
+	private static final String buchos_friend = "buchos_friend@hoge.co.jp";
 	
 	@Autowired
 	Bucho bucho;
 	
 	@Autowired
 	ArigatoManager arigato;
+
+	@Autowired
+	UserManager userManager;
 	
 	private Pagination p = new Pagination();
 	
@@ -45,7 +49,9 @@ public class WhenTakashiLookArigato {
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
-	public void before(){
+	public void before() throws IOException{
+		userManager.registerUser(friend, "friend", "password");
+		userManager.registerUser(buchos_friend, "buchos_friend", "password");
 		link();
 		clearArigato();
 	}
@@ -54,6 +60,10 @@ public class WhenTakashiLookArigato {
 		link(me,me);
 		link(me,friend);
 		link(me,Bucho.email);
+		link(Bucho.email,me);
+		link(Bucho.email,friend);
+		link(Bucho.email,buchos_friend);
+		
 	}
 	private void clearArigato(){
 		jdbcTemplate.update("delete from arigato_tbl");
@@ -186,11 +196,13 @@ public class WhenTakashiLookArigato {
 	@Test
 	public void 存在しないメッセージを取得するとNotFoundExceptionが発生するべき(){
 		expectedException.expect(NotFoundException.class);
-		arigato.getMessage(-1);//not exist
+		arigato.getMessage(me,-1);//not exist
 	}
 	@Test
 	public void 友達以外のメッセージを取得するとどうなるの(){
-		//FIXME 実装してね
+		Message message = bucho.sayArigato(buchos_friend);
+		expectedException.expect(NotFoundException.class);
+		arigato.getMessage(me,message.getId());
 	}
 	@Test
 	public void 友達以外にメッセージを登録するとどうなるの(){

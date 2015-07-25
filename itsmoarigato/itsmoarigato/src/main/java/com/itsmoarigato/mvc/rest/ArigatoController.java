@@ -1,7 +1,6 @@
 package com.itsmoarigato.mvc.rest;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +52,7 @@ public class ArigatoController {
     	if(type.equals(GetType.mine.name())){
     		messages = arigatoManager.getMineMessages(me(), new Pagination());
     	}else if(type.equals(GetType.wrote.name())){
-    		messages = arigatoManager.getWrittenMessages(me(), new Pagination());
+    		messages = arigatoManager.getWrittenMessages(me(), me(), new Pagination());
     	}else{
     		messages = arigatoManager.getAroundMessages(me(), new Pagination());
     	}
@@ -64,26 +62,26 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.GET)
     @ResponseBody
     Message detail(@PathVariable("id")String id) {
-    	Message message = arigatoManager.getMessage(toInt(id));
+    	Message message = arigatoManager.getMessage(me(),toInt(id));
     	return message;
     }
     
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
-    Json add(@Valid ArigatoCommand arigato,Principal principal) {
+    Json add(@Valid ArigatoCommand arigato) {
     	//friend以外には送れないようにしないとね
-    	int arigatoId = this.arigatoManager.add(toMessage(arigato,principal.getName()));
+    	int arigatoId = this.arigatoManager.add(toMessage(arigato,me()));
     	return new Json("{\"success\":true,\"arigatoId\":" + arigatoId + "}");
     }
 
     @RequestMapping(value="/rest/arigato/{arigatoId}/image",method=RequestMethod.POST)
     @ResponseBody
-    String add(@Valid FileUploadCommand uploaded,Principal principal) throws IOException {
-    	Message message = this.arigatoManager.getMessage(uploaded.arigatoId);
+    String add(@Valid FileUploadCommand uploaded) throws IOException {
+    	Message message = this.arigatoManager.getMessage(me(),uploaded.arigatoId);
     	//TODO ファイルが画像かどうかのverify
     	//TODO ファイルサイズのverify
     	
-    	int imageId = imageManager.add(uploaded.file.getInputStream(),principal.getName());
+    	int imageId = imageManager.add(uploaded.file.getInputStream(),me());
     	arigatoManager.addImage(message.getHistoryId(),imageId);
 
     	return "{\"success\":true}";
@@ -91,7 +89,7 @@ public class ArigatoController {
 
 	@RequestMapping(value="/rest/arigato/{arigatoId}/image/{id}",method=RequestMethod.GET)
 	ByteArrayResource image(@PathVariable("arigatoId")String arigatoId,@PathVariable("id")String id,HttpServletResponse res) {
-		Message message = this.arigatoManager.getMessage(toInt(arigatoId));
+		Message message = this.arigatoManager.getMessage(me(),toInt(arigatoId));
 		for(Image i:message.getImages()){
 			if(i.getId() != toInt(id)){
 				continue;
@@ -115,7 +113,7 @@ public class ArigatoController {
     @ResponseBody
     Json update(@Valid ArigatoCommand arigato) {
 		//for exist check if when no exist then throw NotFoundException  
-		this.arigatoManager.getMessage(toInt(arigato.getId()));
+		this.arigatoManager.getMessage(me(),toInt(arigato.getId()));
     	
 		this.arigatoManager.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
     	return new Json("{\"success\":true}");

@@ -64,6 +64,12 @@ public class ArigatoManager {
 			+ "inner join arigato_history_tbl h "
 			+ "on (a.id = h.arigato_id "
 			+ "and h.id = select max(id) from arigato_history_tbl where arigato_id = h.arigato_id　group by arigato_id"
+			+ ") "
+			+ "where to_user in ("
+			+ "select "
+			+ "friend "
+			+ "from friend_tbl "
+			+ "where me = ?"
 			+ ") ";
 
 	private class ArigatoRowMapper implements RowMapper<Message>{
@@ -93,13 +99,16 @@ public class ArigatoManager {
 			return new Message(id,historyId,fromUser, toUser, subject, contents, created, images);
 		}
 	}
-	
 	public List<Message> getMineMessages(String me,Pagination page) {
+		return getYoursMessages(me, me, page);
+	}
+	
+	public List<Message> getYoursMessages(String me,String you,Pagination page) {
 		boolean afterAtPoint = page.hasAtPoint();
 		
 		StringBuilder sql = new StringBuilder();
 		sql.append(select_from_arigato);
-		sql.append("where to_user = ? ");
+		sql.append("and to_user = ? ");
 		if(afterAtPoint){
 			sql.append("and h.created > ? ");
 		}
@@ -107,9 +116,9 @@ public class ArigatoManager {
 		sql.append("limit ? offset ? ");
 		Object[] params;
 		if(afterAtPoint){
-			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+			params = new Object[]{me,you,page.getAtPoint(),page.getLimit(),page.getOffset()};
 		}else{
-			params = new Object[]{me,page.getLimit(),page.getOffset()};
+			params = new Object[]{me,you,page.getLimit(),page.getOffset()};
 		}
 
 		return jdbcTemplate.query(sql.toString(), 
@@ -122,12 +131,6 @@ public class ArigatoManager {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(select_from_arigato);
-		sql.append("where to_user in (");
-		sql.append("select ");
-		sql.append("friend ");
-		sql.append("from friend_tbl ");
-		sql.append("where me = ?");
-		sql.append(") ");
 		if(afterAtPoint){
 			sql.append("and h.created > ? ");
 		}
@@ -146,12 +149,12 @@ public class ArigatoManager {
 				params);
 	}
 
-	public List<Message> getWrittenMessages(String me,Pagination page) {
+	public List<Message> getWrittenMessages(String me,String writer,Pagination page) {
 		boolean afterAtPoint = page.hasAtPoint();
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(select_from_arigato);
-		sql.append("where from_user = ?");
+		sql.append("and from_user = ?");
 		if(afterAtPoint){
 			sql.append("and h.created > ? ");
 		}
@@ -160,9 +163,9 @@ public class ArigatoManager {
 
 		Object[] params;
 		if(afterAtPoint){
-			params = new Object[]{me,page.getAtPoint(),page.getLimit(),page.getOffset()};
+			params = new Object[]{me,writer,page.getAtPoint(),page.getLimit(),page.getOffset()};
 		}else{
-			params = new Object[]{me,page.getLimit(),page.getOffset()};
+			params = new Object[]{me,writer,page.getLimit(),page.getOffset()};
 		}
 
 		return jdbcTemplate.query(sql.toString() , 
@@ -174,13 +177,14 @@ public class ArigatoManager {
 		return userManager.getUser(email);
 	}
 
-	public Message getMessage(int messageId) {
+	public Message getMessage(String me,int messageId) {
 		try{
 			//FIXME friend以外は見えないようにしないとね
 			return jdbcTemplate.queryForObject(
 					select_from_arigato + 
-					"where a.id = ?", 
+					"and a.id = ?", 
 					new ArigatoRowMapper(),
+					me,
 					messageId);
 		}catch(EmptyResultDataAccessException e){
 			throw new NotFoundException(e);
