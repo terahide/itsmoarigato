@@ -9,7 +9,7 @@ import geb.*
  */
 class HomePage extends Page {
 	static url = ''
-	static at = { assert driver.title == 'Spring Session Sample - Secured Content'; true}
+	static at = { assert driver.title == "it's more early got you - main"; true}
 	static content = {
 		username { $('#un').text() }
 		logout(to:LoginPage) { $('input[type=submit]').click() }
