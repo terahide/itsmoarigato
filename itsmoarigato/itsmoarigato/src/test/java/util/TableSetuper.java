@@ -1,5 +1,10 @@
 package util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 
 import org.junit.Test;
@@ -11,16 +16,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.itsmoarigato.model.Bucho;
+import com.itsmoarigato.model.ImageManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
 public class TableSetuper {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	ImageManager imageManager;
 
 	//@Ignore
 	@Test
-	public void remakeTable() {
+	public void remakeTable() throws IOException {
 		remakeImageTable();
 		remakeArigatoTable();
 		remakeUserTable();
@@ -48,7 +57,7 @@ public class TableSetuper {
 				.execute("create table arigato_image_Tbl("
 						+ "arigato_history_id integer, image_id integer, created timestamp, primary key(arigato_history_id, image_id))");
 	}
-	private void remakeUserTable() {
+	private void remakeUserTable() throws IOException {
 		jdbcTemplate.execute("drop table user_Tbl if exists");
 		jdbcTemplate
 				.execute("create table user_Tbl("
@@ -57,7 +66,7 @@ public class TableSetuper {
 		jdbcTemplate.execute("drop table user_image_Tbl if exists");
 		jdbcTemplate
 				.execute("create table user_image_Tbl("
-						+ "user_id integer, image_id integer, created timestamp, primary key(user_id, image_id))");
+						+ "email char, image_id integer, created timestamp, primary key(email, image_id))");
 		registerUser();
 	}
 	private void remakeFriendTable() {
@@ -80,7 +89,7 @@ public class TableSetuper {
 
 	private static final String me = "takashi@hoge.co.jp";
 	
-	private void registerUser(){
+	private void registerUser() throws IOException{
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{me});
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{Bucho.email});
 
@@ -88,10 +97,22 @@ public class TableSetuper {
 		registerUser(Bucho.email,"bucho",e("password"));
 	}
 	
-	private void registerUser(String email,String name,String password){
+	private void registerUser(String email,String name,String password) throws IOException{
 		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,password});
+		
+		Integer imageId = imageManager.add(new FileInputStream(toImage(name)), email);
+		linkImage(email,imageId);
 	}
 	
+	private File toImage(String name) {
+		return new File("src/test/resources/persona/"+name+".jpg");
+	}
+	
+	private void linkImage(String email, Integer imageId) {
+		jdbcTemplate.update("insert into user_image_Tbl("
+				+ "email, image_id, created) values (?,?,?)",email,imageId,new Timestamp(System.currentTimeMillis()));
+	}
+
 	private void link(){
 		jdbcTemplate.update("delete from friend_tbl where me = ?",new Object[]{me});
 		link(me,me);

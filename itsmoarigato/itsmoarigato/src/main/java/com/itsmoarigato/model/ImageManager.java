@@ -24,7 +24,7 @@ public class ImageManager {
 	
 	public Integer add(final InputStream inputStream, final String fromUser) {
 		LobHandler lobHandler= new DefaultLobHandler();
-		jdbcTemplate.execute("insert into image_tbl (from_user,created,contents) values (?,?)",new AbstractLobCreatingPreparedStatementCallback(lobHandler) {
+		jdbcTemplate.execute("insert into image_tbl (from_user,created,contents) values (?,?,?)",new AbstractLobCreatingPreparedStatementCallback(lobHandler) {
 			@Override
 			protected void setValues(PreparedStatement ps, LobCreator lobCreator)
 					throws SQLException, DataAccessException {
@@ -45,7 +45,8 @@ public class ImageManager {
 				ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
 		        lobCreator.setBlobAsBytes(ps, 3, out.toByteArray());
 			}
-		});
+		}
+		);
 
 		Integer imageId = jdbcTemplate.queryForObject("select max(id) from image_tbl where from_user = ?",
 				Integer.class,
