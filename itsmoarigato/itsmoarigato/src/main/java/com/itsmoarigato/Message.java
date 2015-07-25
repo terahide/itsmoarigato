@@ -1,7 +1,10 @@
 package com.itsmoarigato;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -63,6 +66,16 @@ public class Message {
 	public Timestamp getCreated() {
 		return created;
 	}
+	public List<Map<String,String>> getImageUrls() {
+		List<Map<String,String>> l = new ArrayList<>();
+		for(Image i:images){
+			Map<String,String> m = new HashMap<>();
+			m.put("url", "/rest/arigato/"+id+"/image/"+i.getId());
+			l.add(m);
+		}
+		return l;
+	}
+	@JsonIgnore
 	public List<Image> getImages() {
 		return images;
 	}

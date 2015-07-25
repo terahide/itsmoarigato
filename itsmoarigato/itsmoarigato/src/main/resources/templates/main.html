@@ -79,6 +79,9 @@
 			</table>
 			<p>【<span data-bind="text: subject"></span>】</p>
 			<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+			<div data-bind="foreach: imageUrls">
+				<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
+			</div>
 			<hr />
 		</div> 
 		</div> 

@@ -5,10 +5,13 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +71,7 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato",method=RequestMethod.POST)
     @ResponseBody
     Json add(@Valid ArigatoCommand arigato,Principal principal) {
+    	//friend以外には送れないようにしないとね
     	int arigatoId = this.arigatoManager.add(toMessage(arigato,principal.getName()));
     	return new Json("{\"success\":true,\"arigatoId\":" + arigatoId + "}");
     }
@@ -85,7 +89,19 @@ public class ArigatoController {
     	return "{\"success\":true}";
     }
 
-    private Message toMessage(ArigatoCommand arigato,String fromUserId) {
+	@RequestMapping(value="/rest/arigato/{arigatoId}/image/{id}",method=RequestMethod.GET)
+	ByteArrayResource image(@PathVariable("arigatoId")String arigatoId,@PathVariable("id")String id,HttpServletResponse res) {
+		Message message = this.arigatoManager.getMessage(toInt(arigatoId));
+		for(Image i:message.getImages()){
+			if(i.getId() != toInt(id)){
+				continue;
+			}
+			return new ByteArrayResource(i.getContents());
+		}
+		throw new NotFoundException();
+	}
+
+	private Message toMessage(ArigatoCommand arigato,String fromUserId) {
     	Message message = new Message(toUser(fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,new ArrayList<Image>());
 		return message;
 	}
