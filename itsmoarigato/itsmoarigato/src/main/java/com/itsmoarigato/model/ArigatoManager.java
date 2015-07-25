@@ -35,7 +35,7 @@ public class ArigatoManager {
 
 	private int saveArigato(Message message) {
 		jdbcTemplate.update("insert into arigato_tbl (from_user ,to_user ,created) values (?,?,?)",
-				new Object[]{message.getFromUser().getEmail(),message.getToUser().getEmail(),new Timestamp(System.currentTimeMillis())});
+				message.getFromUser().getEmail(),message.getToUser().getEmail(),new Timestamp(System.currentTimeMillis()));
 		Integer arigatoId = jdbcTemplate.queryForObject("select max(id) from arigato_tbl where from_user = ? and to_user = ?", 
 				Integer.class,
 				message.getFromUser().getEmail(),message.getToUser().getEmail());

@@ -93,7 +93,7 @@ public class ArigatoController {
 	}
 
 	private User toUser(String userId) {
-		User user = new User(userId,null,null);
+		User user = new User(userId,null,null,null);
 		return user;
 	}
 

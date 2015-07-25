@@ -22,10 +22,11 @@ public class UserManager {
 	ImageManager imageManager;
 	
 	public User getUser(final String email){
-		return jdbcTemplate.queryForObject("select name from user_Tbl where email = ?", new RowMapper<User>(){
+		return jdbcTemplate.queryForObject("select name,password from user_Tbl where email = ?", new RowMapper<User>(){
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 				String name = rs.getString("name");
+				String password = rs.getString("password"); 
 				Integer imageId = getUserImageId(email);
 				Image i; 
 				if(imageId == null){
@@ -33,7 +34,7 @@ public class UserManager {
 				}else{
 					i = imageManager.findImageById(imageId);
 				}
-				return new User(email, name, i);
+				return new User(email, name, password, i);
 			}
 			
 		},email);
