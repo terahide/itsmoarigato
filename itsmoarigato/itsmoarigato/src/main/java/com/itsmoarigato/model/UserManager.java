@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.itsmoarigato.Image;
@@ -25,6 +26,11 @@ public class UserManager {
 	
 	@Autowired
 	ImageManager imageManager;
+	
+	public void registerUser(String email,String name,String password) throws IOException{
+		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,e(password)});
+	}
+
 	
 	public User getUser(final String email){
 		try{
@@ -70,5 +76,9 @@ public class UserManager {
 	private void linkImage(String email, Integer imageId) {
 		jdbcTemplate.update("insert into user_image_Tbl("
 				+ "email, image_id, created) values (?,?,?)",email,imageId,new Timestamp(System.currentTimeMillis()));
+	}
+
+	static String e(String s){
+		return new StandardPasswordEncoder().encode(s);
 	}
 }

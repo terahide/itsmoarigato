@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -86,20 +85,17 @@ public class TableSetuper {
 	}
 
 	private static final String me = "takashi@hoge.co.jp";
-	private static final String friend = "tae@hoge.co.jp";
 	
 	private void registerUser() throws IOException{
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{me});
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{Bucho.email});
-		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{friend});
-
-		registerUser(me,"takashi",e("password"));
-		registerUser(Bucho.email,"bucho",e("password"));
-		registerUser(friend,"tae",e("password"));
+		
+		registerUser(me,"takashi","password");
+		registerUser(Bucho.email,"bucho","password");
 	}
 	
 	private void registerUser(String email,String name,String password) throws IOException{
-		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,password});
+		userManager.registerUser(email,name,password);
 		
 		File image = toImage(name);
 		if(image.exists()){
@@ -115,9 +111,5 @@ public class TableSetuper {
 		jdbcTemplate.update("delete from friend_tbl where me = ?",new Object[]{me});
 		link(me,me);
 		link(me,Bucho.email);
-	}
-	
-	static String e(String s){
-		return new StandardPasswordEncoder().encode(s);
 	}
 }
