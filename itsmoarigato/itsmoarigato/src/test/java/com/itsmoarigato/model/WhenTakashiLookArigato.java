@@ -1,6 +1,8 @@
 package com.itsmoarigato.model;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -8,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,6 +194,14 @@ public class WhenTakashiLookArigato {
 	}
 	@Test
 	public void 存在しないメッセージを更新するとどうなるの(){
+		//FIXME 実装してね
+	}
+	@Test
+	public void 他人のメッセージを更新するとどうなるの(){
+		//FIXME 実装してね
+	}
+	@Test
+	public void 他人のメッセージを削除するとどうなるの(){
 		//FIXME 実装してね
 	}
 }
