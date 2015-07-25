@@ -2,9 +2,7 @@ package util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 
 import org.junit.Test;
@@ -88,20 +86,26 @@ public class TableSetuper {
 	}
 
 	private static final String me = "takashi@hoge.co.jp";
+	private static final String friend = "tae@hoge.co.jp";
 	
 	private void registerUser() throws IOException{
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{me});
 		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{Bucho.email});
+		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{friend});
 
 		registerUser(me,"takashi",e("password"));
 		registerUser(Bucho.email,"bucho",e("password"));
+		registerUser(friend,"tae",e("password"));
 	}
 	
 	private void registerUser(String email,String name,String password) throws IOException{
 		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,password});
 		
-		Integer imageId = imageManager.add(new FileInputStream(toImage(name)), email);
-		linkImage(email,imageId);
+		File image = toImage(name);
+		if(image.exists()){
+			Integer imageId = imageManager.add(new FileInputStream(image), email);
+			linkImage(email,imageId);
+		}
 	}
 	
 	private File toImage(String name) {
