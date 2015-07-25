@@ -66,17 +66,21 @@ public class Message {
 	public Timestamp getCreated() {
 		return created;
 	}
-	public List<Map<String,String>> getImageUrls() {
-		List<Map<String,String>> l = new ArrayList<>();
+	public List<Image> getImages() {
+		List<Image> l = new ArrayList<>();
 		for(Image i:images){
-			Map<String,String> m = new HashMap<>();
-			m.put("url", "/rest/arigato/"+id+"/image/"+i.getId());
-			l.add(m);
+			l.add(new Image_(i));
 		}
 		return l;
 	}
-	@JsonIgnore
-	public List<Image> getImages() {
-		return images;
+	
+	class Image_ extends Image{
+		public Image_(Image image) {
+			super(image.getId(), image.getContents());
+		}
+		
+		public String getUrl(){
+			return "/rest/arigato/"+id+"/image/"+getId();
+		}
 	}
 }

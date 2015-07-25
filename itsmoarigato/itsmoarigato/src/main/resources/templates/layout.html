@@ -96,7 +96,7 @@
 					<input type="submit" value="Log out" />
 			</form>
 			<a th:href="@{/my}">
-			<img th:src="${currentUser.user.imageUrl}" style="max-height:2em" class="pull-right" th:alt="${currentUser.user.name}"></img>
+			<img th:src="${currentUser.user.image.url}" style="max-height:2em" class="pull-right" th:alt="${currentUser.user.name}"></img>
 			<p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">
 				sample_user
 			</p>

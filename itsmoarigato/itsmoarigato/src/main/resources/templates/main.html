@@ -72,14 +72,14 @@
 		<div data-bind="foreach: arigatos">
 			<table>
 			<tr>
-				<td><img data-bind="attr:{src: fromUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+				<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
 				<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-				<td><img data-bind="attr:{src: toUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+				<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
 			</tr>
 			</table>
 			<p>【<span data-bind="text: subject"></span>】</p>
 			<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
-			<div data-bind="foreach: imageUrls">
+			<div data-bind="foreach: images">
 				<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
 			</div>
 			<hr />

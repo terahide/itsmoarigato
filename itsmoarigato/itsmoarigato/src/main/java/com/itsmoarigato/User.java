@@ -28,15 +28,17 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-	@JsonIgnore
 	public Image getImage() {
-		return image;
+		return new Image_(image);
 	}
-	public URI getImageUrl() {
-		try {
-			return new URI("/rest/user/"+email+"/image/"+image.getId());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException();
+
+	class Image_ extends Image{
+		public Image_(Image image) {
+			super(image.getId(), image.getContents());
+		}
+		
+		public String getUrl(){
+			return "/rest/user/"+email+"/image/"+getId();
 		}
 	}
 }

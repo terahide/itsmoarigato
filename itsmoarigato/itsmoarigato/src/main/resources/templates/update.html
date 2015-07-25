@@ -71,7 +71,12 @@
 			<tr><td>だれにありがとう？</td><td><input type="text" id="toUserId" name="toUserId"  data-bind="attr:{value: arigato.toUser.email}"/><span id="toUserId_error" class="error" /></td></tr>
 			<tr><td>件名</td><td><input type="text" id="subject" name="subject" data-bind="attr:{value: arigato.subject}" /><span id="subject_error" class="error" /></td></tr>
 			<tr><td>感謝のことば</td><td><input type="text" id="message" name="message"  data-bind="attr:{value: arigato.contents}"/><span id="message_error" class="error" /></td></tr>
-			<tr><td></td><td><input type="button" id="submit" value="click" /></td></tr> 
+			<tr><td></td><td>
+				<div data-bind="foreach: arigato.images">
+					<img data-bind="attr:{src: url}" style="max-height:120px" ></img>
+				</div>
+			</td></tr>
+			<tr><td><input type="button" id="submit" value="更新" /></td><td></td></tr> 
 			</table>
 		</form>
 	</div>
