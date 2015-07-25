@@ -1,7 +1,11 @@
 package com.itsmoarigato.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -51,5 +55,15 @@ public class UserManager {
 		}catch(EmptyResultDataAccessException e){
 			return null;
 		}
+	}
+	
+	public void addUserImage(String email,File image) throws IOException{
+		Integer imageId = imageManager.add(new FileInputStream(image), email);
+		linkImage(email,imageId);
+	}
+	
+	private void linkImage(String email, Integer imageId) {
+		jdbcTemplate.update("insert into user_image_Tbl("
+				+ "email, image_id, created) values (?,?,?)",email,imageId,new Timestamp(System.currentTimeMillis()));
 	}
 }

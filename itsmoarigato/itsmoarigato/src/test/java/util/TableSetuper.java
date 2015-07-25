@@ -1,10 +1,10 @@
 package util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.itsmoarigato.model.Bucho;
-import com.itsmoarigato.model.ImageManager;
+import com.itsmoarigato.model.UserManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
@@ -23,9 +23,9 @@ public class TableSetuper {
 	JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	ImageManager imageManager;
+	UserManager userManager;
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void remakeTable() throws IOException {
 		remakeImageTable();
@@ -103,18 +103,12 @@ public class TableSetuper {
 		
 		File image = toImage(name);
 		if(image.exists()){
-			Integer imageId = imageManager.add(new FileInputStream(image), email);
-			linkImage(email,imageId);
+			userManager.addUserImage(email, image);
 		}
 	}
 	
 	private File toImage(String name) {
 		return new File("src/test/resources/persona/"+name+".jpg");
-	}
-	
-	private void linkImage(String email, Integer imageId) {
-		jdbcTemplate.update("insert into user_image_Tbl("
-				+ "email, image_id, created) values (?,?,?)",email,imageId,new Timestamp(System.currentTimeMillis()));
 	}
 
 	private void link(){
