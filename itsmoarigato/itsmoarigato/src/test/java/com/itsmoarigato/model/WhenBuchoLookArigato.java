@@ -1,12 +1,13 @@
 package com.itsmoarigato.model;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,11 +69,9 @@ public class WhenBuchoLookArigato {
 		Message message = messages.get(0);
 		assertThat(message.getId(),not(0));
 		assertThat(message.getFromUser().getEmail(),is(me));
-		assertThat(message.getFromUser().getImage().getUrl(),notNullValue());
-		assertThat(message.getFromUser().getImage().getContents(),notNullValue());
+		assertThat(message.getFromUser().getImageUrl().toString(),startsWith("/rest/user/"+me+"/image/"));
 		assertThat(message.getToUser().getEmail(),is(takashi));
-		assertThat(message.getToUser().getImage().getUrl(),notNullValue());
-		assertThat(message.getToUser().getImage().getContents(),notNullValue());
+		assertThat(message.getToUser().getImageUrl().toString(),startsWith("/rest/user/"+takashi+"/image/"));
 		assertThat(message.getSubject(),is("いつもありがと"));
 		assertThat(message.getContents(),is("今日もがんばってるね:)"));
 	}

@@ -1,5 +1,8 @@
 package com.itsmoarigato;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -25,7 +28,11 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-	public Image getImage() {
-		return image;
+	public URI getImageUrl() {
+		try {
+			return new URI("/rest/user/"+email+"/image/"+image.getId());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException();
+		}
 	}
 }

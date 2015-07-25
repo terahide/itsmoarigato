@@ -79,7 +79,7 @@ public class ArigatoManager {
 				public Image mapRow(ResultSet rs, int rowNum)
 						throws SQLException {
 					
-					Image image = new Image(rs.getInt("id"), "", null);
+					Image image = new Image(rs.getInt("id"), null);
 					
 					return image;
 				}

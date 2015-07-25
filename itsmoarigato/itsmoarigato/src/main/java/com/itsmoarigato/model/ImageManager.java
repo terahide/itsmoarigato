@@ -65,14 +65,9 @@ public class ImageManager {
 			@Override
 			public Image mapRow(ResultSet rs, int rowNum) throws SQLException {
 				int id = rs.getInt("id");
-
-				//TODO ファイルに出力して見えるようにする？
-				//TODO バイナリ列を返す？
-				String url = "";
-
 				DefaultLobHandler lobHandler = new DefaultLobHandler();
 				byte[] contents = lobHandler.getBlobAsBytes(rs, "contents");
-				return new Image(id, url, contents);
+				return new Image(id, contents);
 			}
 		},imageId);
 	}
