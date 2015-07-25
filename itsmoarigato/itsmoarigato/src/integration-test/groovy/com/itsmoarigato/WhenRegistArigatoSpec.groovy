@@ -30,10 +30,9 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			$('#toUserId') << "takashi@hoge.co.jp"
 			$('#subject') << "いつもありがと"
 			$('#message') << "今日も頑張ってるね:)"
-			$('#submit').click()
-			waitFor{ $('#result').text() == "ご登録ありがとうございました!" }
-		then: "sucessと表示されるべき"
-			$('#result').text() == "ご登録ありがとうございました!"
+			withAlert(wait:true){$('#submit').click()} == "ご登録ありがとうございました!"
+		then: "ホームページが表示されるべき"
+			at HomePage
 		when:"rest list access one data"	
 			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato"

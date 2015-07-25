@@ -49,11 +49,8 @@
 			});
 			
 			handleDone = function(res){
-				$('#result').text("ご登録ありがとうございました!");
-				$('.error').each(function(){
-					$(this).text("");
-				});
-				$("#submit").prop("disabled",false);
+				alert("ご登録ありがとうございました!");
+				location.href="/"
 			}
 		</script>
 		<div id="result"></div>
