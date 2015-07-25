@@ -3,9 +3,13 @@ package com.itsmoarigato;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class Message {
-	private final int id; 
+	private final int id;
+	@JsonIgnore
+	private final int historyId;
 	private final User fromUser; 
 	private final User toUser; 
 	private final String subject; 
@@ -17,6 +21,7 @@ public class Message {
 			String subject, String contents, List<Image> images) {
 		super();
 		this.id = 0;
+		this.historyId = 0;
 		this.fromUser = fromUser;
 		this.toUser = toUser;
 		this.subject = subject;
@@ -25,10 +30,11 @@ public class Message {
 		this.images=images;
 	}
 
-	public Message(int id, User fromUser, User toUser,
+	public Message(int id, int historyId, User fromUser, User toUser,
 			String subject, String contents, Timestamp created, List<Image> images) {
 		super();
 		this.id = id;
+		this.historyId = historyId;
 		this.fromUser = fromUser;
 		this.toUser = toUser;
 		this.subject = subject;
@@ -38,6 +44,9 @@ public class Message {
 	}
 	public int getId() {
 		return id;
+	}
+	public int getHistoryId() {
+		return historyId;
 	}
 	public User getFromUser() {
 		return fromUser;

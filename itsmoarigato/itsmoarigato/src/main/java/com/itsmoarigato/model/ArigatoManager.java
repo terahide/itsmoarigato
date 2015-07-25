@@ -24,6 +24,8 @@ public class ArigatoManager {
 	
 	@Autowired
 	UserManager userManager;
+	@Autowired
+	ImageManager imageManager;
 	
 	public int add(Message message){
 		//FIXME friend以外は見えないようにしないとね
@@ -74,19 +76,21 @@ public class ArigatoManager {
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
 			Timestamp created = rs.getTimestamp("created");
-			List<Image> images = jdbcTemplate.query("select id,contents from image_tbl i inner join arigato_image_tbl l on (i.id = l.image_id) where l.arigato_history_id = ?",new RowMapper<Image>(){
+			
+			
+			
+			
+			List<Image> images = jdbcTemplate.query("select id from image_tbl i inner join arigato_image_tbl l on (i.id = l.image_id) where l.arigato_history_id = ?",new RowMapper<Image>(){
 				@Override
 				public Image mapRow(ResultSet rs, int rowNum)
 						throws SQLException {
 					
-					Image image = new Image(rs.getInt("id"), null);
-					
-					return image;
+					return imageManager.findImageById(rs.getInt("id"));
 				}
 			},
 			historyId);
 			
-			return new Message(id,fromUser, toUser, subject, contents, created, images);
+			return new Message(id,historyId,fromUser, toUser, subject, contents, created, images);
 		}
 	}
 	
@@ -196,9 +200,9 @@ public class ArigatoManager {
 				arigatoId);
 	}
 
-	public void addImage(int arigatoId, int imageId) {
-		jdbcTemplate.update("insert into arigato_image_tbl (arigato_id ,image_id ,created) values (?,?,?)",
-				arigatoId,
+	public void addImage(int arigatoHistoryId, int imageId) {
+		jdbcTemplate.update("insert into arigato_image_tbl (arigato_history_id ,image_id ,created) values (?,?,?)",
+				arigatoHistoryId,
 				imageId,
 				new Timestamp(System.currentTimeMillis()));
 	}

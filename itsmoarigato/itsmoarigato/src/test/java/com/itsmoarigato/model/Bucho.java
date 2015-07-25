@@ -3,6 +3,9 @@ package com.itsmoarigato.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,8 @@ public class Bucho {
 	
 	@Autowired
 	ArigatoManager arigato;
+	@Autowired
+	ImageManager imageManager;
 	
 	public void sayArigato(String toUser) {
 		arigato.add(createMessage(toUser));
@@ -31,7 +36,7 @@ public class Bucho {
 	}
 
 	private Message createMessage(int id) {
-		Message message = new Message(id,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", null, new ArrayList<Image>());
+		Message message = new Message(id,0,toUser(null), toUser(null), "今日もありがと", "ムリしないでね:)", null, new ArrayList<Image>());
 		return message;
 	}
 
@@ -64,5 +69,16 @@ public class Bucho {
 
 	public void deleteArigato(int arigatoId) {
 		arigato.delete(arigatoId);		
+	}
+
+	public void sayArigatoWithImage(String toUser) throws IOException {
+		sayArigato(toUser);
+		//機械的な都合
+		Message message = getMostNewMessage(toUser);
+		
+		int historyId = message.getHistoryId();
+
+		int imageId = imageManager.add(new FileInputStream(new File("src/test/resources/images/arigato.png")),email);
+    	arigato.addImage(historyId,imageId);
 	}
 }

@@ -1,13 +1,13 @@
 package com.itsmoarigato.model;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,6 +163,17 @@ public class WhenTakashiLookArigato {
 		}
 		assertThat(messages.size(),is(2));
 	}
+	
+	@Test
+	public void 自分あての画像付きのメッセージを登録してもらい自分あてのメッセージをみると画像があるべき() throws IOException{
+		bucho.sayArigatoWithImage(me);
+		List<Message> messages = arigato.getMineMessages(me,new Pagination());
+		Message message = messages.get(0);
+		assertThat(message.getImages().size(), is(1)); 
+		assertThat(message.getImages().get(0).getContents(), notNullValue());
+	}
+	
+	
 	@Test
 	public void 存在しないメッセージを取得するとどうなるの(){
 		//FIXME 実装してね

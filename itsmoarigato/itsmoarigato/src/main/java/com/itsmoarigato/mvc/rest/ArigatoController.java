@@ -62,9 +62,6 @@ public class ArigatoController {
     @ResponseBody
     Message detail(@PathVariable("id")String id) {
     	Message message = arigatoManager.getMessage(toInt(id));
-    	if(message == null){
-    		throw new NotFoundException();
-    	}
     	return message;
     }
     
@@ -78,17 +75,18 @@ public class ArigatoController {
     @RequestMapping(value="/rest/arigato/{arigatoId}/image",method=RequestMethod.POST)
     @ResponseBody
     String add(@Valid FileUploadCommand uploaded,Principal principal) throws IOException {
+    	Message message = this.arigatoManager.getMessage(uploaded.arigatoId);
     	//TODO ファイルが画像かどうかのverify
     	//TODO ファイルサイズのverify
     	
     	int imageId = imageManager.add(uploaded.file.getInputStream(),principal.getName());
-    	arigatoManager.addImage(uploaded.arigatoId,imageId);
+    	arigatoManager.addImage(message.getHistoryId(),imageId);
 
     	return "{\"success\":true}";
     }
 
     private Message toMessage(ArigatoCommand arigato,String fromUserId) {
-    	Message message = new Message(toInt(arigato.getId()),toUser(fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,null,new ArrayList<Image>());
+    	Message message = new Message(toUser(fromUserId),toUser(arigato.toUserId),arigato.subject,arigato.message,new ArrayList<Image>());
 		return message;
 	}
 
@@ -100,13 +98,10 @@ public class ArigatoController {
 	@RequestMapping(value="/rest/arigato/{id}",method=RequestMethod.POST)
     @ResponseBody
     Json update(@Valid ArigatoCommand arigato) {
-		{
-			Message message = this.arigatoManager.getMessage(toInt(arigato.getId()));
-	    	if(message == null){
-	    		throw new NotFoundException();
-	    	}
-		}
-    	this.arigatoManager.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
+		//for exist check if when no exist then throw NotFoundException  
+		this.arigatoManager.getMessage(toInt(arigato.getId()));
+    	
+		this.arigatoManager.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
     	return new Json("{\"success\":true}");
     }
     
