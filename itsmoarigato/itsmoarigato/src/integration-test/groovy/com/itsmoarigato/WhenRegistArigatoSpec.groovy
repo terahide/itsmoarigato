@@ -27,7 +27,6 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 
 		when: "ありがとを登録すると"	
 			go "http://localhost:8080/create"
-			$('#fromUserId') << "bucho@hoge.co.jp"
 			$('#toUserId') << "takashi@hoge.co.jp"
 			$('#subject') << "いつもありがと"
 			$('#message') << "今日も頑張ってるね:)"
@@ -44,14 +43,13 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			def root = slurper.parseText($("pre").text())
 			root.size >= 1
 			def arigatoId = root[0]['id']
-			root[0]['fromUser']['email'] == "bucho@hoge.co.jp"
+			root[0]['fromUser']['email'] == "takashi@hoge.co.jp"
 			root[0]['toUser']['email'] == "takashi@hoge.co.jp"
 			root[0]['subject'] == "いつもありがと"
 			root[0]['contents'] == "今日も頑張ってるね:)"
 			
 		when: "登録したありがとを更新すると"	
 			go "http://localhost:8080/update/"+arigatoId
-			$('#fromUserId') << "bucho@hoge.co.jp"
 			$('#toUserId') << "takashi@hoge.co.jp"
 			$('#subject') << "今日もありがと"
 			$('#message') << "ムリしないでね:)"
@@ -65,7 +63,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		and:
 			root = slurper.parseText($("pre").text())
 		then: 
-			root['fromUser']['email'] == "bucho@hoge.co.jp"
+			root['fromUser']['email'] == "takashi@hoge.co.jp"
 			root['toUser']['email'] == "takashi@hoge.co.jp"
 			root['subject'] == "今日もありがと"
 			root['contents'] == "ムリしないでね:)"
@@ -100,11 +98,10 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			waitFor{ $('#errors').text() != "" }
 		then: "Validation failed!と表示されるべき"
 			$('#errors').text() == "入力エラーがあります。ご確認ください"
-			$('#fromUserId_error').text() == "may not be empty"
-			$('#toUserId_error').text() == "may not be empty"
-			$('#message_error').text() == "may not be empty"
-			$('#subject_error').text() == "may not be empty"
-			$('#toUserId_error').text() == "may not be empty"
+			$('#toUserId_error').text() == "入力してください"
+			$('#message_error').text() == "入力してください"
+			$('#subject_error').text() == "入力してください"
+			$('#toUserId_error').text() == "入力してください"
 
 		when: "ありがとを入力ミスで更新すると"
 			go "http://localhost:8080/update/"+arigatoId
@@ -112,10 +109,8 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			waitFor{ $('#result').text() == "Validation failed!" }
 		then: "Validation failed!と表示されるべき"
 			$('#result').text() == "Validation failed!"
-			$('#errors').text().contains("fromUserId:may not be empty")
-			$('#errors').text().contains("fromUserId:may not be empty")
-			$('#errors').text().contains("message:may not be empty")
-			$('#errors').text().contains("subject:may not be empty")
-			$('#errors').text().contains("toUserId:may not be empty")
+			$('#errors').text().contains("message:入力してください")
+			$('#errors').text().contains("subject:入力してください")
+			$('#errors').text().contains("toUserId:入力してください")
 	}
 }

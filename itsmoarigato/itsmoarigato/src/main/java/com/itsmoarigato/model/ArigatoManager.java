@@ -49,6 +49,7 @@ public class ArigatoManager {
 	private static final String select_from_arigato = 
 			"select "
 			+ "a.id,"
+			+ "h.id as history_id,"
 			+ "from_user ,"
 			+ "to_user ,"
 			+ "subject ,"
@@ -64,12 +65,13 @@ public class ArigatoManager {
 		@Override
 		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
 			int id = rs.getInt("id"); 
+			int historyId = rs.getInt("history_id"); 
 			User fromUser = toUser(rs.getString("from_user")); 
 			User toUser = toUser(rs.getString("to_user"));
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
 			Timestamp created = rs.getTimestamp("created");
-			List<Image> images = jdbcTemplate.query("select id,contents from image_tbl i inner join arigato_image_tbl l on (i.id = a.image_id) where l.arigato_id = ?",new RowMapper<Image>(){
+			List<Image> images = jdbcTemplate.query("select id,contents from image_tbl i inner join arigato_image_tbl l on (i.id = l.image_id) where l.arigato_history_id = ?",new RowMapper<Image>(){
 				@Override
 				public Image mapRow(ResultSet rs, int rowNum)
 						throws SQLException {
@@ -83,7 +85,7 @@ public class ArigatoManager {
 					return image;
 				}
 			},
-			id);
+			historyId);
 			
 			return new Message(id,fromUser, toUser, subject, contents, created, images);
 		}
