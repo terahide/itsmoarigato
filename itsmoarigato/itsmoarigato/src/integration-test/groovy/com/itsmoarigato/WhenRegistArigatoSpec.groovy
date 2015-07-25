@@ -99,18 +99,20 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		then: "Validation failed!と表示されるべき"
 			$('#errors').text() == "入力エラーがあります。ご確認ください"
 			$('#toUserId_error').text() == "入力してください"
-			$('#message_error').text() == "入力してください"
 			$('#subject_error').text() == "入力してください"
-			$('#toUserId_error').text() == "入力してください"
+			$('#message_error').text() == "入力してください"
 
 		when: "ありがとを入力ミスで更新すると"
 			go "http://localhost:8080/update/"+arigatoId
+			$('#toUserId') << ""
+			$('#subject') << ""
+			$('#message') << ""
 			$('#submit').click()
-			waitFor{ $('#result').text() == "Validation failed!" }
+			waitFor{ $('#errors').text() != "" }
 		then: "Validation failed!と表示されるべき"
-			$('#result').text() == "Validation failed!"
-			$('#errors').text().contains("message:入力してください")
-			$('#errors').text().contains("subject:入力してください")
-			$('#errors').text().contains("toUserId:入力してください")
+			$('#errors').text() == "入力エラーがあります。ご確認ください"
+			$('#toUserId_error').text() == "入力してください"
+			$('#subject_error').text() == "入力してください"
+			$('#message_error').text() == "入力してください"
 	}
 }

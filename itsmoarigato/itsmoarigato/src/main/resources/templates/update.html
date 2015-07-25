@@ -21,10 +21,10 @@
 					.fail(function( data, status, xhr){
 						var error = eval("(" + data.responseText + ")");
 						if(error.message.indexOf("Validation failed") == 0){
-							$('#result').text("Validation failed!");
-							$('#errors').text("");
+							$('#result').text("");
+							$('#errors').text("入力エラーがあります。ご確認ください");
 							$.each(error.errors,function(){
-								$('#errors').append(this.field+":"+this.defaultMessage+"<BR />");
+								$('#'+this.field+'_error').text(this.defaultMessage);
 							});
 						}else{
 							alert("fail" + data.responseText);
@@ -32,6 +32,7 @@
 					})
 				});
 			});
+			
 		</script>
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
