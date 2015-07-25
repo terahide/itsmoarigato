@@ -1,18 +1,22 @@
 package com.itsmoarigato;
 
 public class Image {
-	private long id;
-	private String url;
+	private final long id;
+	private final String url;
+	private final byte[] contents;
+	public Image(long id, String url, byte[] contents) {
+		super();
+		this.id = id;
+		this.url = url;
+		this.contents = contents;
+	}
 	public long getId() {
 		return id;
 	}
 	public String getUrl() {
 		return url;
 	}
-	public Image(long id, String url) {
-		super();
-		this.id = id;
-		this.url = url;
+	public byte[] getContents() {
+		return contents;
 	}
-	
 }

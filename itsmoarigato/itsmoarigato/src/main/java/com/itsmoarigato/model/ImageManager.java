@@ -4,17 +4,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.AbstractLobCreatingPreparedStatementCallback;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.stereotype.Component;
+
+import com.itsmoarigato.Image;
 
 @Component
 public class ImageManager {
@@ -54,5 +58,22 @@ public class ImageManager {
 		
 		
 		return imageId;
+	}
+
+	public Image findImageById(int imageId) {
+		return jdbcTemplate.queryForObject("select id,contents from image_tbl where id = ?", new RowMapper<Image>(){
+			@Override
+			public Image mapRow(ResultSet rs, int rowNum) throws SQLException {
+				int id = rs.getInt("id");
+
+				//TODO ファイルに出力して見えるようにする？
+				//TODO バイナリ列を返す？
+				String url = "";
+
+				DefaultLobHandler lobHandler = new DefaultLobHandler();
+				byte[] contents = lobHandler.getBlobAsBytes(rs, "contents");
+				return new Image(id, url, contents);
+			}
+		},imageId);
 	}
 }

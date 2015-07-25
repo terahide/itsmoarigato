@@ -22,6 +22,9 @@ public class ArigatoManager {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	
+	@Autowired
+	UserManager userManager;
+	
 	public int add(Message message){
 		//FIXME friend以外は見えないようにしないとね
 		int arigatoId = saveArigato(message);
@@ -76,11 +79,7 @@ public class ArigatoManager {
 				public Image mapRow(ResultSet rs, int rowNum)
 						throws SQLException {
 					
-					
-					//TODO ファイルに出力して見えるようにする？
-					//TODO バイナリ列を返す？
-					
-					Image image = new Image(rs.getInt("id"), "");
+					Image image = new Image(rs.getInt("id"), "", null);
 					
 					return image;
 				}
@@ -167,8 +166,8 @@ public class ArigatoManager {
 				params);
 	}
 
-	private static User toUser(String email) {
-		return new User(email, "");//TODO nameの取得
+	private User toUser(String email) {
+		return userManager.getUser(email);
 	}
 
 	public Message getMessage(int messageId) {

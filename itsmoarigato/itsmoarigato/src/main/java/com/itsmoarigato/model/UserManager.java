@@ -1,0 +1,42 @@
+package com.itsmoarigato.model;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
+import com.itsmoarigato.User;
+
+@Component
+public class UserManager {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	ImageManager imageManager;
+	
+	public User getUser(final String email){
+		return jdbcTemplate.queryForObject("select name from user_Tbl where email = ?", new RowMapper<User>(){
+			@Override
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+				String name = rs.getString("name");
+				int imageId = getUserImageId(email);
+				return new User(email, name, imageManager.findImageById(imageId));
+			}
+			
+		},email);
+	}
+
+	private int getUserImageId(String email) {
+		return jdbcTemplate.queryForObject("select image_id from user_image_Tbl where email = ? order by created desc limit 1", new RowMapper<Integer>(){
+			@Override
+			public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getInt("image_id");
+			}
+		},email);
+	}
+}
