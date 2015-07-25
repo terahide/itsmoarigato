@@ -95,10 +95,12 @@
 			<form class="navbar-form pull-right" th:action="@{/logout}" method="post">
 					<input type="submit" value="Log out" />
 			</form>
+			<a th:href="@{/my}">
 			<img th:src="${currentUser.user.imageUrl}" style="max-height:2em" class="pull-right" th:alt="${currentUser.user.name}"></img>
 			<p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">
 				sample_user
 			</p>
+			</a>
 	</div>
 	<ul class="nav">
 	</ul>
@@ -107,6 +109,8 @@
 				</div>
 			</div>
 		</div>
+
+
 			<!-- Begin page content -->
 			<div class="container">
 				<div class="alert alert-success"
@@ -114,6 +118,7 @@
 							th:text="${globalMessage}">
 						Some Success message
 				</div>
+				<a th:href="@{/create}"><img th:src="@{/resources/img/create.png}" alt="ありがとうを伝える"></img></a><br /><br />
 				<div layout:fragment="content">
 						Fake content
 				</div>

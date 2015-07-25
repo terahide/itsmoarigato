@@ -20,6 +20,22 @@
 
 				get(url,data,function(data){
 					viewModel.writtenByMe(data)
+
+					$(".delete").click(function(){
+						var url = $("#deleteForm").attr("action");
+						var $deleteButton = $(this) 
+						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+						data = $("#deleteForm").serialize();
+						delete_(url,data,function(){
+							$deleteButton.parents("table").remove()
+						})
+					})
+					$(".edit").click(function(){
+						var url = $("#updateForm").attr("action");
+						var $editButton = $(this) 
+						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+						location.href=url
+					})
 				})
 			});
 			
@@ -67,18 +83,29 @@
 			}
 		</script>
 		
-		<div id="around">
-		
-		<div data-bind="foreach: arigatos">
+		<div id="writtenByMe">
+		<div data-bind="foreach: writtenByMe">
 			<table>
 			<tr>
-				<td><img data-bind="attr:{src: fromUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
-				<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-				<td><img data-bind="attr:{src: toUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+				<td>
+					<img th:src="@{/resources/img/trash.png}" style="max-height:3em" alt="削除" class="delete"></img>
+					<img th:src="@{/resources/img/edit.png}" style="max-height:3em" alt="編集" class="edit"></img>
+					<input type="hidden" class="id" data-bind="attr:{value:id}" />
+				</td>
+				<td>
+					<table>
+					<tr>
+						<td><img data-bind="attr:{src: fromUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+						<td><img data-bind="attr:{src: toUser.imageUrl}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+					</tr>
+					</table>
+					<p>【<span data-bind="text: subject"></span>】</p>
+					<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+				</td>
 			</tr>
 			</table>
-			<p>【<span data-bind="text: subject"></span>】</p>
-			<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+			
 			<hr />
 		</div> 
 		</div> 
@@ -87,6 +114,7 @@
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
 			<input type="hidden" name="type" value="wrote" />
 		</form>
+		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
 	</div>
 </body>

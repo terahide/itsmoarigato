@@ -18,6 +18,11 @@ public class IndexController {
 		return "main";
 	}
 	
+	@RequestMapping("/my")
+	public String my() {
+		return "my";
+	}
+
 	@RequestMapping("/create")
 	public String create() {
 		return "create";
