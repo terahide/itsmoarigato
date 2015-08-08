@@ -195,7 +195,6 @@ public class WhenTakashiLookArigato {
 		assertThat(message.getImages().get(0).getContents(), notNullValue());
 	}
 	
-	
 	@Test
 	public void 存在しないメッセージを取得するとNotFoundExceptionが発生するべき(){
 		expectedException.expect(NotFoundException.class);
@@ -211,10 +210,6 @@ public class WhenTakashiLookArigato {
 	public void 友達以外にメッセージを登録するとIllegalMessageSendExceptionが発生するべき(){
 		expectedException.expect(IllegalMessageSendException.class);
 		bucho.sayArigato(not_buchos_friend);
-	}
-	@Test
-	public void 友達以外のメッセージを更新するとどうなるの(){
-		//FIXME 実装してね
 	}
 	@Test
 	public void 存在しないメッセージを更新するとどうなるの(){

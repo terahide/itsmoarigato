@@ -67,8 +67,15 @@
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{'/rest/arigato/'+${arigatoId}}">
+			<input type="hidden" name="toUserId" data-bind="attr:{value: arigato.toUser.email}" />
+			<table>
+			<tr>
+				<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+				<td><img data-bind="attr:{src: arigato.toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: arigato.toUser.name"></span></td>
+			</tr>
+			</table>
+			<br />
 			<table th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
-			<tr><td>だれにありがとう？</td><td><input type="text" id="toUserId" name="toUserId"  data-bind="attr:{value: arigato.toUser.email}"/><span id="toUserId_error" class="error" /></td></tr>
 			<tr><td>件名</td><td><input type="text" id="subject" name="subject" data-bind="attr:{value: arigato.subject}" /><span id="subject_error" class="error" /></td></tr>
 			<tr><td>感謝のことば</td><td><input type="text" id="message" name="message"  data-bind="attr:{value: arigato.contents}"/><span id="message_error" class="error" /></td></tr>
 			<tr><td></td><td>

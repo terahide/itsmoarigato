@@ -98,7 +98,6 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			waitFor{ $('#errors').text() != "" }
 		then: "Validation failed!と表示されるべき"
 			$('#errors').text() == "入力エラーがあります。ご確認ください"
-			$('#toUserId_error').text() == "入力してください"
 			$('#subject_error').text() == "入力してください"
 			$('#message_error').text() == "入力してください"
 	}
