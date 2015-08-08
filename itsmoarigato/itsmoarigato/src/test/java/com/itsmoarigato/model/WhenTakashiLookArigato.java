@@ -33,7 +33,6 @@ public class WhenTakashiLookArigato {
 	
 	private static final String me = Takashikun.email;
 	private static final String not_buchos_friend = "kaori@hoge.co.jp";
-	private static final String buchos_friend = "buchos_friend@hoge.co.jp";
 	
 	@Autowired
 	Bucho bucho;
@@ -55,7 +54,7 @@ public class WhenTakashiLookArigato {
 	@Before
 	public void before() throws IOException{
 		userManager.registerUser(Takashikun.friend, "friend", "password");
-		userManager.registerUser(buchos_friend, "buchos_friend", "password");
+		userManager.registerUser(Bucho.friend, "buchos_friend", "password");
 		link();
 		clearArigato();
 	}
@@ -67,7 +66,7 @@ public class WhenTakashiLookArigato {
 		link(me,Bucho.email);
 		link(Bucho.email,me);
 		link(Bucho.email,Takashikun.friend);
-		link(Bucho.email,buchos_friend);
+		link(Bucho.email,Bucho.friend);
 		
 	}
 	private void clearArigato(){
@@ -188,7 +187,7 @@ public class WhenTakashiLookArigato {
 	}
 	@Test
 	public void 友達以外のメッセージを取得するとNotFoundExceptionが発生するべき(){
-		Message message = bucho.sayArigato(buchos_friend);
+		Message message = bucho.sayArigato(Bucho.friend);
 		expectedException.expect(NotFoundException.class);
 		arigato.getMessage(me,message.getId());
 	}
@@ -199,7 +198,7 @@ public class WhenTakashiLookArigato {
 	}
 	@Test
 	public void 存在しないメッセージを更新するとNotFoundExceptionが発生するべき(){
-		Message message = bucho.sayArigato(buchos_friend);
+		Message message = bucho.sayArigato(Bucho.friend);
 		
 		int noExistsArigatoId = message.getId() * 10;
 		
@@ -224,7 +223,7 @@ public class WhenTakashiLookArigato {
 	
 	@Test
 	public void 存在しないメッセージを削除するとどうなるの(){
-		Message message = bucho.sayArigato(buchos_friend);
+		Message message = bucho.sayArigato(Bucho.friend);
 		
 		int noExistsArigatoId = message.getId() * 10;
 		

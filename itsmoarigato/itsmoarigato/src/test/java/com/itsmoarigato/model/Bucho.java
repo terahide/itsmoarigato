@@ -20,6 +20,8 @@ import com.itsmoarigato.User;
 public class Bucho {
 
 	public static final String email = "bucho@hoge.co.jp";
+	public static final String friend = "buchos_friend@hoge.co.jp";
+	
 	private static final String me = email;
 	
 	@Autowired
