@@ -235,4 +235,14 @@ public class WhenTakashiLookArigato {
 		expectedException.expect(IllegalMessageSendException.class);
 		arigato.delete(me, message.getId());
 	}
+	
+	@Test
+	public void 存在しないメッセージを削除するとどうなるの(){
+		Message message = bucho.sayArigato(buchos_friend);
+		
+		int noExistsArigatoId = message.getId() * 10;
+		
+		expectedException.expect(NotFoundException.class);
+		bucho.deleteArigato(noExistsArigatoId);
+	}
 }
