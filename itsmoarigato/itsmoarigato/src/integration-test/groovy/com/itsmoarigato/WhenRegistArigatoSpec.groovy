@@ -17,8 +17,8 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			login()
 		then: 'sent to original page'
 			at HomePage
-//		and: 'the username is displayed'
-//			username == 'takashi'
+		and: 'the username is displayed'
+			username == 'takashi'
 			
 		when: "rest list access nodata"	
 			go "http://localhost:8080/rest/arigato"
@@ -69,9 +69,6 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			login()
 		then: 'sent to original page'
 			at HomePage
-//		and: 'the username is displayed'
-//			username == 'takashi'
-			
 		when:"rest list access one data"	
 			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato"
