@@ -91,6 +91,8 @@ public class Takashikun {
 	public void lookFriendsThenTwoFriends() {
 		List<User> friends = userManager.getFriends(me,me,p);
 		assertThat(friends.size(), is(2));
+		assertThat(friends.get(0).getEmail(),is(Bucho.email));
+		assertThat(friends.get(1).getEmail(),is(Takashikun.friend));
 	}
 
 	public void 自分の友達ではない人の友達を見る() {
