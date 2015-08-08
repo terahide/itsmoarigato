@@ -128,13 +128,14 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			via MyPage
 		then: "自分が書いたメッセージの一覧が表示されるべき"
 			at MyPage
-		when: "最初のメッセージの更新をクリックする"
+		when: "最初のメッセージの更新をクリックする"()
 		then: "更新画面が表示されるべき"
-		when: "項目を入力して更新する"
+			at UpdatePage
+		when: "項目を入力して更新する"()
 		then: "更新画面が表示されるべき"
-		
-		assert false //TODO 実装してね
+			at UpdatePage
 	}
+	
 	def "削除のテスト"(){
 		given: "ログインした状態で"
 		when: "新規登録リンクをクリックする"
