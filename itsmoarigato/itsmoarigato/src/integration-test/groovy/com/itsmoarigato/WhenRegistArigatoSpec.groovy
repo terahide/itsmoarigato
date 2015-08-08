@@ -127,6 +127,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			//FIXME "自分のアカウントをクリックする"() が Element is not clickable at point (589, 0). Other element would receive the click:となるので暫定措置
 			via MyPage
 		then: "自分が書いたメッセージの一覧が表示されるべき"
+			at MyPage
 		when: "最初のメッセージの更新をクリックする"
 		then: "更新画面が表示されるべき"
 		when: "項目を入力して更新する"
