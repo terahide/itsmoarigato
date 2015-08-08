@@ -115,7 +115,7 @@ public class ArigatoController {
 		//for exist check if when no exist then throw NotFoundException  
 		this.arigatoManager.getMessage(me(),toInt(arigato.getId()));
     	
-		this.arigatoManager.update(toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
+		this.arigatoManager.update(me(),toInt(arigato.getId()), arigato.getSubject(), arigato.getMessage());
     	return new Json("{\"success\":true}");
     }
     

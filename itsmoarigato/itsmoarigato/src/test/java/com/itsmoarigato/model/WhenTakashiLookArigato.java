@@ -212,8 +212,13 @@ public class WhenTakashiLookArigato {
 		bucho.sayArigato(not_buchos_friend);
 	}
 	@Test
-	public void 存在しないメッセージを更新するとどうなるの(){
-		//FIXME 実装してね
+	public void 存在しないメッセージを更新するとNotFoundExceptionが発生するべき(){
+		Message message = bucho.sayArigato(buchos_friend);
+		
+		int noExistsArigatoId = message.getId() * 10;
+		
+		expectedException.expect(NotFoundException.class);
+		arigato.update(bucho.email,noExistsArigatoId, "test", "test");
 	}
 	@Test
 	public void 他人のメッセージを更新するとどうなるの(){

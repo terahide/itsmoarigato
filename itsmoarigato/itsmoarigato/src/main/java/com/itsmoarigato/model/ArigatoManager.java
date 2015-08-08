@@ -196,7 +196,7 @@ public class ArigatoManager {
 		return userManager.getUser(email);
 	}
 
-	public Message getMessage(String me,int messageId) {
+	public Message getMessage(String me,int arigatoId) {
 		try{
 			//FIXME friend以外は見えないようにしないとね
 			return jdbcTemplate.queryForObject(
@@ -204,13 +204,14 @@ public class ArigatoManager {
 					"and a.id = ?", 
 					new ArigatoRowMapper(),
 					me,
-					messageId);
+					arigatoId);
 		}catch(EmptyResultDataAccessException e){
 			throw new NotFoundException(e);
 		}
 	}
 
-	public void update(int arigatoId,String subject,String message) {
+	public void update(String me,int arigatoId,String subject,String message) {
+		getMessage(me, arigatoId);
 		//FIXME 他のユーザのメッセージは更新できないようにしないとね
 		//FIXME 対象がなかった場合どうしようね
 		//FIXME friend以外は見えないようにしないとね
