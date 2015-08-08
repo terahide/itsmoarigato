@@ -1,10 +1,10 @@
 package com.itsmoarigato
 
 import groovy.json.*
+
 import geb.spock.GebReportingSpec;
 
-import com.itsmoarigato.pages.LoginPage
-import com.itsmoarigato.pages.HomePage
+import com.itsmoarigato.pages.*
 
 class WhenRegistArigatoSpec extends GebReportingSpec {
 	def "ちょっとやってみた"(){
@@ -116,12 +116,25 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 	}
 	def "画面遷移のテスト"(){
 		given: "ログインした状態で"
+			go "http://localhost:8080"
+			at LoginPage
+			login()
+			at HomePage
 		when: "新規登録リンクをクリックする"
+			$('#toCreate').click()
 		then: "新規登録画面が表示されるべき"
+			at CreatePage
 		when: "項目を入力して登録する"
+			$('#toUserId') << "takashi@hoge.co.jp"
+			$('#subject') << "いつもありがと"
+			$('#message') << "今日も頑張ってるね:)"
+			withAlert(wait:true){$('#submit').click()} == "ご登録ありがとうございました!"
 		then: "メイン画面が表示されるべき"
+			at HomePage
 		when: "最初のメッセージの更新をクリックする"
+			$('.edit',0).click()
 		then: "更新画面が表示されるべき"
+			at UpdatePage
 		when: "項目を入力して更新する"
 		then: "更新画面が表示されるべき"
 		when: "自分のアカウントをクリックする"
