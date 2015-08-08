@@ -76,7 +76,7 @@ public class ArigatoController {
 
     @RequestMapping(value="/rest/arigato/{arigatoId}/image",method=RequestMethod.POST)
     @ResponseBody
-    String add(@Valid FileUploadCommand uploaded) throws IOException {
+    Json add(@Valid FileUploadCommand uploaded) throws IOException {
     	Message message = this.arigatoManager.getMessage(me(),uploaded.arigatoId);
     	//TODO ファイルが画像かどうかのverify
     	//TODO ファイルサイズのverify
@@ -84,7 +84,7 @@ public class ArigatoController {
     	int imageId = imageManager.add(uploaded.file.getInputStream(),me());
     	arigatoManager.addImage(message.getHistoryId(),imageId);
 
-    	return "{\"success\":true}";
+    	return new Json("{\"success\":true}");
     }
 
 	@RequestMapping(value="/rest/arigato/{arigatoId}/image/{id}",method=RequestMethod.GET)
