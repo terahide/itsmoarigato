@@ -5,7 +5,28 @@
 <body>
 	<div layout:fragment="content">
 		<script>
+			var viewModel = new AppViewModel()
 			$(document).ready(function(){
+				ko.applyBindings(viewModel);
+
+				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+
+				get(url,'',function(data){
+					viewModel.friends(data)
+					$(".face").each(function(){
+						$(this).mouseover(function(){
+							$(this).css('background-color','#fad0d0')
+						})
+						$(this).mouseout(function(){
+							$(this).css('background-color','#ffffff')
+						})
+						$(this).click(function(){
+							var email = $('.email',$(this).parent()).val()
+							$("#toUserId").val(email)
+						})
+					})
+				})
+
 				$("#submit").click(function(){
 					$("#submit").prop("disabled",true);
 				
@@ -48,21 +69,55 @@
 				});
 			});
 			
+			function get(url,data,doneHandler){
+				$.ajax({
+					url: url,
+					type:"get",
+					data:data
+				})
+				.done(function(data, status, xhr){
+					if (doneHandler == undefined){
+						return;
+					}
+					doneHandler(data)
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
+			}
+
 			handleDone = function(res){
 				alert("ご登録ありがとうございました!");
 				location.href="/"
+			}
+
+			function AppViewModel() {
+			    var self = this;
+			    
+			    // Editable data
+			    self.friends = ko.observableArray([]);
 			}
 		</script>
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{/rest/arigato}">
-			<table th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
-			<tr><td>だれにありがとう？</td><td><input type="text" id="toUserId" name="toUserId" /><span id="toUserId_error" class="error" /></td></tr>
+			<table>
+			<tr><td>だれにありがとう？<img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td><td>
+			<table>
+				<tr data-bind="foreach: friends">
+					<td class="face">
+						<img data-bind="attr:{src: image.url}" style="max-height:2em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+					</td>
+				</tr>
+			</table>
+			<input type="text" id="toUserId" name="toUserId" readonly="true"/>
+			<span id="toUserId_error" class="error" /></td></tr>
 			<tr><td>件名</td><td><input type="text" id="subject" name="subject" /><span id="subject_error" class="error" /></td></tr>
 			<tr><td>感謝のことば</td><td><input type="text" id="message" name="message" /><span id="message_error" class="error" /></td></tr>
 			<tr><td>写真・画像</td><td><input type="file" id="img" name="file" /><span id="file_error" class="error" /></td></tr>
 			<tr><td></td><td><input type="button" id="submit" value="click" /></td></tr> 
 			</table>
+			
 		</form>
 	</div>
 </body>

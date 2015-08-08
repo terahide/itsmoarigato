@@ -39,7 +39,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			root.size >= 1
 			def arigatoId = root[0]['id']
 			root[0]['fromUser']['email'] == "takashi@hoge.co.jp"
-			root[0]['toUser']['email'] == "takashi@hoge.co.jp"
+			root[0]['toUser']['email'] == "bucho@hoge.co.jp"
 			root[0]['subject'] == "いつもありがと"
 			root[0]['contents'] == "今日も頑張ってるね:)"
 			
@@ -54,7 +54,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			root = slurper.parseText($("pre").text())
 		then: 
 			root['fromUser']['email'] == "takashi@hoge.co.jp"
-			root['toUser']['email'] == "takashi@hoge.co.jp"
+			root['toUser']['email'] == "bucho@hoge.co.jp"
 			root['subject'] == "今日もありがと"
 			root['contents'] == "ムリしないでね:)"
 	}
