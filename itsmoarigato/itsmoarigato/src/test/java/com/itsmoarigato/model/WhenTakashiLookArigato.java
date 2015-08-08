@@ -110,8 +110,7 @@ public class WhenTakashiLookArigato {
 	public void 他人あてのメッセージを登録してもらい自分あてのメッセージを見ると0件であるべき(){
 		bucho.sayArigato(friend);
 		
-		List<Message> messages = arigato.getMineMessages(me,p);
-		assertThat(messages.size(),is(0));
+		takashi.lookArigatoThenNoMessage();
 	}
 
 	@Test
