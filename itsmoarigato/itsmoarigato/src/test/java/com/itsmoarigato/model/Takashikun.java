@@ -14,6 +14,7 @@ import com.itsmoarigato.Message;
 @Component
 public class Takashikun {
 	public static final String email = "takashi@hoge.co.jp";
+	public static final String friend = "tae@hoge.co.jp";
 	private static final String me = email;
 
 	@Autowired
@@ -38,5 +39,12 @@ public class Takashikun {
 	public void lookArigatoThenNoMessage() {
 		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(0));
+	}
+
+	public void lookArroundArigatoThenTwoMessage() {
+		List<Message> messages = arigato.getAroundMessages(me,p);
+		assertThat(messages.size(),is(2));
+		assertThat(messages.get(0).getToUser().getEmail(),is(friend));//新しい順
+		assertThat(messages.get(1).getToUser().getEmail(),is(me));
 	}
 }

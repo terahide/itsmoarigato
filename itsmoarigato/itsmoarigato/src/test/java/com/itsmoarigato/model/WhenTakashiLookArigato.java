@@ -32,7 +32,6 @@ import com.itsmoarigato.model.exception.NotFoundException;
 public class WhenTakashiLookArigato {
 	
 	private static final String me = Takashikun.email;
-	private static final String friend = "tae@hoge.co.jp";
 	private static final String not_buchos_friend = "kaori@hoge.co.jp";
 	private static final String buchos_friend = "buchos_friend@hoge.co.jp";
 	
@@ -55,7 +54,7 @@ public class WhenTakashiLookArigato {
 	
 	@Before
 	public void before() throws IOException{
-		userManager.registerUser(friend, "friend", "password");
+		userManager.registerUser(Takashikun.friend, "friend", "password");
 		userManager.registerUser(buchos_friend, "buchos_friend", "password");
 		link();
 		clearArigato();
@@ -63,11 +62,11 @@ public class WhenTakashiLookArigato {
 	private void link(){
 		jdbcTemplate.update("delete from friend_tbl");
 		link(me,me);
-		link(me,friend);
+		link(me,Takashikun.friend);
 		link(me,not_buchos_friend);
 		link(me,Bucho.email);
 		link(Bucho.email,me);
-		link(Bucho.email,friend);
+		link(Bucho.email,Takashikun.friend);
 		link(Bucho.email,buchos_friend);
 		
 	}
@@ -108,7 +107,7 @@ public class WhenTakashiLookArigato {
 
 	@Test
 	public void 他人あてのメッセージを登録してもらい自分あてのメッセージを見ると0件であるべき(){
-		bucho.sayArigato(friend);
+		bucho.sayArigato(Takashikun.friend);
 		
 		takashi.lookArigatoThenNoMessage();
 	}
@@ -116,12 +115,9 @@ public class WhenTakashiLookArigato {
 	@Test
 	public void 自分あてと他人あてのメッセージを登録してもらい周囲のメッセージを見ると2件であるべき(){
 		bucho.sayArigato(me);
-		bucho.sayArigato(friend);
-		
-		List<Message> messages = arigato.getAroundMessages(me,p);
-		assertThat(messages.size(),is(2));
-		assertThat(messages.get(0).getToUser().getEmail(),is(friend));//新しい順
-		assertThat(messages.get(1).getToUser().getEmail(),is(me));
+		bucho.sayArigato(Takashikun.friend);
+
+		takashi.lookArroundArigatoThenTwoMessage();
 	}
 
 	@Test
@@ -212,7 +208,7 @@ public class WhenTakashiLookArigato {
 	}
 	@Test
 	public void 他人のメッセージを更新するとIllegalMessageSendExceptionが発生すべき(){
-		Message message = bucho.sayArigato(friend);
+		Message message = bucho.sayArigato(Takashikun.friend);
 		
 		expectedException.expect(IllegalMessageSendException.class);
 		arigato.update(me, message.getId(), "test", "test");
@@ -220,7 +216,7 @@ public class WhenTakashiLookArigato {
 	
 	@Test
 	public void 他人のメッセージを削除するとIllegalMessageSendExceptionが発生すべき(){
-		Message message = bucho.sayArigato(friend);
+		Message message = bucho.sayArigato(Takashikun.friend);
 		
 		expectedException.expect(IllegalMessageSendException.class);
 		arigato.delete(me, message.getId());
