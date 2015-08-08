@@ -2,8 +2,10 @@ package com.itsmoarigato.model;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +60,22 @@ public class Takashikun {
 		assertThat(message.getToUser().getEmail(),is(me));
 		assertThat(message.getSubject(),is("今日もありがと"));
 		assertThat(message.getContents(),is("ムリしないでね:)"));
+	}
+
+	public void lookArroundArigatoThenTwoMessage(Timestamp atPoint) {
+		List<Message> messages = arigato.getAroundMessages(Takashikun.email,new Pagination(atPoint));
+		assertThat(messages.size(),is(2));
+	}
+
+	public void lookMineArigatoThenTwoMessage(Timestamp atPoint) {
+		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination(atPoint));
+		assertThat(messages.size(),is(2));
+	}
+
+	public void lookArigatoWithImage() {
+		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination());
+		Message message = messages.get(0);
+		assertThat(message.getImages().size(), is(1)); 
+		assertThat(message.getImages().get(0).getContents(), notNullValue());
 	}
 }

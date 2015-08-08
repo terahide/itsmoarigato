@@ -132,8 +132,8 @@ public class WhenTakashiLookArigato {
 		wait_();
 		bucho.sayArigato(Takashikun.email);
 		bucho.sayArigato(Takashikun.email);
-		List<Message> messages = arigato.getAroundMessages(Takashikun.email,new Pagination(atPoint));
-		assertThat(messages.size(),is(2));
+		
+		takashi.lookArroundArigatoThenTwoMessage(atPoint);
 	}
 
 	private void wait_() {
@@ -151,24 +151,15 @@ public class WhenTakashiLookArigato {
 		wait_();
 		bucho.sayArigato(Takashikun.email);
 		bucho.sayArigato(Takashikun.email);
-		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination(atPoint));
-		for (Message message : messages) {
-			System.out.print(message.getId());
-			System.out.print("\t");
-			System.out.print(message.getContents());
-			System.out.print("\t");
-			System.out.println(message.getCreated());
-		}
-		assertThat(messages.size(),is(2));
+
+		takashi.lookMineArigatoThenTwoMessage(atPoint);
 	}
 	
 	@Test
 	public void 自分あての画像付きのメッセージを登録してもらい自分あてのメッセージをみると画像があるべき() throws IOException{
 		bucho.sayArigatoWithImage(Takashikun.email);
-		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination());
-		Message message = messages.get(0);
-		assertThat(message.getImages().size(), is(1)); 
-		assertThat(message.getImages().get(0).getContents(), notNullValue());
+		
+		takashi.lookArigatoWithImage();
 	}
 	
 	@Test
