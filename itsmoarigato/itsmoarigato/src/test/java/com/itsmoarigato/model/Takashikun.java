@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.itsmoarigato.Message;
+import com.itsmoarigato.User;
 
 @Component
 public class Takashikun {
@@ -21,6 +22,9 @@ public class Takashikun {
 
 	@Autowired
 	ArigatoManager arigato;
+	
+	@Autowired
+	UserManager userManager;
 
 	private Pagination p = new Pagination();
 
@@ -77,5 +81,10 @@ public class Takashikun {
 		Message message = messages.get(0);
 		assertThat(message.getImages().size(), is(1)); 
 		assertThat(message.getImages().get(0).getContents(), notNullValue());
+	}
+
+	public void lookFriends() {
+		List<User> friends = userManager.getFriends(Takashikun.email,p);
+		assertThat(friends.size(), is(0));
 	}
 }

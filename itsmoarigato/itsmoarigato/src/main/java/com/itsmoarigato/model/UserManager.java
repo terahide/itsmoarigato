@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,7 +33,6 @@ public class UserManager {
 		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,e(password)});
 	}
 
-	
 	public User getUser(final String email){
 		try{
 			return jdbcTemplate.queryForObject("select name,password from user_Tbl where email = ?", new RowMapper<User>(){
@@ -80,5 +81,9 @@ public class UserManager {
 
 	static String e(String s){
 		return new StandardPasswordEncoder().encode(s);
+	}
+
+	public List<User> getFriends(String email, Pagination p) {
+		return new ArrayList<>();
 	}
 }
