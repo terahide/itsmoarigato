@@ -34,16 +34,12 @@ public class WhenTakashiLookFriends {
 		link();
 	}
 	
-	private void link(String me, String friend) {
-		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,sysdate)",new Object[]{me,friend});
-	}
-
 	private void link(){
 		deleteAllFriends();
-		link(Takashikun.email,Takashikun.email);
-		link(Takashikun.email,Takashikun.friend);
-		link(Bucho.email,Takashikun.email);
-		link(Bucho.email,Bucho.friend);
+		userManager.link(Takashikun.email,Takashikun.email);
+		userManager.link(Takashikun.email,Takashikun.friend);
+		userManager.link(Bucho.email,Takashikun.email);
+		userManager.link(Bucho.email,Bucho.friend);
 		
 	}
 

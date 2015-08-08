@@ -1,8 +1,6 @@
 package com.itsmoarigato.model;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -59,13 +57,13 @@ public class WhenTakashiLookArigato {
 	}
 	private void link(){
 		jdbcTemplate.update("delete from friend_tbl");
-		link(Takashikun.email,Takashikun.email);
-		link(Takashikun.email,Takashikun.friend);
-		link(Takashikun.email,not_buchos_friend);
-		link(Takashikun.email,Bucho.email);
-		link(Bucho.email,Takashikun.email);
-		link(Bucho.email,Takashikun.friend);
-		link(Bucho.email,Bucho.friend);
+		userManager.link(Takashikun.email,Takashikun.email);
+		userManager.link(Takashikun.email,Takashikun.friend);
+		userManager.link(Takashikun.email,not_buchos_friend);
+		userManager.link(Takashikun.email,Bucho.email);
+		userManager.link(Bucho.email,Takashikun.email);
+		userManager.link(Bucho.email,Takashikun.friend);
+		userManager.link(Bucho.email,Bucho.friend);
 		
 	}
 	private void clearArigato(){
@@ -75,11 +73,6 @@ public class WhenTakashiLookArigato {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	
-	private void link(String me, String friend) {
-		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,sysdate)",new Object[]{me,friend});
-	}
-
-
 	@Test
 	public void メッセージがないとき自分あてのメッセージを見ると０件であるべき(){
 		List<Message> messages = arigato.getMineMessages(Takashikun.email,p);

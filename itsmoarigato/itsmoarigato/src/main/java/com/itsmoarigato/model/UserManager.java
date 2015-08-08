@@ -69,6 +69,10 @@ public class UserManager {
 		}
 	}
 	
+	public void link(String me, String friend) {
+		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,sysdate)",me,friend);
+	}
+
 	public void addUserImage(String email,File image) throws IOException{
 		Integer imageId = imageManager.add(new FileInputStream(image), email);
 		linkImage(email,imageId);
