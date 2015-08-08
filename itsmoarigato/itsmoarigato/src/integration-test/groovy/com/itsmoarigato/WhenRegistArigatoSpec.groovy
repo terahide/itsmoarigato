@@ -120,19 +120,13 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			at LoginPage
 			login()
 			at HomePage
-		when: "新規登録リンクをクリックする"
-			$('#toCreate').click()
+		when: "新規登録リンクをクリックする"()
 		then: "新規登録画面が表示されるべき"
 			at CreatePage
-		when: "項目を入力して登録する"
-			$('#toUserId') << "takashi@hoge.co.jp"
-			$('#subject') << "いつもありがと"
-			$('#message') << "今日も頑張ってるね:)"
-			withAlert(wait:true){$('#submit').click()} == "ご登録ありがとうございました!"
+		when: "項目を入力して登録する"()
 		then: "メイン画面が表示されるべき"
 			at HomePage
-		when: "最初のメッセージの更新をクリックする"
-			$('.edit',0).click()
+		when: "最初のメッセージの更新をクリックする"()
 		then: "更新画面が表示されるべき"
 			at UpdatePage
 		when: "項目を入力して更新する"

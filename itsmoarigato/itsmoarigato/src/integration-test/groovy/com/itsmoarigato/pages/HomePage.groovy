@@ -13,5 +13,11 @@ class HomePage extends Page {
 	static content = {
 		username { $('#un').text() }
 		logout(to:LoginPage) { $('input[type=submit]').click() }
+		"新規登録リンクをクリックする"{
+			$('#toCreate').click()
+		}
+		"最初のメッセージの更新をクリックする"{
+			$('.edit',0).click()
+		}
 	}
 }
