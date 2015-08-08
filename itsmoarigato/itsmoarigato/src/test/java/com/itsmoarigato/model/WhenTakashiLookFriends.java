@@ -40,7 +40,6 @@ public class WhenTakashiLookFriends {
 		userManager.link(Takashikun.email,Takashikun.friend);
 		userManager.link(Bucho.email,Takashikun.email);
 		userManager.link(Bucho.email,Bucho.friend);
-		
 	}
 
 	@Test
@@ -48,6 +47,11 @@ public class WhenTakashiLookFriends {
 		deleteAllFriends();
 		
 		takashi.lookFriendsThenNoFriends();
+	}
+
+	@Test
+	public void たかしくんが友達をみると2人いるべき(){
+		takashi.lookFriendsThenTwoFriends();
 	}
 
 	private void deleteAllFriends() {

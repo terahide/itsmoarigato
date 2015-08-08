@@ -35,22 +35,7 @@ public class UserManager {
 
 	public User getUser(final String email){
 		try{
-			return jdbcTemplate.queryForObject("select name,password from user_Tbl where email = ?", new RowMapper<User>(){
-				@Override
-				public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-					String name = rs.getString("name");
-					String password = rs.getString("password"); 
-					Integer imageId = getUserImageId(email);
-					Image i; 
-					if(imageId == null){
-						i = null;
-					}else{
-						i = imageManager.findImageById(imageId);
-					}
-					return new User(email, name, password, i);
-				}
-			
-			},email);
+			return jdbcTemplate.queryForObject("select email,name,password from user_Tbl where email = ?", new UserRowMapper(),email);
 		}catch(EmptyResultDataAccessException e){
 			throw new NotFoundException(e);
 		}
@@ -88,6 +73,42 @@ public class UserManager {
 	}
 
 	public List<User> getFriends(String email, Pagination p) {
-		return new ArrayList<>();
+		return jdbcTemplate.query(
+				"select u.email,u.name,u.password from user_Tbl u inner join friend_tbl f on (u.email = f.friend) where f.me = ? limit ? offset ?"
+				,new UserRowMapper(),
+				email,
+				p.getLimit(),
+				p.getOffset()
+				);
 	}
+
+	public boolean isFriend(String me,String toUser) {
+		Integer counted = jdbcTemplate.queryForObject(
+			"select "
+			+ "count(*) "
+			+ "from friend_tbl "
+			+ "where me = ? "
+			+ "and friend = ?"
+			,Integer.class,
+			me,
+			toUser);
+		return 0 < counted;
+	}
+	
+	private class UserRowMapper implements RowMapper<User>{
+		@Override
+		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+			String email = rs.getString("email");
+			String name = rs.getString("name");
+			String password = rs.getString("password");
+			Integer imageId = getUserImageId(email);
+			Image i; 
+			if(imageId == null){
+				i = null;
+			}else{
+				i = imageManager.findImageById(imageId);
+			}
+			return new User(email, name, password, i);
+		}
+	}  
 }

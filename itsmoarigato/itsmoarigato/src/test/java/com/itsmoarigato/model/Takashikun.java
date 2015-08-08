@@ -87,4 +87,9 @@ public class Takashikun {
 		List<User> friends = userManager.getFriends(Takashikun.email,p);
 		assertThat(friends.size(), is(0));
 	}
+
+	public void lookFriendsThenTwoFriends() {
+		List<User> friends = userManager.getFriends(Takashikun.email,p);
+		assertThat(friends.size(), is(2));
+	}
 }
