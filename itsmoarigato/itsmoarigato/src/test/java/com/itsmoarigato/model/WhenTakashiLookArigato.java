@@ -218,7 +218,7 @@ public class WhenTakashiLookArigato {
 		int noExistsArigatoId = message.getId() * 10;
 		
 		expectedException.expect(NotFoundException.class);
-		arigato.update(bucho.email,noExistsArigatoId, "test", "test");
+		bucho.updateArigato(noExistsArigatoId,"test","test");
 	}
 	@Test
 	public void 他人のメッセージを更新するとどうなるの(){

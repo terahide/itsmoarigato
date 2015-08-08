@@ -56,7 +56,11 @@ public class Bucho {
 
 		message = createMessage(messageId);
 		
-		arigato.update(email,message.getId(), message.getSubject(), message.getContents());
+		updateArigato(message.getId(), message.getSubject(), message.getContents());
+	}
+	
+	public void updateArigato(int arigatoId,String subject,String contents){
+		arigato.update(email,arigatoId, subject, contents);
 	}
 
 	private Message getMostNewMessage(String toUser) {
