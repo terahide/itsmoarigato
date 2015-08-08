@@ -34,7 +34,7 @@ public class TableSetuper {
 	}
 	
 	private void link(String me,String friend){
-		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,?)",new Object[]{me,friend,new Timestamp(System.currentTimeMillis())});
+		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,?)",me,friend,new Timestamp(System.currentTimeMillis()));
 	}
 
 	
@@ -80,15 +80,13 @@ public class TableSetuper {
 		jdbcTemplate
 				.execute("create table image_Tbl("
 						+ "id serial, from_user char, contents blob, created timestamp, primary key(id))");
-	
-		link();
 	}
 
 	private static final String me = "takashi@hoge.co.jp";
 	
 	private void registerUser() throws IOException{
-		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{me});
-		jdbcTemplate.update("delete from user_tbl where email = ?",new Object[]{Bucho.email});
+		jdbcTemplate.update("delete from user_tbl where email = ?",me);
+		jdbcTemplate.update("delete from user_tbl where email = ?",Bucho.email);
 		
 		registerUser(me,"takashi","password");
 		registerUser(Bucho.email,"bucho","password");
@@ -108,7 +106,7 @@ public class TableSetuper {
 	}
 
 	private void link(){
-		jdbcTemplate.update("delete from friend_tbl where me = ?",new Object[]{me});
+		jdbcTemplate.update("delete from friend_tbl where me = ?",me);
 		link(me,me);
 		link(me,Bucho.email);
 	}
