@@ -221,9 +221,13 @@ public class WhenTakashiLookArigato {
 		bucho.updateArigato(noExistsArigatoId,"test","test");
 	}
 	@Test
-	public void 他人のメッセージを更新するとどうなるの(){
-		//FIXME 実装してね
+	public void 他人のメッセージを更新するとIllegalMessageSendExceptionが発生すべき(){
+		Message message = bucho.sayArigato(friend);
+		
+		expectedException.expect(IllegalMessageSendException.class);
+		arigato.update(me, message.getId(), "test", "test");
 	}
+	
 	@Test
 	public void 他人のメッセージを削除するとどうなるの(){
 		//FIXME 実装してね

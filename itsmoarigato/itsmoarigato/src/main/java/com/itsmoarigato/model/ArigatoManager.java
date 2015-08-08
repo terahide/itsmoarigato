@@ -216,8 +216,10 @@ public class ArigatoManager {
 	}
 	
 	private void validateForUpdate(String me,int arigatoId) {
-		Message message = getMessage(me, arigatoId);
-		//FIXME 他のユーザのメッセージは更新できないようにしないとね
+		Message message = getMessage(me, arigatoId);//if no exist or not frinends message then throw NotFoundException
+		if( ! message.getFromUser().getEmail().equals(me)){
+			throw new IllegalMessageSendException();
+		}
 	}
 
 	public void delete(int arigatoId){
