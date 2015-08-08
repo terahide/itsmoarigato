@@ -72,13 +72,32 @@ public class UserManager {
 		return new StandardPasswordEncoder().encode(s);
 	}
 
-	public List<User> getFriends(String email, Pagination p) {
+	public List<User> getFriends(String me,String email, Pagination p) {
+		if( ! isFriend(me, email)){
+			throw new NotFoundException();
+		}
+		
+		boolean isGetSelf = me.equals(email);
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select u.email,u.name,u.password from user_Tbl u inner join friend_tbl f on (u.email = f.friend) where f.me = ? ");
+		if(isGetSelf){
+			sql.append(" and u.email != ? ");
+		}
+		sql.append("limit ? offset ?");
+		
+		List<Object> params = new ArrayList<>();
+		params.add(email);
+		if(isGetSelf){
+			params.add(me);
+		}
+		params.add(p.getLimit());
+		params.add(p.getOffset());
+		
 		return jdbcTemplate.query(
-				"select u.email,u.name,u.password from user_Tbl u inner join friend_tbl f on (u.email = f.friend) where f.me = ? limit ? offset ?"
+				sql.toString()
 				,new UserRowMapper(),
-				email,
-				p.getLimit(),
-				p.getOffset()
+				params.toArray()
 				);
 	}
 

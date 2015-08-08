@@ -67,29 +67,33 @@ public class Takashikun {
 	}
 
 	public void lookArroundArigatoThenTwoMessage(Timestamp atPoint) {
-		List<Message> messages = arigato.getAroundMessages(Takashikun.email,new Pagination(atPoint));
+		List<Message> messages = arigato.getAroundMessages(me,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
 	}
 
 	public void lookMineArigatoThenTwoMessage(Timestamp atPoint) {
-		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination(atPoint));
+		List<Message> messages = arigato.getMineMessages(me,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
 	}
 
 	public void lookArigatoWithImage() {
-		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination());
+		List<Message> messages = arigato.getMineMessages(me,new Pagination());
 		Message message = messages.get(0);
 		assertThat(message.getImages().size(), is(1)); 
 		assertThat(message.getImages().get(0).getContents(), notNullValue());
 	}
 
 	public void lookFriendsThenNoFriends() {
-		List<User> friends = userManager.getFriends(Takashikun.email,p);
+		List<User> friends = userManager.getFriends(me,me,p);
 		assertThat(friends.size(), is(0));
 	}
 
-	public void lookFriendsThenTwoFriends() {
-		List<User> friends = userManager.getFriends(Takashikun.email,p);
-		assertThat(friends.size(), is(2));
+	public void lookFriendsThenOneFriends() {
+		List<User> friends = userManager.getFriends(me,me,p);
+		assertThat(friends.size(), is(1));
+	}
+
+	public void 自分の友達ではない人の友達を見る() {
+		userManager.getFriends(me,Bucho.friend,p);
 	}
 }
