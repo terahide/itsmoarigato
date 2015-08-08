@@ -138,18 +138,29 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 	
 	def "削除のテスト"(){
 		given: "ログインした状態で"
-		when: "新規登録リンクをクリックする"
+			go "http://localhost:8080"
+			at LoginPage
+			login()
+			at HomePage
+		when: "新規登録リンクをクリックする"()
 		then: "新規登録画面が表示されるべき"
-		when: "項目を入力して登録する"
+			at CreatePage
+		when: "項目を入力して登録する"()
 		then: "メイン画面が表示されるべき"
+			at HomePage
 		when: "最初のメッセージの削除をクリックする"
 		then: "最初のメッセージが削除されるべき"
-		when: "新規登録リンクをクリックする"
+		when: "新規登録リンクをクリックする"()
 		then: "新規登録画面が表示されるべき"
-		when: "項目を入力して登録する"
+			at CreatePage
+		when: "項目を入力して登録する"()
 		then: "メイン画面が表示されるべき"
+			at HomePage
 		when: "自分のアカウントをクリックする"
+			//FIXME "自分のアカウントをクリックする"() が Element is not clickable at point (589, 0). Other element would receive the click:となるので暫定措置
+			via MyPage
 		then: "自分が書いたメッセージの一覧が表示されるべき"
+			at MyPage
 		when: "最初のメッセージの削除をクリックする"
 		then: "最初のメッセージが削除されるべき"
 
