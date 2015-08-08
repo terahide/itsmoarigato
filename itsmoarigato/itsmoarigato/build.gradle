@@ -44,7 +44,7 @@ dependencies {
 
 integrationTest {
 	doFirst {
-  		def port = reservePort()
+  		def port = 8080
 
 		def host = 'localhost:' + port
 		systemProperties['geb.build.baseUrl'] = 'http://'+host+'/'

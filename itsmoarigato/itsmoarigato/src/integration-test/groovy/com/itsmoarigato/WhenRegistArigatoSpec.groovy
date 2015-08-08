@@ -9,7 +9,7 @@ import com.itsmoarigato.pages.*
 class WhenRegistArigatoSpec extends GebReportingSpec {
 	def "ちょっとやってみた"(){
 		when: 'firstAccess'
-			go "http://localhost:8080"
+			via HomePage
 		then:
 			at LoginPage
 		
@@ -26,15 +26,11 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			$("pre").text().startsWith("[")
 
 		when: "ありがとを登録すると"	
-			go "http://localhost:8080/create"
-			$('#toUserId') << "takashi@hoge.co.jp"
-			$('#subject') << "いつもありがと"
-			$('#message') << "今日も頑張ってるね:)"
-			withAlert(wait:true){$('#submit').click()} == "ご登録ありがとうございました!"
+			via CreatePage
+			"項目を入力して登録する"()
 		then: "ホームページが表示されるべき"
 			at HomePage
 		when:"rest list access one data"	
-			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato"
 			waitFor { $("pre").text().startsWith("[") }
 		then: 
@@ -48,16 +44,11 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			root[0]['contents'] == "今日も頑張ってるね:)"
 			
 		when: "登録したありがとを更新すると"	
-			go "http://localhost:8080/update/"+arigatoId
-			$('#toUserId').value("takashi@hoge.co.jp")
-			$('#subject').value("今日もありがと")
-			$('#message').value("ムリしないでね:)")
-			$('#submit').click()
-			waitFor{ $('#result').text() == "更新されました!" }
-		then: "sucessと表示されるべき"
-			$('#result').text() == "更新されました!"
+			go UpdatePage.url + arigatoId
+			at UpdatePage
+			項目を入力して更新する()
+		then: "更新されました!と表示されるべき"()
 		when: "登録したありがとを表示すると"	
-			go "http://localhost:8080/"
 			go "http://localhost:8080/rest/arigato/"+arigatoId
 		and:
 			root = slurper.parseText($("pre").text())

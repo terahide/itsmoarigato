@@ -8,7 +8,7 @@ import geb.*
  * @author Rob Winch
  */
 class HomePage extends Page {
-	static url = ''
+	static url = '/'
 	static at = { assert driver.title == "it's more early got you - main"; true}
 	static content = {
 		username { $('#un').text() }
