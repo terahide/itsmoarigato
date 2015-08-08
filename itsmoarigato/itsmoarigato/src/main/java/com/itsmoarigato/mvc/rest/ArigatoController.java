@@ -123,7 +123,7 @@ public class ArigatoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
 	@ResponseBody
     Json delete(@PathVariable("id")String id) { 
-    	this.arigatoManager.delete(toInt(id));
+    	this.arigatoManager.delete(me(),toInt(id));
     	return new Json("{\"success\":true}");
     }
     

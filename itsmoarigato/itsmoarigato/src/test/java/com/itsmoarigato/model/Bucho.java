@@ -73,7 +73,7 @@ public class Bucho {
 	}
 
 	public void deleteArigato(int arigatoId) {
-		arigato.delete(arigatoId);		
+		arigato.delete(email,arigatoId);		
 	}
 
 	public void sayArigatoWithImage(String toUser) throws IOException {

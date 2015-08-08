@@ -222,8 +222,8 @@ public class ArigatoManager {
 		}
 	}
 
-	public void delete(int arigatoId){
-		//FIXME 他のユーザのメッセージは削除できないようにしないとね
+	public void delete(String me,int arigatoId){
+		validateForUpdate(me,arigatoId);
 		jdbcTemplate.update("delete from arigato_tbl where id = ?", 
 				arigatoId);
 	}

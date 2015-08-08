@@ -229,7 +229,10 @@ public class WhenTakashiLookArigato {
 	}
 	
 	@Test
-	public void 他人のメッセージを削除するとどうなるの(){
-		//FIXME 実装してね
+	public void 他人のメッセージを削除するとIllegalMessageSendExceptionが発生すべき(){
+		Message message = bucho.sayArigato(friend);
+		
+		expectedException.expect(IllegalMessageSendException.class);
+		arigato.delete(me, message.getId());
 	}
 }
