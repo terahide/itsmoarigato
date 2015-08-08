@@ -20,6 +20,7 @@ import com.itsmoarigato.User;
 public class Bucho {
 
 	public static final String email = "bucho@hoge.co.jp";
+	private static final String me = email;
 	
 	@Autowired
 	ArigatoManager arigato;
@@ -27,12 +28,12 @@ public class Bucho {
 	ImageManager imageManager;
 	
 	public Message sayArigato(String toUser) {
-		arigato.add(email,createMessage(toUser));
+		arigato.add(me,createMessage(toUser));
 		return getMostNewMessage(toUser);
 	}
 
 	private Message createMessage(String toUser) {
-		Message message = new Message(toUser(email), toUser(toUser), "いつもありがと", "今日もがんばってるね:)", new ArrayList<Image>());
+		Message message = new Message(toUser(me), toUser(toUser), "いつもありがと", "今日もがんばってるね:)", new ArrayList<Image>());
 		return message;
 	}
 
@@ -41,17 +42,17 @@ public class Bucho {
 		return message;
 	}
 
-	private User toUser(String email) {
-		return new User(email, "", "", null);
+	private User toUser(String me) {
+		return new User(me, "", "", null);
 	}
 
 	public void sayArigatoAndUpdate(String toUser) {
-		arigato.add(email,createMessage(toUser));
+		arigato.add(me,createMessage(toUser));
 		//機械的な都合
 		Message message = getMostNewMessage(toUser);
 		
 		int messageId = message.getId();
-		message = arigato.getMessage(email,messageId);
+		message = arigato.getMessage(me,messageId);
 		assertThat(message.getId(), is(messageId));
 
 		message = createMessage(messageId);
@@ -60,11 +61,11 @@ public class Bucho {
 	}
 	
 	public void updateArigato(int arigatoId,String subject,String contents){
-		arigato.update(email,arigatoId, subject, contents);
+		arigato.update(me,arigatoId, subject, contents);
 	}
 
 	private Message getMostNewMessage(String toUser) {
-		List<Message> messages = arigato.getYoursMessages(email,toUser,new Pagination());
+		List<Message> messages = arigato.getYoursMessages(me,toUser,new Pagination());
 		
 		//validate
 		//assertThat(messages.size(), is(1));
@@ -73,7 +74,7 @@ public class Bucho {
 	}
 
 	public void deleteArigato(int arigatoId) {
-		arigato.delete(email,arigatoId);		
+		arigato.delete(me,arigatoId);		
 	}
 
 	public void sayArigatoWithImage(String toUser) throws IOException {
@@ -83,7 +84,7 @@ public class Bucho {
 		
 		int historyId = message.getHistoryId();
 
-		int imageId = imageManager.add(new FileInputStream(new File("src/test/resources/images/arigato.png")),email);
+		int imageId = imageManager.add(new FileInputStream(new File("src/test/resources/images/arigato.png")),me);
     	arigato.addImage(historyId,imageId);
 	}
 }

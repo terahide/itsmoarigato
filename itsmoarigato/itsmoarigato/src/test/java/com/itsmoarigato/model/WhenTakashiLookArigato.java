@@ -31,13 +31,16 @@ import com.itsmoarigato.model.exception.NotFoundException;
 @Ignore //テストが失敗する暫定措置 com.itsmoarigato.config.HttpSessionConfigのアノテーション(@EnableEmbeddedRedis,@EnableRedisHttpSession)をコメントアウトして実行してください
 public class WhenTakashiLookArigato {
 	
-	private static final String me = "takashi@hoge.co.jp";
+	private static final String me = Takashikun.email;
 	private static final String friend = "tae@hoge.co.jp";
 	private static final String not_buchos_friend = "kaori@hoge.co.jp";
 	private static final String buchos_friend = "buchos_friend@hoge.co.jp";
 	
 	@Autowired
 	Bucho bucho;
+
+	@Autowired
+	Takashikun takashi;
 	
 	@Autowired
 	ArigatoManager arigato;
@@ -89,16 +92,7 @@ public class WhenTakashiLookArigato {
 	@Test
 	public void 自分あてのメッセージを登録してもらい自分あてのメッセージを見ると1件であるべき(){
 		bucho.sayArigato(me);
-		
-		List<Message> messages = arigato.getMineMessages(me,p);
-		assertThat(messages.size(),is(1));
-
-		Message message = messages.get(0);
-		assertThat(message.getId(),not(0));
-		assertThat(message.getFromUser().getEmail(),is(Bucho.email));
-		assertThat(message.getToUser().getEmail(),is(me));
-		assertThat(message.getSubject(),is("いつもありがと"));
-		assertThat(message.getContents(),is("今日もがんばってるね:)"));
+		takashi.lookArigato();
 	}
 
 	@Test

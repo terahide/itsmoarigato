@@ -24,7 +24,7 @@ import com.itsmoarigato.Message;
 public class WhenBuchoLookArigato {
 
 	private static final String me = Bucho.email;
-	private static final String takashi = "takashi@hoge.co.jp";
+	private static final String takashi = Takashikun.email;
 	
 	@Autowired
 	Bucho bucho;
