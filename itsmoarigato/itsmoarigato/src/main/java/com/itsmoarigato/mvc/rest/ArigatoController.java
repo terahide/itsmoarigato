@@ -70,7 +70,7 @@ public class ArigatoController {
     @ResponseBody
     Json add(@Valid ArigatoCommand arigato) {
     	//friend以外には送れないようにしないとね
-    	int arigatoId = this.arigatoManager.add(toMessage(arigato,me()));
+    	int arigatoId = this.arigatoManager.add(me(),toMessage(arigato,me()));
     	return new Json("{\"success\":true,\"arigatoId\":" + arigatoId + "}");
     }
 

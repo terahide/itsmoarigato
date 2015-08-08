@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.itsmoarigato.Image;
 import com.itsmoarigato.Message;
 import com.itsmoarigato.User;
+import com.itsmoarigato.model.exception.IllegalMessageSendException;
 import com.itsmoarigato.model.exception.NotFoundException;
 
 @Component
@@ -27,12 +28,30 @@ public class ArigatoManager {
 	@Autowired
 	ImageManager imageManager;
 	
-	public int add(Message message){
-		//FIXME friend以外は見えないようにしないとね
+	public int add(String me, Message message){
+		
+		String toUser = message.getToUser().getEmail();
+		if( ! isFriend(me,toUser)){
+			throw new IllegalMessageSendException();
+		}
+		
 		int arigatoId = saveArigato(message);
 		saveHistory(arigatoId,message.getSubject(),message.getContents());
 		
 		return arigatoId;
+	}
+
+	private boolean isFriend(String me,String toUser) {
+		Integer counted = jdbcTemplate.queryForObject(
+			"select "
+			+ "count(*) "
+			+ "from friend_tbl "
+			+ "where me = ? "
+			+ "and friend = ?"
+			,Integer.class,
+			me,
+			toUser);
+		return 0 < counted;
 	}
 
 	private int saveArigato(Message message) {

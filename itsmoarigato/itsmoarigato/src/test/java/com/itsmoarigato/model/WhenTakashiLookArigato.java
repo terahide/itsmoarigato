@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itsmoarigato.Message;
+import com.itsmoarigato.model.exception.IllegalMessageSendException;
 import com.itsmoarigato.model.exception.NotFoundException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,6 +33,7 @@ public class WhenTakashiLookArigato {
 	
 	private static final String me = "takashi@hoge.co.jp";
 	private static final String friend = "tae@hoge.co.jp";
+	private static final String not_buchos_friend = "kaori@hoge.co.jp";
 	private static final String buchos_friend = "buchos_friend@hoge.co.jp";
 	
 	@Autowired
@@ -59,6 +61,7 @@ public class WhenTakashiLookArigato {
 		jdbcTemplate.update("delete from friend_tbl");
 		link(me,me);
 		link(me,friend);
+		link(me,not_buchos_friend);
 		link(me,Bucho.email);
 		link(Bucho.email,me);
 		link(Bucho.email,friend);
@@ -199,14 +202,15 @@ public class WhenTakashiLookArigato {
 		arigato.getMessage(me,-1);//not exist
 	}
 	@Test
-	public void 友達以外のメッセージを取得するとどうなるの(){
+	public void 友達以外のメッセージを取得するとNotFoundExceptionが発生するべき(){
 		Message message = bucho.sayArigato(buchos_friend);
 		expectedException.expect(NotFoundException.class);
 		arigato.getMessage(me,message.getId());
 	}
 	@Test
-	public void 友達以外にメッセージを登録するとどうなるの(){
-		//FIXME 実装してね
+	public void 友達以外にメッセージを登録するとIllegalMessageSendExceptionが発生するべき(){
+		expectedException.expect(IllegalMessageSendException.class);
+		bucho.sayArigato(not_buchos_friend);
 	}
 	@Test
 	public void 友達以外のメッセージを更新するとどうなるの(){

@@ -27,7 +27,7 @@ public class Bucho {
 	ImageManager imageManager;
 	
 	public Message sayArigato(String toUser) {
-		arigato.add(createMessage(toUser));
+		arigato.add(email,createMessage(toUser));
 		return getMostNewMessage(toUser);
 	}
 
@@ -46,7 +46,7 @@ public class Bucho {
 	}
 
 	public void sayArigatoAndUpdate(String toUser) {
-		arigato.add(createMessage(toUser));
+		arigato.add(email,createMessage(toUser));
 		//機械的な都合
 		Message message = getMostNewMessage(toUser);
 		
