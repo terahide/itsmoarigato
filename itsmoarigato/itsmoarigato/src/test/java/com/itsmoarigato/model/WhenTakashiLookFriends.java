@@ -71,4 +71,10 @@ public class WhenTakashiLookFriends {
 		expectedException.expect(NotFoundException.class);		
 		takashi.自分の友達ではない人の友達を見る();
 	}
+	
+	@Test
+	public void たかしくんが自分の友達をみると友達であるべき(){
+		takashi.LookTakashisFriend();
+	}
+	//部長の友達をみると友達でないべき
 }

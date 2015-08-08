@@ -68,13 +68,14 @@ public class UserManager {
 		boolean isGetSelf = me.equals(email);
 		
 		StringBuilder sql = new StringBuilder();
-		sql.append("select u.email,u.name,u.password from user_Tbl u inner join friend_tbl f on (u.email = f.friend) where f.me = ? ");
+		sql.append("select u.email,u.name,u.password,m.friend  from user_Tbl u inner join friend_tbl f on (u.email = f.friend) left outer join friend_tbl m on (u.email = m.friend and m.me = ?) where f.me = ? ");
 		if(isGetSelf){
 			sql.append(" and u.email != ? ");
 		}
 		sql.append("limit ? offset ?");
 		
 		List<Object> params = new ArrayList<>();
+		params.add(me);
 		params.add(email);
 		if(isGetSelf){
 			params.add(me);
@@ -108,6 +109,7 @@ public class UserManager {
 			String email = rs.getString("email");
 			String name = rs.getString("name");
 			String password = rs.getString("password");
+			String friend = rs.getString("friend");
 			Integer imageId = getUserImageId(email);
 			Image i; 
 			if(imageId == null){
@@ -115,7 +117,7 @@ public class UserManager {
 			}else{
 				i = imageManager.findImageById(imageId);
 			}
-			return new User(email, name, password, i);
+			return new User(email, name, password, friend != null ,i);
 		}
 
 		private Integer getUserImageId(String email) {

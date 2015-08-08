@@ -45,7 +45,7 @@ public class Bucho {
 	}
 
 	private User toUser(String me) {
-		return new User(me, "", "", null);
+		return new User(me, "", "", false, null);
 	}
 
 	public void sayArigatoAndUpdate(String toUser) {

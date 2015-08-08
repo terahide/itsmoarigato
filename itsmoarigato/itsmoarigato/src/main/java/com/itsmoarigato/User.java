@@ -10,12 +10,14 @@ public class User {
 	private final String email;
 	private final String name;
 	private final String password;
+	private final boolean myFriend;
 	private final Image image;
-	public User(String email, String name, String password,Image image) {
+	public User(String email, String name, String password,boolean myFriend,Image image) {
 		super();
 		this.email = email;
 		this.name = name;
 		this.password = password;
+		this.myFriend = myFriend;
 		this.image = image;
 	}
 	public String getEmail() {
@@ -27,6 +29,9 @@ public class User {
 	@JsonIgnore
 	public String getPassword() {
 		return password;
+	}
+	public boolean isMyFriend() {
+		return myFriend;
 	}
 	public Image getImage() {
 		return new Image_(image);
