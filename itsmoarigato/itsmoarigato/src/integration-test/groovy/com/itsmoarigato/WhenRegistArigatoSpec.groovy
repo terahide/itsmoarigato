@@ -145,15 +145,15 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		when: "新規登録リンクをクリックする"()
 		then: "新規登録画面が表示されるべき"
 			at CreatePage
-		when: "項目を入力して登録する"()
+		when: "項目を入力して登録する"('delete test')
 		then: "メイン画面が表示されるべき"
 			at HomePage
-		when: "最初のメッセージの削除をクリックする"
-		then: "最初のメッセージが削除されるべき"
+		when: "最初のメッセージの削除をクリックする"()
+		then: "最初のメッセージの件名が'delete test'でないべき"()
 		when: "新規登録リンクをクリックする"()
 		then: "新規登録画面が表示されるべき"
 			at CreatePage
-		when: "項目を入力して登録する"()
+		when: "項目を入力して登録する"('delete test')
 		then: "メイン画面が表示されるべき"
 			at HomePage
 		when: "自分のアカウントをクリックする"
@@ -161,9 +161,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 			via MyPage
 		then: "自分が書いたメッセージの一覧が表示されるべき"
 			at MyPage
-		when: "最初のメッセージの削除をクリックする"
-		then: "最初のメッセージが削除されるべき"
-
-		assert false //TODO 実装してね
+		when: "最初のメッセージの削除をクリックする"()
+		then: "最初のメッセージの件名が'delete test'でないべき"()
 	}
 }

@@ -9,5 +9,13 @@ class MyPage extends Menu{
 			waitFor{$('.edit',0) != null}
 			$('.edit',0).click()
 		}
+		"最初のメッセージの削除をクリックする"{
+			waitFor{$('.delete',0) != null}
+			$('.delete',0).click()
+		}
+		"最初のメッセージの件名が'delete test'でないべき"{
+			waitFor{$('.subject',0) != null}
+			$('.subject',0).text() != 'delete test'
+		}
 	} 
 }
