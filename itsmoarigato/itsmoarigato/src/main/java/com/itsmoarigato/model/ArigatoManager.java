@@ -211,13 +211,15 @@ public class ArigatoManager {
 	}
 
 	public void update(String me,int arigatoId,String subject,String message) {
-		getMessage(me, arigatoId);
-		//FIXME 他のユーザのメッセージは更新できないようにしないとね
-		//FIXME 対象がなかった場合どうしようね
-		//FIXME friend以外は見えないようにしないとね
+		validateForUpdate(me,arigatoId);
 		saveHistory(arigatoId, subject, message);
 	}
 	
+	private void validateForUpdate(String me,int arigatoId) {
+		Message message = getMessage(me, arigatoId);
+		//FIXME 他のユーザのメッセージは更新できないようにしないとね
+	}
+
 	public void delete(int arigatoId){
 		//FIXME 他のユーザのメッセージは削除できないようにしないとね
 		jdbcTemplate.update("delete from arigato_tbl where id = ?", 
