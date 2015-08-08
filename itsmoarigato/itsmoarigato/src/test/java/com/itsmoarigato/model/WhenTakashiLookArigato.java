@@ -197,7 +197,7 @@ public class WhenTakashiLookArigato {
 	}
 	
 	@Test
-	public void 存在しないメッセージを削除するとどうなるの(){
+	public void 存在しないメッセージを削除するとNotFoundExceptionが発生すべき(){
 		Message message = bucho.sayArigato(Bucho.friend);
 		
 		int noExistsArigatoId = message.getId() * 10;
