@@ -74,7 +74,9 @@ public class WhenTakashiLookFriends {
 	
 	@Test
 	public void たかしくんが自分の友達をみると友達であるべき(){
-		takashi.LookTakashisFriend();
+		takashi.lookTakashisFriend();
 	}
-	//部長の友達をみると友達でないべき
+	public void たかしくんが部長の友達をみると友達でないべき(){
+		takashi.lookBuchosFriend();
+	}
 }

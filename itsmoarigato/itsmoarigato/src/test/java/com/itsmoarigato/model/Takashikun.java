@@ -100,8 +100,13 @@ public class Takashikun {
 		userManager.getFriends(me,Bucho.friend,p);
 	}
 
-	public void LookTakashisFriend() {
+	public void lookTakashisFriend() {
 		User friend = userManager.getUser(me, Takashikun.friend);
 		assertThat(friend.isMyFriend(), is(true));
+	}
+
+	public void lookBuchosFriend() {
+		User friend = userManager.getUser(me, Bucho.friend);
+		assertThat(friend.isMyFriend(), is(false));
 	}
 }
