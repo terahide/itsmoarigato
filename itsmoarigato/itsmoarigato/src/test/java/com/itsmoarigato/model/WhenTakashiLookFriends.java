@@ -1,7 +1,6 @@
 package com.itsmoarigato.model;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -12,8 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.itsmoarigato.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
@@ -54,7 +51,7 @@ public class WhenTakashiLookFriends {
 	public void ぼっちのたかしくんは友達がいない(){
 		deleteAllFriends();
 		
-		takashi.lookFriends();
+		takashi.lookFriendsThenNoFriends();
 	}
 
 	private void deleteAllFriends() {

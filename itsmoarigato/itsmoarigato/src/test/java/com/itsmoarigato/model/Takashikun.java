@@ -83,7 +83,7 @@ public class Takashikun {
 		assertThat(message.getImages().get(0).getContents(), notNullValue());
 	}
 
-	public void lookFriends() {
+	public void lookFriendsThenNoFriends() {
 		List<User> friends = userManager.getFriends(Takashikun.email,p);
 		assertThat(friends.size(), is(0));
 	}
