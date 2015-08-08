@@ -1,8 +1,7 @@
 package com.itsmoarigato.pages
 
-import geb.Page
 
-class UpdatePage extends Page{
+class UpdatePage extends Menu{
 	static url = '/update/'
 	static at = {title == 'it\'s more early got you - update'}
 	static content = {
@@ -16,9 +15,5 @@ class UpdatePage extends Page{
 		"更新されました!と表示されるべき"{
 			$('#result').text() == "更新されました!"
 		}
-		"自分のアカウントをクリックする"{
-			$('#me').click()
-		}
-
 	}
 }

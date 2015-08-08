@@ -1,8 +1,6 @@
 package com.itsmoarigato.pages
 
-import geb.Page
-
-class CreatePage extends Page{
+class CreatePage extends Menu{
 	static url = '/create'
 	static at = {title == 'it\'s more early got you - create'}
 	static content = {
