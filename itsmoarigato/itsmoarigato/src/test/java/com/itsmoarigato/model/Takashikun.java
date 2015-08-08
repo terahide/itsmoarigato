@@ -21,7 +21,7 @@ public class Takashikun {
 
 	private Pagination p = new Pagination();
 
-	public void lookArigato() {
+	public Message lookArigato() {
 		List<Message> messages = arigato.getMineMessages(me,p);
 		assertThat(messages.size(),is(1));
 
@@ -31,5 +31,12 @@ public class Takashikun {
 		assertThat(message.getToUser().getEmail(),is(me));
 		assertThat(message.getSubject(),is("いつもありがと"));
 		assertThat(message.getContents(),is("今日もがんばってるね:)"));
+		
+		return message;
+	}
+
+	public void lookArigatoThenNoMessage() {
+		List<Message> messages = arigato.getMineMessages(me,p);
+		assertThat(messages.size(),is(0));
 	}
 }
