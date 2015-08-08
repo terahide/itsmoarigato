@@ -123,15 +123,7 @@ public class WhenTakashiLookArigato {
 	public void 自分あてのメッセージを変更してもらい自分あてのメッセージを見ると1件であるべき(){
 		bucho.sayArigatoAndUpdate(me);
 		
-		List<Message> messages = arigato.getMineMessages(me,p);
-		assertThat(messages.size(),is(1));
-
-		Message message = messages.get(0);
-		assertThat(message.getId(),not(0));
-		assertThat(message.getFromUser().getEmail(),is(Bucho.email));
-		assertThat(message.getToUser().getEmail(),is(me));
-		assertThat(message.getSubject(),is("今日もありがと"));
-		assertThat(message.getContents(),is("ムリしないでね:)"));
+		takashi.lookUpdatedArigato();
 	}
 
 	@Test
