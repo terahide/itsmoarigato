@@ -79,12 +79,19 @@ public class ArigatoManager {
 			+ ") ";
 
 	private class ArigatoRowMapper implements RowMapper<Message>{
+		final String me;
+		
+		public ArigatoRowMapper(String me) {
+			super();
+			this.me = me;
+		}
+
 		@Override
 		public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
 			int id = rs.getInt("id"); 
 			int historyId = rs.getInt("history_id"); 
-			User fromUser = toUser(rs.getString("from_user")); 
-			User toUser = toUser(rs.getString("to_user"));
+			User fromUser = toUser(me,rs.getString("from_user")); 
+			User toUser = toUser(me,rs.getString("to_user"));
 			String subject = rs.getString("subject"); 
 			String contents = rs.getString("message"); 
 			Timestamp created = rs.getTimestamp("created");
@@ -128,7 +135,7 @@ public class ArigatoManager {
 		}
 
 		return jdbcTemplate.query(sql.toString(), 
-				new ArigatoRowMapper(),
+				new ArigatoRowMapper(me),
 				params);
 	}
 
@@ -151,7 +158,7 @@ public class ArigatoManager {
 		}
 
 		return jdbcTemplate.query(sql.toString() , 
-				new ArigatoRowMapper(),
+				new ArigatoRowMapper(me),
 				params);
 	}
 
@@ -175,12 +182,12 @@ public class ArigatoManager {
 		}
 
 		return jdbcTemplate.query(sql.toString() , 
-				new ArigatoRowMapper(),
+				new ArigatoRowMapper(me),
 				params);
 	}
 
-	private User toUser(String email) {
-		return userManager.getUser(email);
+	private User toUser(String me,String email) {
+		return userManager.getUser(me,email);
 	}
 
 	public Message getMessage(String me,int arigatoId) {
@@ -189,7 +196,7 @@ public class ArigatoManager {
 			return jdbcTemplate.queryForObject(
 					select_from_arigato + 
 					"and a.id = ?", 
-					new ArigatoRowMapper(),
+					new ArigatoRowMapper(me),
 					me,
 					arigatoId);
 		}catch(EmptyResultDataAccessException e){

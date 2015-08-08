@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		public UserDetails loadUserByUsername(String username)
 				throws UsernameNotFoundException {
 			
-			return toUserDetails(userManager.getUser(username));
+			return toUserDetails(userManager.getUser(username,username));
 		}
 
 		private UserDetails toUserDetails(final User user) {

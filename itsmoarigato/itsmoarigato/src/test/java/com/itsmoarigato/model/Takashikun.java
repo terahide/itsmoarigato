@@ -88,9 +88,9 @@ public class Takashikun {
 		assertThat(friends.size(), is(0));
 	}
 
-	public void lookFriendsThenOneFriends() {
+	public void lookFriendsThenTwoFriends() {
 		List<User> friends = userManager.getFriends(me,me,p);
-		assertThat(friends.size(), is(1));
+		assertThat(friends.size(), is(2));
 	}
 
 	public void 自分の友達ではない人の友達を見る() {

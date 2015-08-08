@@ -33,27 +33,15 @@ public class UserManager {
 		jdbcTemplate.update("insert into user_Tbl (email,name,password) values (?,?,?)",new Object[]{email,name,e(password)});
 	}
 
-	public User getUser(final String email){
+	public User getUser(String me,String email){
 		try{
-			return jdbcTemplate.queryForObject("select email,name,password from user_Tbl where email = ?", new UserRowMapper(),email);
+			//return jdbcTemplate.queryForObject("select u.email,u.name,u.password,f.friend from user_Tbl u left outer join friend_tbl f on (u.email = f.friend) where u.email = ? and f.me = ?", new UserRowMapper(),email,me);
+			return jdbcTemplate.queryForObject("select u.email,u.name,u.password,f.friend from user_Tbl u left outer join friend_tbl f on (u.email = f.friend and f.me = ?) where u.email = ?", new UserRowMapper(),me,email);
 		}catch(EmptyResultDataAccessException e){
 			throw new NotFoundException(e);
 		}
 	}
 
-	private Integer getUserImageId(String email) {
-		try{
-			return jdbcTemplate.queryForObject("select image_id from user_image_Tbl where email = ? order by created desc limit 1", new RowMapper<Integer>(){
-				@Override
-				public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-					return rs.getInt("image_id");
-				}
-			},email);
-		}catch(EmptyResultDataAccessException e){
-			return null;
-		}
-	}
-	
 	public void link(String me, String friend) {
 		jdbcTemplate.update("insert into friend_tbl (me,friend,created) values (?,?,sysdate)",me,friend);
 	}
@@ -128,6 +116,19 @@ public class UserManager {
 				i = imageManager.findImageById(imageId);
 			}
 			return new User(email, name, password, i);
+		}
+
+		private Integer getUserImageId(String email) {
+			try{
+				return jdbcTemplate.queryForObject("select image_id from user_image_Tbl where email = ? order by created desc limit 1", new RowMapper<Integer>(){
+					@Override
+					public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+						return rs.getInt("image_id");
+					}
+				},email);
+			}catch(EmptyResultDataAccessException e){
+				return null;
+			}
 		}
 	}  
 }
