@@ -31,7 +31,7 @@ public class ArigatoManager {
 	public int add(String me, Message message){
 		
 		String toUser = message.getToUser().getEmail();
-		if( ! isFriend(me,toUser)){
+		if( ! userManager.isFriend(me,toUser)){
 			throw new IllegalMessageSendException();
 		}
 		
@@ -39,19 +39,6 @@ public class ArigatoManager {
 		saveHistory(arigatoId,message.getSubject(),message.getContents());
 		
 		return arigatoId;
-	}
-
-	private boolean isFriend(String me,String toUser) {
-		Integer counted = jdbcTemplate.queryForObject(
-			"select "
-			+ "count(*) "
-			+ "from friend_tbl "
-			+ "where me = ? "
-			+ "and friend = ?"
-			,Integer.class,
-			me,
-			toUser);
-		return 0 < counted;
 	}
 
 	private int saveArigato(Message message) {
