@@ -31,7 +31,6 @@ import com.itsmoarigato.model.exception.NotFoundException;
 @Ignore //テストが失敗する暫定措置 com.itsmoarigato.config.HttpSessionConfigのアノテーション(@EnableEmbeddedRedis,@EnableRedisHttpSession)をコメントアウトして実行してください
 public class WhenTakashiLookArigato {
 	
-	private static final String me = Takashikun.email;
 	private static final String not_buchos_friend = "kaori@hoge.co.jp";
 	
 	@Autowired
@@ -60,11 +59,11 @@ public class WhenTakashiLookArigato {
 	}
 	private void link(){
 		jdbcTemplate.update("delete from friend_tbl");
-		link(me,me);
-		link(me,Takashikun.friend);
-		link(me,not_buchos_friend);
-		link(me,Bucho.email);
-		link(Bucho.email,me);
+		link(Takashikun.email,Takashikun.email);
+		link(Takashikun.email,Takashikun.friend);
+		link(Takashikun.email,not_buchos_friend);
+		link(Takashikun.email,Bucho.email);
+		link(Bucho.email,Takashikun.email);
 		link(Bucho.email,Takashikun.friend);
 		link(Bucho.email,Bucho.friend);
 		
@@ -83,19 +82,19 @@ public class WhenTakashiLookArigato {
 
 	@Test
 	public void メッセージがないとき自分あてのメッセージを見ると０件であるべき(){
-		List<Message> messages = arigato.getMineMessages(me,p);
+		List<Message> messages = arigato.getMineMessages(Takashikun.email,p);
 		assertThat(messages.size(),is(0));
 	}
 
 	@Test
 	public void 自分あてのメッセージを登録してもらい自分あてのメッセージを見ると1件であるべき(){
-		bucho.sayArigato(me);
+		bucho.sayArigato(Takashikun.email);
 		takashi.lookArigato();
 	}
 
 	@Test
 	public void 自分あてのメッセージを登録してもらいそれを消してと自分あてのメッセージを見ると0件であるべき(){
-		bucho.sayArigato(me);
+		bucho.sayArigato(Takashikun.email);
 		
 		Message message = takashi.lookArigato();
 		
@@ -113,7 +112,7 @@ public class WhenTakashiLookArigato {
 
 	@Test
 	public void 自分あてと他人あてのメッセージを登録してもらい周囲のメッセージを見ると2件であるべき(){
-		bucho.sayArigato(me);
+		bucho.sayArigato(Takashikun.email);
 		bucho.sayArigato(Takashikun.friend);
 
 		takashi.lookArroundArigatoThenTwoMessage();
@@ -121,19 +120,19 @@ public class WhenTakashiLookArigato {
 
 	@Test
 	public void 自分あてのメッセージを変更してもらい自分あてのメッセージを見ると1件であるべき(){
-		bucho.sayArigatoAndUpdate(me);
+		bucho.sayArigatoAndUpdate(Takashikun.email);
 		
 		takashi.lookUpdatedArigato();
 	}
 
 	@Test
 	public void 自分あてのメッセージ3件を登録してもらいある時点以降の周囲のメッセージを見ると2件であるべき(){
-		bucho.sayArigato(me);
+		bucho.sayArigato(Takashikun.email);
 		Timestamp atPoint = new Timestamp(System.currentTimeMillis());
 		wait_();
-		bucho.sayArigato(me);
-		bucho.sayArigato(me);
-		List<Message> messages = arigato.getAroundMessages(me,new Pagination(atPoint));
+		bucho.sayArigato(Takashikun.email);
+		bucho.sayArigato(Takashikun.email);
+		List<Message> messages = arigato.getAroundMessages(Takashikun.email,new Pagination(atPoint));
 		assertThat(messages.size(),is(2));
 	}
 
@@ -147,12 +146,12 @@ public class WhenTakashiLookArigato {
 	
 	@Test
 	public void 自分あてのメッセージ3件を登録してもらいある時点以降の自分宛てのメッセージを見ると2件であるべき(){
-		bucho.sayArigato(me);
+		bucho.sayArigato(Takashikun.email);
 		Timestamp atPoint = new Timestamp(System.currentTimeMillis());
 		wait_();
-		bucho.sayArigato(me);
-		bucho.sayArigato(me);
-		List<Message> messages = arigato.getMineMessages(me,new Pagination(atPoint));
+		bucho.sayArigato(Takashikun.email);
+		bucho.sayArigato(Takashikun.email);
+		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination(atPoint));
 		for (Message message : messages) {
 			System.out.print(message.getId());
 			System.out.print("\t");
@@ -165,8 +164,8 @@ public class WhenTakashiLookArigato {
 	
 	@Test
 	public void 自分あての画像付きのメッセージを登録してもらい自分あてのメッセージをみると画像があるべき() throws IOException{
-		bucho.sayArigatoWithImage(me);
-		List<Message> messages = arigato.getMineMessages(me,new Pagination());
+		bucho.sayArigatoWithImage(Takashikun.email);
+		List<Message> messages = arigato.getMineMessages(Takashikun.email,new Pagination());
 		Message message = messages.get(0);
 		assertThat(message.getImages().size(), is(1)); 
 		assertThat(message.getImages().get(0).getContents(), notNullValue());
@@ -175,13 +174,13 @@ public class WhenTakashiLookArigato {
 	@Test
 	public void 存在しないメッセージを取得するとNotFoundExceptionが発生するべき(){
 		expectedException.expect(NotFoundException.class);
-		arigato.getMessage(me,-1);//not exist
+		arigato.getMessage(Takashikun.email,-1);//not exist
 	}
 	@Test
 	public void 友達以外のメッセージを取得するとNotFoundExceptionが発生するべき(){
 		Message message = bucho.sayArigato(Bucho.friend);
 		expectedException.expect(NotFoundException.class);
-		arigato.getMessage(me,message.getId());
+		arigato.getMessage(Takashikun.email,message.getId());
 	}
 	@Test
 	public void 友達以外にメッセージを登録するとIllegalMessageSendExceptionが発生するべき(){
@@ -202,7 +201,7 @@ public class WhenTakashiLookArigato {
 		Message message = bucho.sayArigato(Takashikun.friend);
 		
 		expectedException.expect(IllegalMessageSendException.class);
-		arigato.update(me, message.getId(), "test", "test");
+		arigato.update(Takashikun.email, message.getId(), "test", "test");
 	}
 	
 	@Test
@@ -210,7 +209,7 @@ public class WhenTakashiLookArigato {
 		Message message = bucho.sayArigato(Takashikun.friend);
 		
 		expectedException.expect(IllegalMessageSendException.class);
-		arigato.delete(me, message.getId());
+		arigato.delete(Takashikun.email, message.getId());
 	}
 	
 	@Test
