@@ -16,5 +16,9 @@ class UpdatePage extends Page{
 		"更新されました!と表示されるべき"{
 			$('#result').text() == "更新されました!"
 		}
+		"自分のアカウントをクリックする"{
+			$('#me').click()
+		}
+
 	}
 }

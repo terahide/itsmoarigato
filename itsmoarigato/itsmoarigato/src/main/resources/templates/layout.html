@@ -87,16 +87,16 @@
 			<div class="navbar navbar-inverse navbar-static-top">
 				<div class="navbar-inner">
 					<div class="container">
-						<a class="brand" th:href="@{/}"><img th:src="@{/resources/img/logo.png}" alt="Spring Security Sample"/></a>
+						<a class="brand" th:href="@{/}"><img th:src="@{/resources/img/logo.png}" alt="it's more early got you"/></a>
 
-<div class="nav-collapse collapse"
+<div class=""
 		 th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
 	<div th:if="${currentUser != null}">
 			<form class="navbar-form pull-right" th:action="@{/logout}" method="post">
 					<input type="submit" value="Log out" />
 			</form>
 			<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
-			<a th:href="@{/my}">
+			<a id="me" th:href="@{/my}">
 			<img th:src="${currentUser.user.image.url}" style="max-height:2em" class="pull-right" th:alt="${currentUser.user.name}"></img>
 			<p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">
 				sample_user
