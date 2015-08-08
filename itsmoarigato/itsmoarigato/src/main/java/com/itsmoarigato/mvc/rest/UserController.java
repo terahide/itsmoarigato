@@ -1,6 +1,5 @@
 package com.itsmoarigato.mvc.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itsmoarigato.User;
+import com.itsmoarigato.model.Pagination;
 import com.itsmoarigato.model.UserManager;
 
 @RestController
@@ -30,7 +30,7 @@ public class UserController {
     
 	@RequestMapping(value="/rest/user/{email}/friend",method=RequestMethod.GET)
 	List<User> friends(@PathVariable("email")String email){
-		return new ArrayList<>();
+		return userManager.getFriends(me(), email, new Pagination());
 	}
 	
 	@RequestMapping(value="/rest/user/{email}/image/{id}",method=RequestMethod.GET)
