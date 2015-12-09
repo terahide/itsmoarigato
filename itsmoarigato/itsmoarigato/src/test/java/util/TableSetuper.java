@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.itsmoarigato.model.Bucho;
+import com.itsmoarigato.model.Kacho;
 import com.itsmoarigato.model.UserManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -87,9 +88,11 @@ public class TableSetuper {
 	private void registerUser() throws IOException{
 		jdbcTemplate.update("delete from user_tbl where email = ?",me);
 		jdbcTemplate.update("delete from user_tbl where email = ?",Bucho.email);
+		jdbcTemplate.update("delete from user_tbl where email = ?",Kacho.email);
 		
 		registerUser(me,"takashi","password");
 		registerUser(Bucho.email,"bucho","password");
+		registerUser(Kacho.email,"kacho","password");
 	}
 	
 	private void registerUser(String email,String name,String password) throws IOException{
@@ -109,5 +112,14 @@ public class TableSetuper {
 		jdbcTemplate.update("delete from friend_tbl where me = ?",me);
 		link(me,me);
 		link(me,Bucho.email);
+		link(me,Kacho.email);
+		link(Bucho.email,Bucho.email);
+		link(Bucho.email,me);
+		link(Bucho.email,Kacho.email);
+		link(Kacho.email,Kacho.email);
+		link(Kacho.email,Bucho.email);
+		link(Kacho.email,me);
+		
+		
 	}
 }
