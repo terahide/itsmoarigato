@@ -167,7 +167,7 @@ public class ArigatoManager {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(select_from_arigato);
-		sql.append("and from_user = ?");
+		sql.append("and to_user = ?");
 		if(afterAtPoint){
 			sql.append("and h.created > ? ");
 		}
