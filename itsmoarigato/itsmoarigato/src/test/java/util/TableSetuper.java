@@ -109,5 +109,6 @@ public class TableSetuper {
 		jdbcTemplate.update("delete from friend_tbl where me = ?",me);
 		link(me,me);
 		link(me,Bucho.email);
+		link(Bucho.email,Bucho.email);
 	}
 }
