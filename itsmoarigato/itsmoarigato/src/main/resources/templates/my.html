@@ -7,6 +7,12 @@
 		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
+				$("#written").hide();
+				$("#test").click(function () {
+  					$("#written").toggle();
+  					$("#writtenByMe").toggle();
+				});
+				
 				ko.applyBindings(viewModel);
 
 				var url = $("#arigatoForm").attr("action");
@@ -81,10 +87,15 @@
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
 			}
+			
+			
+			
 		</script>
-		
+		<button id="test">Toggle</button>
 		<div id="writtenByMe">
+		<p>aaaaaaaaa</p>
 		<div data-bind="foreach: writtenByMe">
+		
 			<table>
 			<tr>
 				<td>
@@ -115,10 +126,40 @@
 			</table>
 		</div> 
 		</div> 
+		
+		<div id="written" >
+		<p>aaa</p>
+		<div data-bind="foreach: writtenByMe">
+			<table>
+			<tr>
+				
+				<td>
+					<table>
+					<tr>
+						<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+					</tr>
+					</table>
+					<p>【<span class="subject" data-bind="text: subject"></span>】</p>
+					<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+					<div data-bind="foreach: images">
+						<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<hr />
+				</td>
+			</tr>
+			</table>
+		</div> 
+		</div> 
 
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
-			<input type="hidden" name="type" value="mine" />
+		<input type="hidden" name="type" value="wrote" />		
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
