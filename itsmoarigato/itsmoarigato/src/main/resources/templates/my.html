@@ -20,6 +20,7 @@
 				get(url,'',function(data){
 					viewModel.arigatos(data)
 				})
+				
 
 				url = $("#arigatoForm").attr("action");
 				data = $("#writtenByMeForm").serialize();
@@ -42,6 +43,14 @@
 						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
 						location.href=url
 					})
+				})
+				
+				url = $("#arigatoForm").attr("action");
+				data = $("#readByMeForm").serialize();
+
+				get(url,data,function(data){
+					viewModel.readByMe(data)				
+					
 				})
 			});
 			
@@ -86,6 +95,7 @@
 			    // Editable data
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
+			    self.readByMe = ko.observableArray([]);
 			}
 			
 			
@@ -129,7 +139,7 @@
 		
 		<div id="written" >
 		<p>友達からのメッセージ</p>
-		<div data-bind="foreach: arigatos">
+		<div data-bind="foreach: readByMe">
 			<table>
 			<tr>
 				
@@ -160,6 +170,9 @@
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
 		<input type="hidden" name="type" value="wrote" />		
+		</form>
+		<form id="readByMeForm" th:action="@{/rest/arigato}">
+		<input type="hidden" name="type" value="mine" />		
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
