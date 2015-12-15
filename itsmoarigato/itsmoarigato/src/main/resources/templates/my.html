@@ -7,9 +7,9 @@
 		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
-				$("#written").hide();
+				$("#read").hide();
 				$("#test").click(function () {
-  					$("#written").toggle();
+  					$("#read").toggle();
   					$("#writtenByMe").toggle();
 				});
 				
@@ -137,7 +137,7 @@
 		</div> 
 		</div> 
 		
-		<div id="written" >
+		<div id="read" >
 		<p>友達からのメッセージ</p>
 		<div data-bind="foreach: readByMe">
 			<table>
