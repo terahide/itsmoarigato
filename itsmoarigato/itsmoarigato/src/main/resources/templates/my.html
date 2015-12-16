@@ -1,20 +1,22 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
 <head>
 	<title>mypage</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
 	<div layout:fragment="content">
 		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
-				$('#tabcontent > div').hide(); //初期では非表示
+				$('#read').hide(); //初期では非表示
  
-	$('#tabnavi a').click(function (e) {
-		e.preventDefault();
-		$('#tabcontent > div').hide().filter(this.hash).fadeIn(); //アンカー要素を表示
+			$('#tabnavi a').click(function (e) {
+				e.preventDefault();
+				$('#tabcontent > div').hide().filter(this.hash).fadeIn(); //アンカー要素を表示
 		
-		$('#tabnavi a').removeClass('active');
-		$(this).addClass('active');
+				$('#tabnavi a').removeClass('active');
+			$(this).addClass('active');
+		
 				});
 				
 				ko.applyBindings(viewModel);
@@ -106,8 +108,8 @@
 			
 		</script>
 		<ul id="tabnavi">
-	<li><a href="#writtenByMe">メニュー1</a></li>
-	<li><a href="#read">メニュー2</a></li>
+	<li><a href="#writtenByMe">友達へのメッセージ</a></li>
+	<li><a href="#read">友達からのメッセージ</a></li>
 </ul>
 <div id="tabcontent">
 		<div id="writtenByMe">
