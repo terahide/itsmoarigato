@@ -7,10 +7,14 @@
 		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
-				$("#read").hide();
-				$("#test").click(function () {
-  					$("#read").toggle();
-  					$("#writtenByMe").toggle();
+				$('#tabcontent > div').hide(); //初期では非表示
+ 
+	$('#tabnavi a').click(function (e) {
+		e.preventDefault();
+		$('#tabcontent > div').hide().filter(this.hash).fadeIn(); //アンカー要素を表示
+		
+		$('#tabnavi a').removeClass('active');
+		$(this).addClass('active');
 				});
 				
 				ko.applyBindings(viewModel);
@@ -101,7 +105,11 @@
 			
 			
 		</script>
-		<button id="test">切り替え</button>
+		<ul id="tabnavi">
+	<li><a href="#writtenByMe">メニュー1</a></li>
+	<li><a href="#read">メニュー2</a></li>
+</ul>
+<div id="tabcontent">
 		<div id="writtenByMe">
 		<p>友達へのメッセージ</p>
 		<div data-bind="foreach: writtenByMe">
@@ -166,7 +174,7 @@
 			</table>
 		</div> 
 		</div> 
-
+</div>
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
 		<input type="hidden" name="type" value="wrote" />		
