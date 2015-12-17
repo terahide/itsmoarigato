@@ -1,7 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
 <head>
 	<title>mypage</title>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -9,13 +8,17 @@
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
 				$('#read').hide(); //初期では非表示
+				$("#witten").trigger("click");
  
 			$('#tabnavi a').click(function (e) {
+				var myColor = $(this).css("background-color");
+				$("#tabcontent").css("background-color", myColor);
+			
 				e.preventDefault();
 				$('#tabcontent > div').hide().filter(this.hash).fadeIn(); //アンカー要素を表示
 		
 				$('#tabnavi a').removeClass('active');
-			$(this).addClass('active');
+				$(this).addClass('active');
 		
 				});
 				
@@ -107,9 +110,35 @@
 			
 			
 		</script>
+		<style type="text/css">
+		.yellow{
+			background-color:#ffd;
+		}
+		.pink{
+			background-color:#fdf;	
+		}
+		.blue{
+			background-color:#dff;	
+		}
+		ul li.selected {
+			color: #000;
+			height:20px;
+			line-height:20px;
+			margin: 0px 0px 0px 5px;			
+			border-bottom:0px none;
+		}
+		
+		
+		</style>
 		<ul id="tabnavi">
-	<li><a href="#writtenByMe">友達へのメッセージ</a></li>
-	<li><a href="#read">友達からのメッセージ</a></li>
+	
+</ul>
+
+
+
+<ul id="tabnavi" class="nav nav-tabs">
+	<li class="yellow" ><a href="#writtenByMe">友達へのメッセージ</a></li>
+	<li class="blue"><a href="#read">友達からのメッセージ</a></li>
 </ul>
 <div id="tabcontent">
 		<div id="writtenByMe">
