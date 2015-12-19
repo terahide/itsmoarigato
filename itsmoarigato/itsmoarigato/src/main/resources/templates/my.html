@@ -110,6 +110,7 @@
 		</script>
 		<style type="text/css">
 			ul{
+				float: left;
 				list-style:none;
 				margin: 10px;
 			}
@@ -140,16 +141,32 @@
 				border: none;
 				border-top: 1px #ddd solid;
 			}
-			#tabcontent{			
+			#tabcontent{
+				float: left;			
 				clear: left;
 				margin: 0px 10px 10px 10px;
 				padding: 10px;
 			}
 	</style>
-	<ul >
-	<li id="tab_1" class="selected" ><a href="#text_1">友達へのメッセージ</a></li>
-	<li id="tab_2"><a href="#text_2">友達からのメッセージ</a></li>
-</ul>
+	
+	<div class=""
+		 th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
+		<div th:if="${currentUser != null}">
+				<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
+				<a id="me" th:href="@{/my}">
+				<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
+				<p id="un" class="navbar-text left" th:text="${currentUser.user.name}+のページ">
+					sample_user
+				</p>
+				</a>
+		</div>
+	</div>
+	
+		<ul >
+		<li id="tab_1" class="selected" ><a href="#text_1">友達へのメッセージ</a></li>
+		<li id="tab_2"><a href="#text_2">友達からのメッセージ</a></li>
+		</ul>
+	
 <div id="tabcontent">
 		<div id="text_1">
 		<p>友達へのメッセージ</p>
