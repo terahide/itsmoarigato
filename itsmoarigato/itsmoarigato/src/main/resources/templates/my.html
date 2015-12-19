@@ -3,24 +3,22 @@
 	<title>mypage</title>
 </head>
 <body>
+
 	<div layout:fragment="content">
+	
 		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
-				$('#read').hide(); //初期では非表示
-				$("#witten").trigger("click");
- 
-			$('#tabnavi a').click(function (e) {
-				var myColor = $(this).css("background-color");
-				$("#tabcontent").css("background-color", myColor);
+				$("#text_2").hide(); //初期では非表示
 			
-				e.preventDefault();
-				$('#tabcontent > div').hide().filter(this.hash).fadeIn(); //アンカー要素を表示
-		
-				$('#tabnavi a').removeClass('active');
-				$(this).addClass('active');
-		
-				});
+				$("ul").on("click","li",function(e){
+					e.preventDefault();
+					$("li.selected").removeClass("selected");
+					$(this).addClass("selected");
+					myID = this.id.split("_")[1];
+					$("#tabcontent > div").hide();
+					$("#text_" + myID).show();
+				})
 				
 				ko.applyBindings(viewModel);
 
@@ -111,37 +109,49 @@
 			
 		</script>
 		<style type="text/css">
-		.yellow{
-			background-color:#ffd;
-		}
-		.pink{
-			background-color:#fdf;	
-		}
-		.blue{
-			background-color:#dff;	
-		}
-		ul li.selected {
-			color: #000;
-			height:20px;
-			line-height:20px;
-			margin: 0px 0px 0px 5px;			
-			border-bottom:0px none;
-		}
+	ul{
+		list-style:none;
+		margin: 10px;
+	}
 		
+	ul li{
+		float: left;
+		height: 20px;
+		margin: 0px 0px 0px 10px;
+		padding: 5px 15px 5px 15px;
+		border: 1px solid #ddd;
+		border-radius: 25px 25px 0px 0px / 25px 25px 0px 0px;
+		color: #999;
+		background-color: #eff;	
+		cursor: pointer;
+	}
+	ul li.selected{
+		text-decoration: none;
+		color: #000;
+		background-color: #fff;
+		border-bottom: 1px #fff solid;
+		cursor: default;
+	}
 		
-		</style>
-		<ul id="tabnavi">
-	
-</ul>
-
-
-
-<ul id="tabnavi" class="nav nav-tabs">
-	<li class="yellow" ><a href="#writtenByMe">友達へのメッセージ</a></li>
-	<li class="blue"><a href="#read">友達からのメッセージ</a></li>
+	#line{
+		position: relative;
+		top: 31px;
+		z-index: -1;
+		border: none;
+		border-top: 1px #ddd solid;
+	}
+	#tabcontent{			
+		clear: left;
+		margin: 0px 10px 10px 10px;
+		padding: 10px;
+	}
+	</style>
+	<ul >
+	<li id="tab_1" class="selected" ><a href="#text_1">友達へのメッセージ</a></li>
+	<li id="tab_2"><a href="#text_2">友達からのメッセージ</a></li>
 </ul>
 <div id="tabcontent">
-		<div id="writtenByMe">
+		<div id="text_1">
 		<p>友達へのメッセージ</p>
 		<div data-bind="foreach: writtenByMe">
 		
@@ -176,7 +186,7 @@
 		</div> 
 		</div> 
 		
-		<div id="read" >
+		<div id="text_2" >
 		<p>友達からのメッセージ</p>
 		<div data-bind="foreach: readByMe">
 			<table>
