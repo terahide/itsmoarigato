@@ -2,9 +2,9 @@
 <head>
 	<title>mypage</title>
 	<style type="text/css">
-<!--	
+<!--
 	ul{
-		list-style:none;
+		list-style: none;
 		margin: 10px;
 	}
 		
@@ -12,12 +12,11 @@
 		float: left;
 		height: 20px;
 		margin: 0px 0px 0px 10px;
-		padding: 5px 15px 5px 15px;
-		border: 1px solid #ddd;
+		padding: 10px 15px 5px 15px;
+		border: 1px #ddd solid;
 		border-radius: 25px 25px 0px 0px / 25px 25px 0px 0px;
 		color: #999;
 		background-color: #eff;	
-		cursor: pointer;
 	}
 
 	ul li.selected{
@@ -25,12 +24,12 @@
 		color: #000;
 		background-color: #fff;
 		border-bottom: 1px #fff solid;
-		cursor: default;
+		pointer-events: none;
 	}
-		
+	
 	#line{
 		position: relative;
-		top: 31px;
+		top: 36px;
 		z-index: -1;
 
 		border: none;
@@ -52,6 +51,10 @@
 			
 			$(document).ready(function(){
 				$("#text_2").hide(); //初期では非表示
+
+//				$(".selected").on("mouseover",function(){
+//					$(this).css('cursor','default')
+//				})
 
 				$("ul").on("click","li",function(){
 					$("li.selected").removeClass("selected");
@@ -75,20 +78,31 @@
 				get(url,data,function(data){
 					viewModel.writtenByMe(data)
 
-					$(".delete").click(function(){
-						var url = $("#deleteForm").attr("action");
-						var $deleteButton = $(this) 
-						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
-						data = $("#deleteForm").serialize();
-						delete_(url,data,function(){
-							$deleteButton.parents("table").remove()
-						})
+					$(".delete").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer');
+						},
+						click : function(){
+							var url = $("#deleteForm").attr("action");
+							var $deleteButton = $(this)
+							url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+							data = $("#deleteForm").serialize();
+							delete_(url,data,function(){
+								$deleteButton.parents("table").remove();
+							})
+						}
 					})
-					$(".edit").click(function(){
-						var url = $("#updateForm").attr("action");
-						var $editButton = $(this) 
-						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
-						location.href=url
+					
+					$(".edit").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#updateForm").attr("action");
+							var $editButton = $(this) 
+							url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+							location.href=url
+						}
 					})
 				})
 				

@@ -4,7 +4,7 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<script>
+		<script>		
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
 				ko.applyBindings(viewModel);
@@ -14,20 +14,31 @@
 				get(url,'',function(data){
 					viewModel.arigatos(data)
 
-					$(".delete").click(function(){
-						var url = $("#deleteForm").attr("action");
-						var $deleteButton = $(this) 
-						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
-						data = $("#deleteForm").serialize();
-						delete_(url,data,function(){
-							$deleteButton.parents("table").remove()
-						})
+					$(".delete").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer');
+						},
+						click : function(){
+							var url = $("#deleteForm").attr("action");
+							var $deleteButton = $(this)
+							url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+							data = $("#deleteForm").serialize();
+							delete_(url,data,function(){
+								$deleteButton.parents("table").remove();
+							})
+						}
 					})
-					$(".edit").click(function(){
-						var url = $("#updateForm").attr("action");
-						var $editButton = $(this) 
-						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
-						location.href=url
+					
+					$(".edit").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#updateForm").attr("action");
+							var $editButton = $(this) 
+							url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+							location.href=url
+						}
 					})
 				})
 			});
@@ -117,7 +128,7 @@
 			<input type="hidden" name="type" value="wrote" />
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
-		<form id="deleteForm" th:action="@{/rest/arigato}" />
+		<form id="deleteForm" th:action="@{/rest/arigato}" />		
 	</div>
 </body>
 </html>
