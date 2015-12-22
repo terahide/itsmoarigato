@@ -4,7 +4,7 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<script>		
+		<script>
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
 				ko.applyBindings(viewModel);
@@ -88,7 +88,6 @@
 		</script>
 		
 		<div id="around">
-		
 		<div data-bind="foreach: arigatos">
 			<table>
 			<tr>
@@ -112,6 +111,7 @@
 					<div data-bind="foreach: images">
 						<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
 					</div>
+					<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
 				</td>
 			</tr>
 			<tr>
@@ -128,7 +128,7 @@
 			<input type="hidden" name="type" value="wrote" />
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
-		<form id="deleteForm" th:action="@{/rest/arigato}" />		
+		<form id="deleteForm" th:action="@{/rest/arigato}" />
 	</div>
 </body>
 </html>

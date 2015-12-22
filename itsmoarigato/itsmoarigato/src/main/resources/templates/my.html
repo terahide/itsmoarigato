@@ -15,7 +15,6 @@
 		padding: 10px 15px 5px 15px;
 		border: 1px #ddd solid;
 		border-radius: 25px 25px 0px 0px / 25px 25px 0px 0px;
-		color: #999;
 		background-color: #eff;	
 	}
 
@@ -25,6 +24,21 @@
 		background-color: #fff;
 		border-bottom: 1px #fff solid;
 		pointer-events: none;
+	}
+	
+	#userpage{
+		float: left;
+		width: 130px;
+	}
+	
+	#friendlist{
+		float: right;
+		width: 550px;
+	}
+	
+	#tabmenu{
+		clear: both;
+		width: 680px;
 	}
 	
 	#line{
@@ -52,10 +66,6 @@
 			$(document).ready(function(){
 				$("#text_2").hide(); //初期では非表示
 
-//				$(".selected").on("mouseover",function(){
-//					$(this).css('cursor','default')
-//				})
-
 				$("ul").on("click","li",function(){
 					$("li.selected").removeClass("selected");
 					$(this).addClass("selected");
@@ -64,7 +74,21 @@
 					$("#text_" + myID).show();
 				})
 					
-				ko.applyBindings(viewModel)
+				ko.applyBindings(viewModel);
+
+				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+
+				get(url,'',function(data){
+					viewModel.friends(data)
+					$(".face").each(function(){
+						$(this).mouseover(function(){
+							$(this).css('background-color','#fad0d0')
+						})
+						$(this).mouseout(function(){
+							$(this).css('background-color','#ffffff')
+						})
+					})
+				})
 
 				var url = $("#arigatoForm").attr("action");
 
@@ -156,13 +180,35 @@
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
    			    self.readByMe = ko.observableArray([]);
+   			    self.friends = ko.observableArray([]);
 			}
 		</script>
 
-		<ul>
-			<li id="tab_1" class="selected"><a href="#writtenByMe">友達へのメッセージ</a></li>
-			<li id="tab_2"><a href="#readByMe">友達からのメッセージ</a></li>
-		</ul>
+		<div id="userpage" class="" th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
+			<div th:if="${currentUser != null}">
+				<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
+				<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
+				<p id="un" class="navbar-text left" th:text="${currentUser.user.name}" />
+			</div>
+		</div>
+
+		<div id="friendlist">
+			<table>
+			<p>あなたの友達</p>
+				<tr data-bind="foreach: friends">
+					<td class="face">
+						<img data-bind="attr:{src: image.url}" style="max-height:3em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="tabmenu">
+			<ul>
+				<li id="tab_1" class="selected"><a href="#writtenByMe">友達へのメッセージ</a></li>
+				<li id="tab_2"><a href="#readByMe">友達からのメッセージ</a></li>
+			</ul>
+		</div>
 
 		<div id="line"></div>	<!-- 調整用 -->
 
@@ -189,6 +235,7 @@
 								<div data-bind="foreach: images">
 									<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
 								</div>
+								<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
 							</td>
 						</tr>
 						<tr>
@@ -217,6 +264,7 @@
 								<div data-bind="foreach: images">
 									<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
 								</div>
+								<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
 							</td>
 						</tr>
 						<tr>
