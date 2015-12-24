@@ -21,6 +21,18 @@
 				})
 				
 				ko.applyBindings(viewModel);
+				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+				get(url,'',function(data){
+					viewModel.friends(data)
+					$(".face").each(function(){
+						$(this).mouseover(function(){
+							$(this).css('background-color','#fad0d0')
+						})
+						$(this).mouseout(function(){
+							$(this).css('background-color','#ffffff')
+						})
+					})
+				})
 
 				var url = $("#arigatoForm").attr("action");
 
@@ -103,6 +115,7 @@
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
 			    self.readByMe = ko.observableArray([]);
+			    self.friends = ko.observableArray([]);
 			}
 			
 			
@@ -153,7 +166,7 @@
 		 th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
 		<div th:if="${currentUser != null}">
 				<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
-				<a id="me" th:href="@{/my}">
+				<a id="me" th:href="@{/}">
 				<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
 				<p id="un" class="navbar-text left" th:text="${currentUser.user.name}+のページ">
 					sample_user
@@ -161,6 +174,17 @@
 				</a>
 		</div>
 	</div>
+	
+	<div id="friendlist">
+			<table>
+			<p>あなたの友達</p>
+				<tr data-bind="foreach: friends">
+					<td class="face">
+						<img data-bind="attr:{src: image.url}" style="max-height:3em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 	
 		<ul >
 		<li id="tab_1" class="selected" ><a href="#text_1">友達へのメッセージ</a></li>
@@ -171,6 +195,7 @@
 		<div id="text_1">
 		<p>友達へのメッセージ</p>
 		<div data-bind="foreach: writtenByMe">
+		
 		
 			<table>
 			<tr>
