@@ -40,6 +40,23 @@
 							location.href=url
 						}
 					})
+					
+					$(".face").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+							}else{
+								location.href=url
+							}
+						}
+					})
+					
 				})
 			});
 			
@@ -101,9 +118,14 @@
 				<td>
 					<table>
 					<tr>
-						<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+						<td>
+						<img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="face">
+							<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+						</img><br /><span data-bind="text: fromUser.name"></span></td>
 						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="face">
+							<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+						</img><br /><span data-bind="text: toUser.name"></span></td>
 					</tr>
 					</table>
 					<p>【<span class="subject" data-bind="text: subject"></span>】</p>
@@ -129,6 +151,7 @@
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
+		<form id="friendForm" th:action="@{/friend}" />
 	</div>
 </body>
 </html>
