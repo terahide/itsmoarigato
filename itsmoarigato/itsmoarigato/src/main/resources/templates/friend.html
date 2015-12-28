@@ -62,6 +62,8 @@
 	<div layout:fragment="content">	
 		<script>
 			var viewModel = new AppViewModel()
+			var myviewModel = new myViewModel()		//ログイン者の友人取得
+			var friendviewModel = new friendViewModel()		//選択された友人の友人取得
 			
 			$(document).ready(function(){
 				$("#text_2").hide(); //初期では非表示
@@ -74,31 +76,48 @@
 					$("#text_" + myID).show();
 				})
 					
-				ko.applyBindings(viewModel);
+				//第2引数で適用する範囲をそれぞれ指定
+				ko.applyBindings(myviewModel,document.getElementById("friendface"));
+				ko.applyBindings(friendviewModel,document.getElementById("friendlist"));
+				ko.applyBindings(viewModel,document.getElementById("tabcontent"));
 
-				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+//				window.onload = function(){
+//					var checkviewModel = {
+//						if($("#friendpage").val()==$("#friendname").val()){
+//							isMeCheck = true;
+//						}else{
+//							isMeCheck = false;
+//						}
+//					};
+//					ko.applyBindings(checkviewModel);
+//				};
+				
+				//console.log($("#friendpage").val());		//選択された友人のnameをconsoleで確認
+				
+				var url = "/rest/user/"+$("#currentUser").val()+"/friend";		//ログイン者の友人一覧
 
 				get(url,'',function(data){
-					$.map(data,function(value,index){
-						if(value.name==$("#friendpage").val()){
-							var currentFriend = value.email;
-							document.getElementById("currentFriend").value=currentFriend;
-							url = "/rest/user/"+currentFriend+"/friend";
+					myviewModel.myfriends(data)
+					
+					$.map(data,function(value,index){		//dataで受け取ったobjectを配列に
+						if(value.name==$("#friendpage").val()){		//選択された友人なら
+							var currentFriend = value.email;		//currentFriendにその友人のemailを設定
+							var url = "/rest/user/"+currentFriend+"/friend";	//選択された友人友人一覧
+							//document.getElementById("currentFriend").value=currentFriend;
+							
+							get(url,'',function(data){
+								friendviewModel.friendfriends(data)
+									$(".icon").each(function(){
+									$(this).mouseover(function(){
+										$(this).css('background-color','#fad0d0')
+									})
+									$(this).mouseout(function(){
+										$(this).css('background-color','#ffffff')
+									})
+								})
+							})
 						}
 					});
-				})
-
-
-				get(url,'',function(data){
-					viewModel.friends(data)
-					$(".face").each(function(){
-						$(this).mouseover(function(){
-							$(this).css('background-color','#fad0d0')
-						})
-						$(this).mouseout(function(){
-							$(this).css('background-color','#ffffff')
-						})
-					})
 				})
 
 				var url = $("#arigatoForm").attr("action");
@@ -191,31 +210,55 @@
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
    			    self.readByMe = ko.observableArray([]); 
-  			    self.friends = ko.observableArray([]);
 			}
+			function myViewModel(){
+				var self = this;
+				self.myfriends = ko.observableArray([]);
+			}
+			function friendViewModel(){
+				var self = this;
+				self.friendfriends = ko.observableArray([]);
+			}
+
+			
+//			console.log(document.getElementById("friendname").toString());
+//			$.map($(document.getElementById("friendname").valueOf()),function(value,index){
+//				console.log(value);				
+//			});
+			
+			
 		</script>
 
+<!-- 選択された友人のnameを受け取り -->
 		<input type="hidden" id="friendpage" th:value="${friendName}" />
-		<input type="hidden" id="currentFriend" />
-		<div id="friendface" th:with="currentFriend=${#httpServletRequest.userPrincipal?.principal}">
-			<div th:if="${currentFriend != null}">
-				<input type="hidden" id="currentFriend" th:value="#{currentFriend.username}" />
-				<img th:src="${currentFriend.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentFriend.user.name}"></img>
-				<p id="un" class="navbar-text left" th:text="${currentFriend.user.name}" />
-			</div>
+
+<!--		<input type="hidden" id="currentFriend" /> 		-->
+		
+<!-- 選択された友人のアイコンを表示 -->
+		<div id="friendface" data-bind="foreach: myfriends">
+			<span>
+				<img data-bind="attr:{src: image.url}" style="max-height:5em" class="pull-left"></img><br />
+				<p data-bind="text: name" />
+			</span>
 		</div>
 
+
+<!-- 選択された友人の友人一覧を表示 -->
 		<div id="friendlist">
 			<table>
 			<p th:text="${friendName}+の友達" />
-				<tr data-bind="foreach: friends">
-					<td class="face">
-						<img data-bind="attr:{src: image.url}" style="max-height:3em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+				<tr data-bind="foreach: friendfriends">
+					<td class="icon">
+				<!--	<input type="hidden" id="friendname" data-bind="attr:{value: name}" />		-->
+						<img data-bind="attr:{src: image.url}" style="max-height:3em"></img><br />
+						<span data-bind="text: name" />
+						<input type="hidden" class="email" data-bind="attr:{value: email}" />
 					</td>
 				</tr>
 			</table>
 		</div>
 		
+
 		
 		<div id="tabmenu">
 			<ul>
@@ -289,7 +332,7 @@
 					</table>
 				</div> 
 			</div> 
-		</div> 
+		</div>
 
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">

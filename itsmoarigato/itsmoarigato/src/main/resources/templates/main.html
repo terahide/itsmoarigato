@@ -41,7 +41,7 @@
 						}
 					})
 					
-					$(".face").on({
+					$(".icon").on({
 						mouseover : function(){
 							$(this).css('cursor','pointer')
 						},
@@ -56,7 +56,6 @@
 							}
 						}
 					})
-					
 				})
 			});
 			
@@ -119,11 +118,11 @@
 					<table>
 					<tr>
 						<td>
-						<img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="face">
+						<img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
 							<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
 						</img><br /><span data-bind="text: fromUser.name"></span></td>
 						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="face">
+						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
 							<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
 						</img><br /><span data-bind="text: toUser.name"></span></td>
 					</tr>
