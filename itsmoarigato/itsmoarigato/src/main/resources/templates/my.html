@@ -90,12 +90,6 @@
 					})
 				})
 
-				var url = $("#arigatoForm").attr("action");
-
-				get(url,'',function(data){
-					viewModel.arigatos(data)
-				})
-
 				url = $("#arigatoForm").attr("action");
 				data = $("#writtenByMeForm").serialize();
 
@@ -128,13 +122,45 @@
 							location.href=url
 						}
 					})
+					
+					$(".icon").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+							}else{
+								location.href=url
+							}
+						}
+					})					
 				})
 				
 				url = $("#arigatoForm").attr("action");
 				data = $("#readByMeForm").serialize();
 
 				get(url,data,function(data){
-					viewModel.readByMe(data)				
+					viewModel.readByMe(data)
+					
+					$(".icon").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+							}else{
+								location.href=url
+							}
+						}
+					})				
 				})
 			});
 			
@@ -186,9 +212,13 @@
 
 		<div id="userpage" class="" th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
 			<div th:if="${currentUser != null}">
-				<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
-				<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
-				<p id="un" class="navbar-text left" th:text="${currentUser.user.name}" />
+				<table>
+					<td>
+						<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
+						<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
+						<p id="un" class="navbar-text left" th:text="${currentUser.user.name}" />
+					</td>
+				</table>
 			</div>
 		</div>
 
@@ -197,9 +227,10 @@
 			<p>あなたの友達</p>
 				<tr data-bind="foreach: friends">
 					<td class="face">
-						<img data-bind="attr:{src: image.url}" style="max-height:3em" ></img><br />
+						<img data-bind="attr:{src: image.url}" style="max-height:3em" class="icon">
+							<input type="hidden" class="friendId" data-bind="attr:{value: name}"/>
+						</img><br />
 						<span data-bind="text: name" />
-						<input type="hidden" class="email" data-bind="attr:{value: email}"/>
 					</td>
 				</tr>
 			</table>
@@ -227,9 +258,13 @@
 							<td>
 								<table>
 									<tr>
-										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+										</img><br /><span data-bind="text: fromUser.name"></span></td>
 										<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+										</img><br /><span data-bind="text: toUser.name"></span></td>
 									</tr>
 								</table>
 								<p>【<span class="subject" data-bind="text: subject"></span>】</p>
@@ -256,9 +291,13 @@
 							<td>
 								<table>
 									<tr>
-										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+										</img><br /><span data-bind="text: fromUser.name"></span></td>
 										<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+										</img><br /><span data-bind="text: toUser.name"></span></td>
 									</tr>
 								</table>
 								<p>【<span class="subject" data-bind="text: subject"></span>】</p>
@@ -289,6 +328,7 @@
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
+		<form id="friendForm" th:action="@{/friend}" />
 	</div>
 </body>
 </html>
