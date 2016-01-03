@@ -48,8 +48,10 @@
 							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
 							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
 								location.href="/my"
+								//location.href=url
 							}else{
 								location.href=url
+								//location.href="/my"
 							}
 						}
 					})
