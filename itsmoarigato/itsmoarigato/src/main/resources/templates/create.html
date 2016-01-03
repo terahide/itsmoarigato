@@ -107,7 +107,9 @@
 			<table>
 				<tr data-bind="foreach: friends">
 					<td class="face">
-						<img data-bind="attr:{src: image.url}" style="max-height:2em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+						<img data-bind="attr:{src: image.url}" style="max-height:2em" ></img><br />
+						<span data-bind="text: name" />
+						<input type="hidden" class="email" data-bind="attr:{value: email}"/>
 					</td>
 				</tr>
 			</table>
