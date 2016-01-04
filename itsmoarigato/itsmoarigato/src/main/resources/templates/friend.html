@@ -64,6 +64,7 @@
 			
 			$(document).ready(function(){
 				$("#text_2").hide(); //初期では非表示
+				$("#text_3").hide(); //初期では非表示
 			
 				$("ul").on("click","li",function(){
 					$("li.selected").removeClass("selected");
@@ -154,15 +155,15 @@
 										$(this).css('cursor','pointer')
 									},
 									click : function(){
-							var url = $("#friendForm").attr("action");
-							var $showButton = $(this) 
-							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
-							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
-								location.href="/my"
-							}else{
-								location.href=url
-							}
-						}
+										var url = $("#friendForm").attr("action");
+										var $showButton = $(this) 
+										url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+										if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+											location.href="/my"
+										}else{
+											location.href=url
+										}
+									}
 								})
 							})
 						
@@ -196,46 +197,94 @@
 									}
 								})									
 							})
+							var email = currentFriend
+							$("#toUserId").val(email) //メッセージ作成先に選択中の友達を設定
 						}
 					})
 				});
 				
-				function get(url,data,doneHandler){
+				$("#submit").click(function(){
+					$("#submit").prop("disabled",true);
+				
+                    var url = $("#sendMessage").attr("action");
+                    var method = $("#sendMessage").attr("method");
+                    var data = $("#sendMessage").serialize();
 					$.ajax({
 						url: url,
-						type:"get",
-						data: data
+						type:method,
+						data:data
 					})
 					.done(function(data, status, xhr){
-						if (doneHandler == undefined){
-							return;
+						if( $('input[type=file]').val() != ''){
+						
+							var url = $("#sendMessage").attr("action");
+							url = url+'/'+data.arigatoId+'/image'
+							var csrf = $('#sendMessage input[name="_csrf"]').serialize()
+						
+							$('input[type=file]').upload(url,csrf, function(res) {
+								handleDone(res);
+							}, 'json');
+						}else{
+							handleDone(data)
 						}
-						doneHandler(data)
+						
 					})
 					.fail(function( data, status, xhr){
-						alert("fail" + data.responseText);
-					})
-				}
-								
-				function delete_(url,data,doneHandler){
-					$.ajax({
-						url: url,
-						type:"DELETE",
-						beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('#deleteForm input[name="_csrf"]').attr('value'))},
-						data: data
-					})
-					.done(function(data, status, xhr){
-						if (doneHandler == undefined){
-							return;
+						var error = eval("(" 	+ data.responseText + ")");
+						if(error.message.indexOf("Validation failed") == 0){
+							$('#result').text("");
+							$('#errors').text("入力エラーがあります。ご確認ください");
+							$.each(error.errors,function(){
+								$('#'+this.field+'_error').text(this.defaultMessage);
+							});
+						}else{
+							alert("fail" + data.responseText);
 						}
-						doneHandler(data)
+						$("#submit").prop("disabled",false);
 					})
-					.fail(function( data, status, xhr){
-						alert("fail" + data.responseText);
-					})
-				}
+				});
+				
+			}) //ready
 			
-			})
+			function get(url,data,doneHandler){
+				$.ajax({
+					url: url,
+					type:"get",
+					data: data
+				})
+				.done(function(data, status, xhr){
+					if (doneHandler == undefined){
+						return;
+					}
+					doneHandler(data)
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
+			} //function get
+			
+			function delete_(url,data,doneHandler){
+				$.ajax({
+					url: url,
+					type:"DELETE",
+					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('#deleteForm input[name="_csrf"]').attr('value'))},
+					data: data
+				})
+				.done(function(data, status, xhr){
+					if (doneHandler == undefined){
+						return;
+					}
+					doneHandler(data)
+				})
+				.fail(function( data, status, xhr){
+					alert("fail" + data.responseText);
+				})
+			} //function delete_
+			
+			handleDone = function(res){
+				alert("ご登録ありがとうございました!");
+				location.href="/"
+			}
 			function AppViewModel() {
 			    var self = this;
 			    
@@ -288,6 +337,7 @@
 			<ul>
 				<li id="tab_1" class="selected"><a href="#readByMe">あなたへのメッセージ</a></li>
 				<li id="tab_2"><a href="#writtenByMe">あなたからのメッセージ</a></li>
+				<li id="tab_3"><a href="#sendMessage">メッセージ作成</a></li>
 			</ul>
 		</div>
 
@@ -364,6 +414,23 @@
 					</table>
 				</div> 
 			</div> 
+			
+			<div id="text_3">
+				<div id="result"></div>
+				<div id="errors" class="error"></div>
+				<form id="sendMessage" method="post" th:action="@{/rest/arigato}">
+				<table>
+					<tr><td>ありがとう<img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td><td>
+					<input type="hidden" id="toUserId" name="toUserId" />
+					<span id="toUserId_error" class="error" /></td></tr>
+					<tr><td>件名</td><td><input type="text" id="subject" name="subject" /><span id="subject_error" class="error" /></td></tr>
+					<tr><td>感謝のことば</td><td><input type="text" id="message" name="message" /><span id="message_error" class="error" /></td></tr>
+					<tr><td>写真・画像</td><td><input type="file" id="img" name="file" /><span id="file_error" class="error" /></td></tr>
+					<tr><td></td><td><input type="button" id="submit" value="click" /></td></tr> 
+				</table>
+				</form>
+			</div> 
+			
 		</div>
 
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
