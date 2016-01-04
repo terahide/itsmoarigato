@@ -98,9 +98,9 @@
 			<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
 			<a id="me" th:href="@{/my}">
 			<img th:src="${currentUser.user.image.url}" style="max-height:4em" class="pull-right" th:alt="${currentUser.user.name}"></img>
-			<!-- <p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">
+			 <p id="un" class="navbar-text pull-right" th:text="${currentUser.user.name}">
 				sample_user
-			</p> -->
+			</p>
 			</a>
 	</div>
 	<ul class="nav">
