@@ -25,7 +25,7 @@ public class TableSetuper {
 	@Autowired
 	UserManager userManager;
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void remakeTable() throws IOException {
 		remakeImageTable();
