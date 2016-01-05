@@ -24,7 +24,9 @@
 						data:data
 					})
 					.done(function(data, status, xhr){
-						$('#result').text("更新されました!");
+						//$('#result').text("更新されました!");
+						alert("更新されました!");
+						location.href="/"
 					})
 					.fail(function( data, status, xhr){
 						var error = eval("(" + data.responseText + ")");

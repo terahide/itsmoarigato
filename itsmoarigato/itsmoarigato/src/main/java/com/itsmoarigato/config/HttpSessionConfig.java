@@ -5,8 +5,8 @@ import org.springframework.session.redis.embedded.EnableEmbeddedRedis;
 
 
 
-@EnableEmbeddedRedis
+//@EnableEmbeddedRedis
 // tag::class[]
-@EnableRedisHttpSession // <1>
+//@EnableRedisHttpSession // <1>
 public class HttpSessionConfig { }
 // end::class[]
