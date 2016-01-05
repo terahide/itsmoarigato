@@ -11,9 +11,7 @@
 				get(url,'',function(data){
 					ko.applyBindings(new AppViewModel(data));
 				})
-				
-			
-			
+		
 				$("#submit").click(function(){
 					var url = $("#arigatoForm").attr("action");
 					var method = $("#arigatoForm").attr("method");
@@ -66,6 +64,7 @@
 			    self.arigato = arigato;
 			}
 		</script>
+		
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{'/rest/arigato/'+${arigatoId}}">

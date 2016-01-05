@@ -33,6 +33,7 @@ public class IndexController {
 		model.addAttribute("arigatoId", id);
 		return "update";
 	}
+
 	@RequestMapping("/friend/{id}")
 	public String friend(@PathVariable("id")String id,Model model){
 		model.addAttribute("friendName",id);

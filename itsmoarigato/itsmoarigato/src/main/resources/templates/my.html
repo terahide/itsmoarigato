@@ -72,6 +72,7 @@
 					
 				ko.applyBindings(viewModel);
 				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+
 				get(url,'',function(data){
 					viewModel.friends(data)
 					$(".face").each(function(){

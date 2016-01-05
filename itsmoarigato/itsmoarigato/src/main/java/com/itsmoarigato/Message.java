@@ -68,9 +68,8 @@ public class Message {
 		return created;
 	}
 	public String getformattedCreated() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(created);
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(created);
 	}
-	
 	public List<Image> getImages() {
 		List<Image> l = new ArrayList<>();
 		for(Image i:images){
