@@ -46,7 +46,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		when: "登録したありがとを更新すると"	
 			go UpdatePage.url + arigatoId
 			at UpdatePage
-			項目を入力して更新する()
+			"項目を入力して更新する"()
 		then: "更新されました!と表示されるべき"()
 		when: "登録したありがとを表示すると"	
 			go "http://localhost:8080/rest/arigato/"+arigatoId
@@ -131,7 +131,7 @@ class WhenRegistArigatoSpec extends GebReportingSpec {
 		then: "更新画面が表示されるべき"
 			at UpdatePage
 	}
-	
+
 	def "削除のテスト"(){
 		given: "ログインした状態で"
 			go "http://localhost:8080"
