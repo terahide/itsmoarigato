@@ -1,6 +1,7 @@
 package com.itsmoarigato;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +67,10 @@ public class Message {
 	public Timestamp getCreated() {
 		return created;
 	}
+	public String getformattedCreated() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(created);
+	}
+	
 	public List<Image> getImages() {
 		List<Image> l = new ArrayList<>();
 		for(Image i:images){
