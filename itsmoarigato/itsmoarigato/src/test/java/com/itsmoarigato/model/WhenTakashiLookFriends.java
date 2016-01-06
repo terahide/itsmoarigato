@@ -19,7 +19,7 @@ import com.itsmoarigato.model.exception.NotFoundException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext.xml"})
 @Transactional
-@Ignore //テストが失敗する暫定措置 com.itsmoarigato.config.HttpSessionConfigのアノテーション(@EnableEmbeddedRedis,@EnableRedisHttpSession)をコメントアウトして実行してください
+//@Ignore //テストが失敗する暫定措置 com.itsmoarigato.config.HttpSessionConfigのアノテーション(@EnableEmbeddedRedis,@EnableRedisHttpSession)をコメントアウトして実行してください
 public class WhenTakashiLookFriends {
 	
 	@Autowired

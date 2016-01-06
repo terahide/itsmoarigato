@@ -21,7 +21,7 @@
 							$(this).css('background-color','#ffffff')
 						})
 						$(this).click(function(){
-							var email = $('.email',$(this).parent()).val()
+							var email = $('.email',$(this)).val()
 							$("#toUserId").val(email)
 						})
 					})
@@ -98,6 +98,7 @@
 			    self.friends = ko.observableArray([]);
 			}
 		</script>
+		
 		<div id="result"></div>
 		<div id="errors" class="error"></div>
 		<form id="arigatoForm" method="post" th:action="@{/rest/arigato}">
@@ -106,7 +107,9 @@
 			<table>
 				<tr data-bind="foreach: friends">
 					<td class="face">
-						<img data-bind="attr:{src: image.url}" style="max-height:2em" ></img><br /><span data-bind="text: name" /><input type="hidden" class="email" data-bind="attr:{value: email}"/>
+						<img data-bind="attr:{src: image.url}" style="max-height:2em" ></img><br />
+						<span data-bind="text: name" />
+						<input type="hidden" class="email" data-bind="attr:{value: email}"/>
 					</td>
 				</tr>
 			</table>
