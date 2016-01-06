@@ -8,26 +8,52 @@
 			var viewModel = new AppViewModel()
 			$(document).ready(function(){
 				ko.applyBindings(viewModel);
-
 				var url = $("#arigatoForm").attr("action");
-
 				get(url,'',function(data){
 					viewModel.arigatos(data)
-
-					$(".delete").click(function(){
-						var url = $("#deleteForm").attr("action");
-						var $deleteButton = $(this) 
-						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
-						data = $("#deleteForm").serialize();
-						delete_(url,data,function(){
-							$deleteButton.parents("table").remove()
-						})
+					$(".delete").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer');
+						},
+						click : function(){
+							var url = $("#deleteForm").attr("action");
+							var $deleteButton = $(this)
+							url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+							data = $("#deleteForm").serialize();
+							delete_(url,data,function(){
+								$deleteButton.parents("table").remove();
+							})
+						}
 					})
-					$(".edit").click(function(){
-						var url = $("#updateForm").attr("action");
-						var $editButton = $(this) 
-						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
-						location.href=url
+					
+					$(".edit").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#updateForm").attr("action");
+							var $editButton = $(this) 
+							url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+							location.href=url
+						}
+					})
+					
+					$(".icon").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+								//location.href=url
+							}else{
+								location.href=url
+								//location.href="/my"
+							}
+						}
 					})
 				})
 			});
@@ -66,7 +92,6 @@
 					alert("fail" + data.responseText);
 				})
 			}
-
 			function AppViewModel() {
 			    var self = this;
 			    
@@ -77,7 +102,6 @@
 		</script>
 		
 		<div id="around">
-		
 		<div data-bind="foreach: arigatos">
 			<table>
 			<tr>
@@ -85,15 +109,20 @@
 					<span data-bind="if: fromUser.email == $parent.me">
 						<img th:src="@{/resources/img/trash.png}" style="max-height:3em" alt="削除" class="delete"></img>
 						<img th:src="@{/resources/img/edit.png}" style="max-height:3em" alt="編集" class="edit"></img>
-						<input type="hidden" class="id" data-bind="attr:{value:id}" />
+							<input type="hidden" class="id" data-bind="attr:{value:id}" />
 					</span>
 				</td>
 				<td>
 					<table>
 					<tr>
-						<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
+						<td>
+						<img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
+							<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+						</img><br /><span data-bind="text: fromUser.name"></span></td>
 						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
+						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
+							<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+						</img><br /><span data-bind="text: toUser.name"></span></td>
 					</tr>
 					</table>
 					<p>【<span class="subject" data-bind="text: subject"></span>】</p>
@@ -101,6 +130,7 @@
 					<div data-bind="foreach: images">
 						<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
 					</div>
+					<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
 				</td>
 			</tr>
 			<tr>
@@ -118,6 +148,7 @@
 		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
+		<form id="friendForm" th:action="@{/friend}" />
 	</div>
 </body>
 </html>

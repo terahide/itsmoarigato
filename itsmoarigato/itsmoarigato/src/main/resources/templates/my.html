@@ -1,41 +1,156 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
 <head>
 	<title>mypage</title>
+	<style type="text/css">
+<!--
+	ul{
+		list-style: none;
+		margin: 10px;
+	}
+		
+	ul li{
+		float: left;
+		height: 20px;
+		margin: 0px 0px 0px 10px;
+		padding: 10px 15px 5px 15px;
+		border: 1px #ddd solid;
+		border-radius: 25px 25px 0px 0px / 25px 25px 0px 0px;
+		background-color: #eff;	
+	}
+	ul li.selected{
+		text-decoration: none;
+		color: #000;
+		background-color: #fff;
+		border-bottom: 1px #fff solid;
+		pointer-events: none;
+	}
+	
+	#userpage{
+		float: left;
+		width: 130px;
+	}
+	
+	#friendlist{
+		float: right;
+		width: 550px;
+	}
+	
+	#tabmenu{
+		clear: both;
+		width: 680px;
+	}
+	
+	#line{
+		position: relative;
+		top: 36px;
+		z-index: -1;
+		border: none;
+		border-top: 1px #ddd solid;
+	}
+	#tabcontent{			
+		clear: left;
+		margin: 0px 10px 10px 10px;
+		padding: 10px;
+	}
+-->
+	</style>
 </head>
 <body>
 	<div layout:fragment="content">
 		<script>
 			var viewModel = new AppViewModel()
+			
 			$(document).ready(function(){
-				ko.applyBindings(viewModel);
-
-				var url = $("#arigatoForm").attr("action");
-
-				get(url,'',function(data){
-					viewModel.arigatos(data)
+				$("#text_2").hide(); //初期では非表示
+				$("ul").on("click","li",function(){
+					$("li.selected").removeClass("selected");
+					$(this).addClass("selected");
+					myID = this.id.split("_")[1];
+					$("#tabcontent > div").hide();
+					$("#text_" + myID).show();
 				})
-
-				url = $("#arigatoForm").attr("action");
-				data = $("#writtenByMeForm").serialize();
-
-				get(url,data,function(data){
-					viewModel.writtenByMe(data)
-
-					$(".delete").click(function(){
-						var url = $("#deleteForm").attr("action");
-						var $deleteButton = $(this) 
-						url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
-						data = $("#deleteForm").serialize();
-						delete_(url,data,function(){
-							$deleteButton.parents("table").remove()
+					
+				ko.applyBindings(viewModel);
+				var url = "/rest/user/"+$("#currentUser").val()+"/friend";
+				get(url,'',function(data){
+					viewModel.friends(data)
+					$(".face").each(function(){
+						$(this).mouseover(function(){
+							$(this).css('background-color','#fad0d0')
+						})
+						$(this).mouseout(function(){
+							$(this).css('background-color','#ffffff')
 						})
 					})
-					$(".edit").click(function(){
-						var url = $("#updateForm").attr("action");
-						var $editButton = $(this) 
-						url = url + "/" +$(".id",$editButton.parent()).val() +"/";
-						location.href=url
+				})
+				url = $("#arigatoForm").attr("action");
+				data = $("#writtenByMeForm").serialize();
+				get(url,data,function(data){
+					viewModel.writtenByMe(data)
+					$(".delete").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer');
+						},
+						click : function(){
+							var url = $("#deleteForm").attr("action");
+							var $deleteButton = $(this)
+							url = url + "/" +$(".id",$deleteButton.parent()).val() +"/";
+							data = $("#deleteForm").serialize();
+							delete_(url,data,function(){
+								$deleteButton.parents("table").remove();
+							})
+						}
 					})
+					
+					$(".edit").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#updateForm").attr("action");
+							var $editButton = $(this) 
+							url = url + "/" +$(".id",$editButton.parent()).val() +"/";
+							location.href=url
+						}
+					})
+					
+					$(".icon").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+							}else{
+								location.href=url
+							}
+						}
+					})					
+				})
+				
+				url = $("#arigatoForm").attr("action");
+				data = $("#readByMeForm").serialize();
+				get(url,data,function(data){
+					viewModel.readByMe(data)
+					
+					$(".icon").on({
+						mouseover : function(){
+							$(this).css('cursor','pointer')
+						},
+						click : function(){
+							var url = $("#friendForm").attr("action");
+							var $showButton = $(this) 
+							url = url + "/" + $(".friendId",$showButton.parent()).val() +"/";
+							if($(".friendId",$showButton.parent()).val() == $("#un").text()){
+								location.href="/my"
+							}else{
+								location.href=url
+							}
+						}
+					})				
 				})
 			});
 			
@@ -43,7 +158,7 @@
 				$.ajax({
 					url: url,
 					type:"get",
-					data:data
+					data: data
 				})
 				.done(function(data, status, xhr){
 					if (doneHandler == undefined){
@@ -61,7 +176,7 @@
 					url: url,
 					type:"DELETE",
 					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('#deleteForm input[name="_csrf"]').attr('value'))},
-					data:data
+					data: data
 				})
 				.done(function(data, status, xhr){
 					if (doneHandler == undefined){
@@ -73,55 +188,136 @@
 					alert("fail" + data.responseText);
 				})
 			}
-
 			function AppViewModel() {
 			    var self = this;
 			    
 			    // Editable data
 			    self.arigatos = ko.observableArray([]);
 			    self.writtenByMe = ko.observableArray([]);
+   			    self.readByMe = ko.observableArray([]);
+   			    self.friends = ko.observableArray([]);
 			}
 		</script>
-		
-		<div id="writtenByMe">
-		<div data-bind="foreach: writtenByMe">
+
+		<div id="userpage" class="" th:with="currentUser=${#httpServletRequest.userPrincipal?.principal}">
+			<div th:if="${currentUser != null}">
+				<table>
+					<td>
+						<input type="hidden" id="currentUser" th:value="${currentUser.username}"/>
+						<img th:src="${currentUser.user.image.url}" style="max-height:5em" class="pull-left" th:alt="${currentUser.user.name}"></img>
+						<p id="un" class="navbar-text left" th:text="${currentUser.user.name}" />
+					</td>
+				</table>
+			</div>
+		</div>
+
+		<div id="friendlist">
 			<table>
-			<tr>
-				<td>
-					<img th:src="@{/resources/img/trash.png}" style="max-height:3em" alt="削除" class="delete"></img>
-					<img th:src="@{/resources/img/edit.png}" style="max-height:3em" alt="編集" class="edit"></img>
-					<input type="hidden" class="id" data-bind="attr:{value:id}" />
-				</td>
-				<td>
-					<table>
-					<tr>
-						<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: fromUser.name"></span></td>
-						<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
-						<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" ></img><br /><span data-bind="text: toUser.name"></span></td>
-					</tr>
-					</table>
-					<p>【<span class="subject" data-bind="text: subject"></span>】</p>
-					<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
-					<div data-bind="foreach: images">
-						<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<hr />
-				</td>
-			</tr>
+			<p>あなたの友達</p>
+				<tr data-bind="foreach: friends">
+					<td class="face">
+						<img data-bind="attr:{src: image.url}" style="max-height:3em" class="icon">
+							<input type="hidden" class="friendId" data-bind="attr:{value: name}"/>
+						</img><br />
+						<span data-bind="text: name" />
+					</td>
+				</tr>
 			</table>
-		</div> 
+		</div>
+
+		<div id="tabmenu">
+			<ul>
+				<li id="tab_1" class="selected"><a href="#writtenByMe">友達へのメッセージ</a></li>
+				<li id="tab_2"><a href="#readByMe">友達からのメッセージ</a></li>
+			</ul>
+		</div>
+
+		<div id="line"></div>	<!-- 調整用 -->
+
+		<div id="tabcontent">
+			<div id="text_1">
+				<div data-bind="foreach: writtenByMe">
+					<table>
+						<tr>
+							<td>
+								<img th:src="@{/resources/img/trash.png}" style="max-height:3em" alt="削除" class="delete"></img>
+								<img th:src="@{/resources/img/edit.png}" style="max-height:3em" alt="編集" class="edit"></img>
+									<input type="hidden" class="id" data-bind="attr:{value:id}" />
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+										</img><br /><span data-bind="text: fromUser.name"></span></td>
+										<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+										</img><br /><span data-bind="text: toUser.name"></span></td>
+									</tr>
+								</table>
+								<p>【<span class="subject" data-bind="text: subject"></span>】</p>
+								<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+								<div data-bind="foreach: images">
+									<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
+								</div>
+								<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<hr />
+							</td>
+						</tr>
+					</table>
+				</div> 
+			</div> 
+
+			<div id="text_2">
+				<div data-bind="foreach: readByMe">
+					<table>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td><img data-bind="attr:{src: fromUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:fromUser.name}" />
+										</img><br /><span data-bind="text: fromUser.name"></span></td>
+										<td><img th:src="@{/resources/img/to.png}" style="max-height:3em" ></img></td>
+										<td><img data-bind="attr:{src: toUser.image.url}" style="max-height:2em" class="icon">
+											<input type="hidden" class="friendId" data-bind="attr:{value:toUser.name}" />
+										</img><br /><span data-bind="text: toUser.name"></span></td>
+									</tr>
+								</table>
+								<p>【<span class="subject" data-bind="text: subject"></span>】</p>
+								<p>&nbsp;&nbsp;<span data-bind="text: contents"></span></p>
+								<div data-bind="foreach: images">
+									<img data-bind="attr:{src: url}" style="max-height:320px" ></img>
+								</div>
+								<p> (<span class="formattedCreated" data-bind="text: formattedCreated"></span>) </p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<hr />
+							</td>
+						</tr>
+					</table>
+				</div> 
+			</div> 
 		</div> 
 
 		<form id="arigatoForm" th:action="@{/rest/arigato}" />
 		<form id="writtenByMeForm" th:action="@{/rest/arigato}">
 			<input type="hidden" name="type" value="wrote" />
 		</form>
+		<form id="arigatoForm" th:action="@{/rest/arigato}" />
+		<form id="readByMeForm" th:action="@{/rest/arigato}">
+			<input type="hidden" name="type" value="mine" />
+		</form>
 		<form id="updateForm" th:action="@{/update}" />
 		<form id="deleteForm" th:action="@{/rest/arigato}" />
+		<form id="friendForm" th:action="@{/friend}" />
 	</div>
 </body>
 </html>
